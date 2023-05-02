@@ -1,0 +1,48 @@
+.entry-design{
+    a{
+        text-decoration: none;
+    }
+}
+.module-title{
+    margin-bottom: $module-title-margin-bottom;
+    font-size: $module-title-font-size;
+    @include breakpoint-font-size($module-title-font-size);
+    text-transform: uppercase;
+}
+.widget, .design{
+    &-title{
+        margin-bottom: $spacer;
+    }
+}
+
+input::placeholder{
+    color: $input-border-color;
+}
+
+// a {
+//     &.both {
+//         & > .icon{
+//             padding: 0; // Fix global scss padding
+//         }
+//         &.icon-left > .icon{
+//             @include rtl-prop(margin-right, 0.625em);
+//         }
+//         &.icon-right > .icon{
+//             @include rtl-prop(margin-left, 0.625em);
+//         }
+//         &.icon-top > .icon{
+//             margin-bottom: 0.625em;
+//         }
+//     }
+// }
+
+.rating{
+    .fas, .far{
+        color: $product-rating-color;
+        transform: rtl-value(none, scaleX(-1));
+    }
+    .far{
+        color: $gray-500;
+    }
+}
+

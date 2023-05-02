@@ -1,0 +1,33 @@
+{% if url_type == 'popup' %}{% set data_toggle = 'modal' %}
+{% elseif url_type == 'drawer' %}{% set data_toggle = 'mz-pure-drawer' %}
+{% elseif url_type == 'collapsible' %}{% set data_toggle = 'collapse' %}
+{% else %}{% set data_toggle = false %}{% endif %}
+
+<figure class="figure">
+{% if url %}<a href="{{ url.href }}" {{ url.attr }} title="{{ alt|e }}" {% if url_target %}target="{{ url_target }}"{% endif %}>
+  {% if icon_font %}
+  <i title="{{ alt|e }}" class="figure-img img-fluid {{ icon_font }} {{ style_class }}" {{ icon_size?'style="font-size: ' ~ icon_size ~ 'px"':'' }}></i>
+  {% elseif icon_svg %}
+  <img src="{{ icon_svg }}" alt="{{ alt|e }}" width="{{ icon_width?:100 }}" height="{{ icon_height?:100 }}" class="figure-img img-fluid m-0 {{ style_class }}" />
+{#  <div title="{{ alt }}" class="svg-icon figure-img img-fluid {{ style_class }}" style="width:{{ icon_width?:100 }}px;height:{{ icon_height?:100 }}px;">{{ icon_svg }}</div>#}
+  {% else %}
+  <img src="{{ icon_image }}" alt="{{ alt|e }}" width="{{ icon_width }}" height="{{ icon_height }}" class="figure-img img-fluid m-0 {{ style_class }}" />
+  {% endif %}
+</a>
+{% if caption %}
+<figcaption class="figure-caption"><a href="{{ url.href }}" {{ url.attr }} title="{{ alt|e }}" {% if url_target %}target="{{ url_target }}"{% endif %}>{{ caption }}</a></figcaption>
+{% endif %}
+{% else %}
+  {% if icon_font %}
+  <i title="{{ alt|e }}" class="figure-img img-fluid {{ icon_font }} {{ style_class }}" {{ icon_size?'style="font-size: ' ~ icon_size ~ 'px"':'' }}></i>
+  {% elseif icon_svg %}
+  <img src="{{ icon_svg }}" alt="{{ alt|e }}" width="{{ icon_width?:100 }}" height="{{ icon_height?:100 }}" class="figure-img img-fluid m-0 {{ style_class }}" />
+{#  <div title="{{ alt }}" class="svg-icon figure-img img-fluid {{ style_class }}" style="width:{{ icon_width?:100 }}px;height:{{ icon_height?:100 }}px;">{{ icon_svg }}</div>#}
+  {% else %}
+  <img src="{{ icon_image }}" alt="{{ alt|e }}" width="{{ icon_width }}" height="{{ icon_height }}" class="figure-img img-fluid m-0 {{ style_class }}" />
+  {% endif %}
+{% if caption %}
+<figcaption class="figure-caption">{{ caption }}</figcaption>
+{% endif %}
+{% endif %}
+</figure>

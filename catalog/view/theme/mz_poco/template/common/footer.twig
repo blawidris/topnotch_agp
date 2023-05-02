@@ -1,0 +1,107 @@
+<footer class="footer">{{ include(template_from_string(footer_content)) }}</footer>
+<div id="svg-data" class="d-none">{{ svg_data }}</div> {# SVG DATA #}
+{% for script in scripts %}<script src="{{ script }}" defer></script>{% endfor %}
+{% for schema in schemas %}<script type="application/ld+json">{{ schema }}</script>{% endfor %}
+<!--Language-->
+{% if language %}
+<form action="{{ language }}" method="post" enctype="multipart/form-data" id="form-language">
+<input type="hidden" name="code" value="" /><input type="hidden" name="redirect" value="" />
+</form>
+{% endif %}
+<!--Currency-->
+{% if currency %}
+<form action="{{ currency }}" method="post" enctype="multipart/form-data" id="form-currency">
+<input type="hidden" name="code" value="" /><input type="hidden" name="redirect" value="" />
+</form>
+{% endif %}
+<!--Google map API-->
+{% if google_map_api_key %}
+<script id="google-map-script" data-src="https://maps.googleapis.com/maps/api/js?key={{ google_map_api_key }}&callback=widgetMap&language={{ language_code }}"></script>
+<script>
+$(function(){
+    if($('.google-map').length){
+        $('#google-map-script').attr('src', $('#google-map-script').data('src'));
+    }
+});
+</script>
+{% endif %}
+<!--Custom code before body tag-->
+{% if code_before_body_tag %}
+{{ code_before_body_tag }}
+{% endif %}
+</div></div>
+<!-- notification -->
+<div id="notification-box-top"></div>
+<div id="notification-box-bottom"></div>
+<!-- Quick view -->
+<div id="quick-view" class="modal fade quick-view" role="dialog"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><button type="button" class="close btn btn-link fas mz-modal-close" data-dismiss="modal"></button><div class="modal-body p-0"></div><div class="loader-spinner"></div></div></div></div>
+<!-- Back to top-->
+{% if back_to_top %}
+<a id="back-to-top" data-show="0" href="#" class="btn btn-primary shadow back-to-top" style="display: none" role="button"><i class="fas fa-chevron-up"></i></a>
+<script>
+$('#back-to-top').click(function(e){
+    e.preventDefault();$('html, body').animate({scrollTop: 0}, 800);
+});
+window.addEventListener("scroll", function(){
+    var el = $('#back-to-top');
+    if((window.pageYOffset > window.innerHeight) && !el.data('show')){
+        el.data('show', 1); el.fadeIn();
+    } else if((window.pageYOffset <= window.innerHeight) && el.data('show')){
+        el.data('show', 0); el.fadeOut();
+    }
+});
+</script>
+{% endif %}
+{# popup Hook #}
+{% for key, popup in mz_hook('popup') %}
+<div class="modal fade" id="{{ popup.unique_id }}">
+  <div class="modal-dialog modal-dialog-centered modal-{{ popup.size }}">
+    <div class="modal-content">
+        {% if popup.title %}
+        <div class="modal-header border-0 bg-primary text-primary-inverse">
+            <h5 class="modal-title">
+            {% if popup.icon_font %}
+            <i class="icon flex-shrink-0 {{ popup.icon_font }} mr-2" {{ popup.icon_size?'style="font-size: ' ~ popup.icon_size ~ 'px"':'' }}></i>
+            {% elseif popup.icon_svg %}
+            <div class="icon flex-shrink-0 svg-icon mr-2" style="{{ popup.image_width?'width:' ~ popup.image_width ~ 'px;' }}{{ popup.image_height?'height:' ~ popup.image_height ~ 'px;' }}">{{ popup.icon_svg }}</div>
+            {% elseif popup.icon_image %}
+            <img class="icon flex-shrink-0 mr-2" src="{{ popup.icon_image }}" width="{{ popup.image_width }}" height="{{ popup.image_height }}"  />
+            {% endif %}
+            {{ popup.title }}</h5>
+            {% if popup.close_button %}
+            <button type="button" class="close fas fa-times" aria-label="Close" data-dismiss="modal"></button>
+            {% endif %}
+        </div>
+        {% elseif popup.close_button %}<button type="button" class="close fas mz-modal-close" aria-label="Close" data-dismiss="modal"></button>
+        {% endif %}
+        <div class="modal-body">{{ popup.content }}</div>
+        {% if popup.do_not_show_again %}
+        <div class="modal-footer mz-popup-do-not-show-again">
+            <div class="form-check mr-auto">
+                <label class="form-check-label"><input id="input-popup-hook-not-show-{{ key }}" type="checkbox" class="form-check-input" value="1"> {{ text_do_not_show_again }}</label>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+    if($.mz_cookie('{{ popup.unique_id }}show_again') === undefined || $.mz_cookie('{{ popup.unique_id }}show_again') !== '0'){
+        {% if popup.auto_start_status %}
+        setTimeout(function(){ $('#{{ popup.unique_id }}').modal("show"); }, {{ popup.auto_start_delay * 1000 }});
+        {% endif %}
+        {% if popup.auto_close_status %}
+        setTimeout(function(){ $('#{{ popup.unique_id }}').modal("hide"); }, {{ popup.auto_close_delay * 1000 }});
+        {% endif %}
+    }
+    $('#input-popup-hook-not-show-{{ key }}').change(function(){
+        if($(this).is(':checked')){
+            $.mz_cookie('{{ popup.unique_id }}show_again', 0, 365);
+        } else {
+            $.mz_cookie('{{ popup.unique_id }}show_again', 1, 365);
+        }
+    });
+});
+</script>
+{% endfor %}

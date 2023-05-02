@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<modification>
+    <name>Maza Language</name>
+    <code>maza_language</code>
+    <version>1.0</version>
+    <author>TemplateMaza.com</author>
+    <link>https://pocotheme.com//</link>
+    <file path="admin/language/en-gb/common/column_left.php">
+        <operation>
+            <search trim='true'><![CDATA[<?php]]></search>
+            <add position="after"><![CDATA[
+// Mazatheme
+$_['text_mazaengine'] = "MazaEngine";
+            ]]></add>
+        </operation>
+    </file>
+    
+    <file path="catalog/language/en-gb/information/sitemap.php">
+        <operation>
+            <search trim='true'><![CDATA[<?php]]></search>
+            <add position="after"><![CDATA[
+$_['text_page']     = 'Page';
+]]></add>
+        </operation>
+    </file>
+</modification>

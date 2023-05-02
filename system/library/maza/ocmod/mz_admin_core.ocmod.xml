@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>Maza admin</name>
+    <code>maza_admin_core</code>
+    <version>1.0</version>
+    <author>TemplateMaza.com</author>
+    <link>https://pocotheme.com//</link>
+    <file path="admin/controller/startup/startup.php">
+        <operation>
+            <search trim='true'><![CDATA[set('encryption']]></search>
+            <add position="after"><![CDATA[$this->load->controller('extension/maza/startup');]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/controller/design/layout.php">
+        <operation>
+            <search trim='true'><![CDATA[$this->load->view('design/layout_form']]></search>
+            <add position="before"><![CDATA[
+                // Maza code
+                $this->load->model('extension/maza/extension');
+                
+                $data['layout_types'] = $this->model_extension_maza_extension->getContentTypes();
+                
+                if (isset($this->request->post['mz_layout_type'])) {
+                    $data['mz_layout_type'] = $this->request->post['mz_layout_type'];
+                } elseif (!empty($layout_info)) {
+                    $data['mz_layout_type'] = $layout_info['mz_layout_type'];
+                } else {
+                    $data['mz_layout_type'] = 'default';
+                }
+                // -- Maza code
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/language/en-gb/design/layout.php">
+        <operation>
+            <search trim='true'><![CDATA[<?php]]></search>
+            <add position="after"><![CDATA[
+// Maza code
+$_['entry_type']          = 'Type';
+// - Maza code
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/model/design/layout.php">
+        <operation>
+            <search regex='true'><![CDATA[~layout\s(.*)SET~]]></search>
+            <add position="iafter"><![CDATA[layout $1SET mz_layout_type = '" . $this->db->escape($data['mz_layout_type']) . "', ]]></add>
+        </operation>
+    </file>
+    <file path="admin/view/template/design/layout_form.twig">
+        <operation>
+            <search trim='true'><![CDATA[id="route"]]></search>
+            <add position="before"><![CDATA[
+            <div class="form-group required">
+              <label class="col-sm-2 control-label" for="input-mz-layout-type">{{ entry_type }}</label>
+              <div class="col-sm-10">
+                <select name="mz_layout_type" id="input-mz-layout-type" class="form-control">
+                {% for layout_type in layout_types %}
+                  {% if mz_layout_type == layout_type.code %}
+                  <option value="{{ layout_type.code }}" selected="selected">{{ layout_type.name }}</option>
+                  {% else %}
+                  <option value="{{ layout_type.code }}">{{ layout_type.name }}</option>
+                  {% endif %}
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            ]]></add>
+        </operation>
+    </file>
+</modification>

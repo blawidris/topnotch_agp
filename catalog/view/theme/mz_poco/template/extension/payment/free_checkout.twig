@@ -1,0 +1,23 @@
+<div class="buttons clearfix">
+  <div class="float-right">
+    <input type="button" value="{{ button_confirm }}" id="button-confirm" class="btn btn-lg btn-primary" data-loading-text="{{ text_loading }}" />
+  </div>
+</div>
+<script><!--
+$('#button-confirm').on('click', function() {
+	$.ajax({
+		type: 'get',
+		url: 'index.php?route=extension/payment/free_checkout/confirm',
+		cache: false,
+		beforeSend: function() {
+			$('#button-confirm').prepend('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');
+		},
+		complete: function() {
+			$('#button-confirm').children('.spinner-grow').remove();
+		},
+		success: function() {
+			location = '{{ continue }}';
+		}
+	});
+});
+//--></script>

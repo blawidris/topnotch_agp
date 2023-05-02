@@ -1,0 +1,13 @@
+{% if heading_title %}
+<h4 class="map-title">{{ heading_title }}</h4>
+{% endif %}
+{% if api_key %}
+<div class="google-map{{ not height?' flex-fill' }}" data-latitude="{{ latitude }}" 
+     data-longitude="{{ longitude }}" data-zoom="{{ zoom }}" 
+     data-zoomControl="{{ control_zoom }}" data-mapTypeControl="{{ control_maptype }}" 
+     data-scaleControl="{{ control_scale }}" data-streetViewControl="{{ control_streetview }}" 
+     data-rotateControl="{{ control_rotate }}" data-fullscreenControl="{{ control_fullscreen }}" 
+     data-marker="{{ marker }}" data-marker_icon="{{ marker_icon }}" {{ height?('style="height:' ~ height ~ 'px"') }}></div>
+{% else %}
+<div class="alert alert-danger" role="alert">{{ error_api_key }}</div>
+{% endif %}

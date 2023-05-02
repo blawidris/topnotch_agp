@@ -1,0 +1,69 @@
+.mz-pure{
+    &-container{
+        // overflow: hidden;
+        width: 100%;
+    }
+
+    &-pusher-container{
+        width: 100%;
+        height: 100%;
+        // overflow: hidden;
+        position: relative;
+    }
+
+    &-overlay{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        background-color: $drawer-overlay-bg-color;
+        opacity: 0;
+        transition: $drawer-transition-duration $drawer-transition-timing opacity;
+    }
+
+    &-drawer{
+        width: $drawer-width;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        @include rtl-prop(left, -$drawer-width);
+        transition: $drawer-transition-duration $drawer-transition-timing all;
+        background-color: $drawer-bg-color;
+        z-index: $zindex-drawer;
+        overflow: auto;
+    
+        @include media-breakpoint-up(sm){
+            width: $drawer-sm-width;
+            @include rtl-prop(left, -$drawer-sm-width);
+        }
+    
+        &.active {
+            @include rtl-prop(left, 0);
+    
+            & ~ .mz-pure-overlay{
+                opacity: 1;
+                width: 100%;
+                height: 100%;
+                z-index: $zindex-drawer - 1;
+            }
+        }
+    }
+}
+
+[data-position="right"].mz-pure-drawer{
+    @include rtl-prop(right, -$drawer-width);
+    @include rtl-prop(left, auto);
+
+    @include media-breakpoint-up(sm){
+        @include rtl-prop(right, -$drawer-sm-width);
+    }
+
+    &.active{
+        @include rtl-prop(left, auto);
+        @include rtl-prop(right, 0);
+    }
+}

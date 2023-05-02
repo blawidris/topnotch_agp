@@ -1,0 +1,7 @@
+<div class="alert alert-{{ color }} {{ dismissible?'alert-dismissible' }}">
+  {% if dismissible %}<button type="button" class="close" data-dismiss="alert">&times;</button>{% endif %}
+  {% if heading_title is not empty %}
+  <h4 class="alert-heading {{ title_size }}">{{ heading_title }}</h4>
+  {% endif %}
+{{ content }}
+</div>

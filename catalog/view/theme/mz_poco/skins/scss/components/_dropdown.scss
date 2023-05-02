@@ -1,0 +1,61 @@
+%caret{
+    position: absolute;
+    /*top: .8em;*/
+}
+
+.dropdown-toggle{
+    cursor: pointer;
+}
+
+.navbar {
+    .dropdown-toggle{
+        &::after{
+            @extend %caret;
+            @include rtl-prop(right, $dropdown-item-padding-x)
+        }
+        &::before{
+            @extend %caret;
+            @include rtl-prop(left, $dropdown-item-padding-x)
+        }
+    }
+}
+
+
+.dropdown-menu {
+    font-size: 1em; // Redeclare because nesting can cause inheritance issues
+}
+
+
+// submenu
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-item.showmore:not(.active){
+    color: $text-muted;
+}
+
+// Fix the overlay problem with sticky elements outside the header
+.header .dropdown-menu{
+    z-index: $zindex-fixed;
+}
+
+// Dropdown design entry
+.design-dropdown {
+    .dropdown-toggle{
+        display: block !important; // Override display flex for icon top
+
+        &.icon-top.both .icon{
+            display: block;
+        }
+        &.icon-left.both .icon{
+            @include rtl-prop(margin-right, map-get($spacers, 1));
+        }
+    }
+}
+
+// Fixed oveflow problem in sticky 
+.mz-sticky .dropdown-menu.mega-menu-content{
+    max-height: 90vh;
+    overflow-y: auto !important;
+}

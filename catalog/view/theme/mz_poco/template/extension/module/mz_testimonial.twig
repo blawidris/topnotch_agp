@@ -1,0 +1,228 @@
+<div class="testimonials">
+{% if heading_title is not empty %}
+<h3 class="module-title">{{ heading_title }}</h3>
+{% endif %}
+{#carousel#}
+{% if carousel_status %}
+<div class="swiper-viewport">
+  <div id="mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %}" class="swiper-container" dir="{{ direction }}">
+    <div class="swiper-wrapper">
+      {% verbatim %}{% for testimonial in testimonials %}{% endverbatim %}
+      <div class="swiper-slide testimonial-thumb text-center">
+        {% if testimonial_image and mz_config('html_testimonial_author_image_seperate') %}
+          {% if lazy_loading %}
+          <img class="author-image lazy-load" src="{{ transparent?:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }}" width="{{ image_width }}" height="{{ image_height }}" data-src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" >
+          {% else %}
+          <img class='author-image' width="{{ image_width }}" height="{{ image_height }}" src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" />
+          {% endif %}
+        {% endif %}
+        {% if testimonial_quote_icon_font or testimonial_quote_icon_svg or testimonial_quote_icon_image %}
+        <div class="quote">{% if testimonial_quote_icon_font %}
+          <i class="icon {{ testimonial_quote_icon_font }}" {{ testimonial_quote_icon_size?'style="font-size: ' ~ testimonial_quote_icon_size/10 ~ 'rem"':'' }}></i>
+          {% elseif testimonial_quote_icon_svg %}
+          <div class="icon svg-icon" style="{{ testimonial_quote_icon_width?'width:' ~ testimonial_quote_icon_width/10 ~ 'rem;' }}{{ testimonial_quote_icon_height?'height:' ~ testimonial_quote_icon_height/10 ~ 'rem;' }}">{{ testimonial_quote_icon_svg }}</div>
+          {% else %}
+          <img class="icon" width="{{ testimonial_quote_icon_width }}" height="{{ testimonial_quote_icon_height }}" src="{{ testimonial_quote_icon_image }}"  />
+          {% endif %}
+        </div>
+        {% endif %}
+        {% if collapsed %}
+        <p class="description text-collapsed" data-showtext="<i class='fas fa-angle-down'></i> {% verbatim %}{{ text_showmore }}{% endverbatim %}" data-hidetext="<i class='fas fa-angle-up'></i> {% verbatim %}{{ text_showless }}{% endverbatim %}">{% verbatim %}{{ testimonial.description }}{% endverbatim %}</p>
+        {% else %}
+        <p class="description">{% verbatim %}{{ testimonial.description }}{% endverbatim %}</p>
+        {% endif %}
+        {% if testimonial_rating %} 
+        <div class="rating">
+        {% verbatim %}
+        {% for i in range(1, 5) %}
+          {% if testimonial.rating >= i %}
+          <i class="fas fa-star"></i>
+          {% else %}
+          <i class="far fa-star"></i>
+          {% endif %}
+        {% endfor %}
+        {% endverbatim %}
+        </div>
+        {% endif %}
+        <div class='author'>
+          {% if testimonial_image and not mz_config('html_testimonial_author_image_seperate') %}
+            {% if lazy_loading %}
+            <img class="author-image lazy-load" src="{{ transparent?:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }}" width="{{ image_width }}" height="{{ image_height }}" data-src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" >
+            {% else %}
+            <img class='author-image' width="{{ image_width }}" height="{{ image_height }}" src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" />
+            {% endif %}
+          {% endif %}
+          <div class='author-info'>
+            <h4 class="author-name">{% verbatim %}{{ testimonial.author }}{% endverbatim %}</h4>
+            {% if testimonial_extra %} 
+              {% verbatim %}
+              {% if testimonial.extra is not empty %}
+              <span class="author-extra">{{ testimonial.extra }}</span>
+              {% endif %}
+              {% endverbatim %}
+            {% endif %}
+          </div>
+        </div>
+        {% if testimonial_timestamp %}
+        <div class="timestamp">{% verbatim %}{{ testimonial.timestamp }}{% endverbatim %}</div>
+        {% endif %}
+      </div>
+      {% verbatim %}{% endfor %}{% endverbatim %}
+    </div>
+    {% if carousel_pagination %}
+    <div class="swiper-pagination mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %}"></div>
+    {% endif %}
+    {% if carousel_nav_status %}
+    <div class="swiper-pager custom-pager">
+      <div class="swiper-button-next">
+        {% if carousel_nav_icon_font %}
+        <i class="icon {{ carousel_nav_icon_font }}" {{ carousel_nav_icon_size?'style="font-size: ' ~ carousel_nav_icon_size ~ 'px"':'' }}></i>
+        {% elseif carousel_nav_icon_svg %}
+        <div class="icon svg-icon" style="{{ carousel_nav_icon_width?'width:' ~ carousel_nav_icon_width ~ 'px;' }}{{ carousel_nav_icon_height?'height:' ~ carousel_nav_icon_height ~ 'px;' }}">{{ carousel_nav_icon_svg }}</div>
+        {% elseif carousel_nav_icon_image %}
+        <img class="icon" width="{{ carousel_nav_icon_width }}" height="{{ carousel_nav_icon_height }}" src="{{ carousel_nav_icon_image }}"  />
+        {% endif %}
+      </div>
+      <div class="swiper-button-prev">
+        {% if carousel_nav_icon_font %}
+        <i class="icon {{ carousel_nav_icon_font }}" {{ carousel_nav_icon_size?'style="font-size: ' ~ carousel_nav_icon_size ~ 'px"':'' }}></i>
+        {% elseif carousel_nav_icon_svg %}
+        <div class="icon svg-icon" style="{{ carousel_nav_icon_width?'width:' ~ carousel_nav_icon_width ~ 'px;' }}{{ carousel_nav_icon_height?'height:' ~ carousel_nav_icon_height ~ 'px;' }}">{{ carousel_nav_icon_svg }}</div>
+        {% elseif carousel_nav_icon_image %}
+        <img class="icon" width="{{ carousel_nav_icon_width }}" height="{{ carousel_nav_icon_height }}" src="{{ carousel_nav_icon_image }}"  />
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<script>
+$(function(){
+    $('#mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %}').swiper({
+            mode: 'horizontal',
+            observer: true,
+            observeParents: true,
+            {% if carousel_pagination %}
+            pagination: '.mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %}',
+            paginationClickable: true,
+            {% else %}
+            pagination: false,
+            {% endif %}
+            nextButton: '#mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %} .swiper-button-next',
+            prevButton: '#mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %} .swiper-button-prev',
+            autoplay: {{ (carousel_autoplay > 0)?carousel_autoplay:'false'  }},
+            loop: {{ (carousel_loop)?'true':'false' }},
+            spaceBetween: {{ gutter_width?:'30' }},
+            slidesPerView:  {{ column_xl }},
+            slidesPerColumn: {{ carousel_row }},
+            autoHeight: {{ carousel_row }} == 1,
+            breakpoints: {
+                {{ breakpoint_xl - 1 }}: {
+                    slidesPerView: {{ column_lg }}
+                },
+                {{ breakpoint_lg - 1 }}: {
+                    slidesPerView: {{ column_md }}
+                },
+                {{ breakpoint_md - 1 }}: {
+                    slidesPerView: {{ column_sm }}
+                },
+                {{ breakpoint_sm - 1 }}: {
+                    slidesPerView: {{ column_xs }}
+                }
+            },
+            {% if lazy_loading %}
+            onSlideNextEnd: function(swiper){
+                $(swiper.slides[swiper.activeIndex]).find('img.lazy-load').each(function(){
+                    if($(this).data("plugin_lazy")){
+                        $(this).data("plugin_lazy").update();
+                    }
+                });
+            },
+            {% endif %}
+    });
+    
+    {% if collapsed %}
+    // Text overflow collapse
+    $('#mz-testimonial{% verbatim %}{{ mz_suffix }}{% endverbatim %} .text-collapsed').textOverflowReadmore({
+        lines: {{ collapsed }},
+        onChanged: function(_ctx){
+            // Fix swiper auto height
+            $(_ctx).parents('.swiper-container-autoheight')[0].swiper.onResize();
+        }
+    });
+    {% endif %}
+});
+</script>
+
+{% else %}
+  <div class="row">
+  {% verbatim %}{% for testimonial in testimonials %}{% endverbatim %}
+    <div class="col-xl-{{ (12/column_xl)|replace({'.':'_'}) }} col-lg-{{ (12/column_lg)|replace({'.':'_'}) }} col-md-{{ (12/column_md)|replace({'.':'_'}) }} col-sm-{{ (12/column_sm)|replace({'.':'_'}) }} col-{{ (12/column_xs)|replace({'.':'_'}) }}"> 
+      <div class="testimonial-thumb text-center">
+        {% if testimonial_image and mz_config('html_testimonial_author_image_seperate') %}
+          {% if lazy_loading %}
+          <img class="author-image lazy-load" src="{{ transparent?:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }}" width="{{ image_width }}" height="{{ image_height }}" data-src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" >
+          {% else %}
+          <img class='author-image' width="{{ image_width }}" height="{{ image_height }}" src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" />
+          {% endif %}
+        {% endif %}
+        <div class="quote">{% if testimonial_quote_icon_font %}
+          <i class="icon {{ testimonial_quote_icon_font }}" {{ testimonial_quote_icon_size?'style="font-size: ' ~ testimonial_quote_icon_size/10 ~ 'rem"':'' }}></i>
+          {% elseif testimonial_quote_icon_svg %}
+          <div class="icon svg-icon" style="{{ testimonial_quote_icon_width?'width:' ~ testimonial_quote_icon_width/10 ~ 'rem;' }}{{ testimonial_quote_icon_height?'height:' ~ testimonial_quote_icon_height/10 ~ 'rem;' }}">{{ testimonial_quote_icon_svg }}</div>
+          {% elseif testimonial_quote_icon_image %}
+          <img class="icon" width="{{ testimonial_quote_icon_width }}" height="{{ testimonial_quote_icon_height }}" src="{{ testimonial_quote_icon_image }}"  />
+          {% endif %}
+        </div>
+        {% if collapsed %}
+        <p class="description text-collapsed" data-line="{{ collapsed }}" data-showtext="<i class='fas fa-angle-down'></i> {% verbatim %}{{ text_showmore }}{% endverbatim %}" data-hidetext="<i class='fas fa-angle-up'></i> {% verbatim %}{{ text_showless }}{% endverbatim %}">{% verbatim %}{{ testimonial.description }}{% endverbatim %}</p>
+        {% else %}
+        <p class="description">{% verbatim %}{{ testimonial.description }}{% endverbatim %}</p>
+        {% endif %}
+        {% if testimonial_rating %} 
+        <div class="rating">
+        {% verbatim %}
+        {% for i in range(1, 5) %}
+          {% if testimonial.rating >= i %}
+          <i class="fas fa-star"></i>
+          {% else %}
+          <i class="far fa-star"></i>
+          {% endif %}
+        {% endfor %}
+        {% endverbatim %}
+        </div>
+        {% endif %}
+        <div class='author'>
+          {% if testimonial_image and not mz_config('html_testimonial_author_image_seperate') %}
+            {% if lazy_loading %}
+            <img class="author-image lazy-load" src="{{ transparent?:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }}" width="{{ image_width }}" height="{{ image_height }}" data-src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" >
+            {% else %}
+            <img class='author-image' width="{{ image_width }}" height="{{ image_height }}" src="{% verbatim %}{{ testimonial.thumb }}{% endverbatim %}" alt="{% verbatim %}{{ testimonial.author }}{% endverbatim %}" />
+            {% endif %}
+          {% endif %}
+          <div class='author-info'>
+            <h4 class="author-name">{% verbatim %}{{ testimonial.author }}{% endverbatim %}</h4>
+            {% if testimonial_extra %} 
+              {% verbatim %}
+              {% if testimonial.extra is not empty %}
+              <span class="author-extra">{{ testimonial.extra }}</span>
+              {% endif %}
+              {% endverbatim %}
+            {% endif %}
+          </div>
+        </div>
+        {% if testimonial_timestamp %} 
+        <div class="timestamp">{% verbatim %}{{ testimonial.timestamp }}{% endverbatim %}</div>
+        {% endif %}
+      </div>
+    </div>
+  {% verbatim %}{% endfor %}{% endverbatim %}
+  </div>
+{% endif %}
+{% if add_testimonial is not empty %}
+<a href="{{ add_testimonial }}#form" class="btn btn-primary">{{ button_add_testimonial }}</a>
+{% endif %} 
+{% if view_testimonial is not empty %}
+<a href="{{ view_testimonial }}" class="btn btn-info">{{ button_view_testimonial }}</a>
+{% endif %}
+</div>

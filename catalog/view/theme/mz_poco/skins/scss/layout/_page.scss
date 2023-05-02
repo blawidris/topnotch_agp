@@ -1,0 +1,92 @@
+.content{
+    background-color: $white;
+}
+
+// Notification area
+#notification-box{
+    &-top, &-bottom{
+        position: fixed; 
+        z-index: $zindex-notification; 
+        @include rtl-prop(right, 0);
+    }
+    &-top{
+        top: 0;
+    }
+    &-bottom{
+        bottom: 0;
+    }
+}
+
+// Back to top
+.back-to-top{
+    position: fixed;
+    z-index: $zindex-fixed;
+    bottom: $spacer * 2;
+    @include rtl-prop(right, $spacer * 2);
+    line-height: 1;
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    padding: $btn-padding-x;
+}
+
+// Loader spinner
+img.loader-spinner, .loader-spinner:not(img)::after{
+    background-position: center;
+    background-size: 5rem;
+    background-repeat: no-repeat;
+    background-color: transparent;
+}
+.loader-spinner:not(img){
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) !important;
+    width: 5rem;
+    height: 5rem;
+}
+.loader-spinner:not(img)::after{
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+@each $lang, $spinner in $mz_spinner_url{
+    html[lang="#{$lang}"]{
+        img.loader-spinner, .loader-spinner:not(img)::after{
+            background-image: url("#{$spinner}");
+            @if 'gif' != mz_getURLExtension($spinner){
+                animation: fa-spin 2s infinite linear;
+            }
+        }
+    }
+}
+@supports (-webkit-mask-image: url('')) or (mask-image: url()){
+    @each $lang, $spinner in $mz_spinner_url{
+        @if 'gif' != mz_getURLExtension($spinner){
+            html[lang="#{$lang}"]{
+                img.loader-spinner, .loader-spinner:not(img)::after{
+                    background-color: $secondary;
+                    background-image: none;
+                    mask-image: url("#{$spinner}");
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    mask-size: 5rem;
+                }
+            }
+        }
+    }
+}
+
+// Image Popup
+.mfp-wrap{
+    z-index: $zindex-modal + 1 !important;
+}
+.mfp-figure figure{
+    margin: 0;
+}
+.mfp-img{
+    @include border-radius();
+}

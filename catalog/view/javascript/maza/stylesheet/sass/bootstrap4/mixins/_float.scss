@@ -1,0 +1,14 @@
+// stylelint-disable declaration-no-important
+
+@mixin float-left {
+  @include rtl-prop(float, left !important, right !important);
+  @include deprecate("The `float-left` mixin", "v4.3.0", "v5");
+}
+@mixin float-right {
+  @include rtl-prop(float, right !important, left !important);
+  @include deprecate("The `float-right` mixin", "v4.3.0", "v5");
+}
+@mixin float-none {
+  float: none !important;
+  @include deprecate("The `float-none` mixin", "v4.3.0", "v5");
+}

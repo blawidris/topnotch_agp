@@ -1,0 +1,7 @@
+{% verbatim %}{% if mz_videos %}{% endverbatim %}<div class="row justify-content-center">
+{% verbatim %}{% for video_url in mz_videos %}{% endverbatim %}<div class="gutter-bottom col-xl-{{ (12/column_xl)|replace({'.':'_'}) }} col-lg-{{ (12/column_lg)|replace({'.':'_'}) }} col-md-{{ (12/column_md)|replace({'.':'_'}) }} col-sm-{{ (12/column_sm)|replace({'.':'_'}) }} col-{{ (12/column_xs)|replace({'.':'_'}) }}">
+  <div class="embed-responsive embed-responsive-16by9">
+    <iframe class="embed-responsive-item" src="{% verbatim %}{{ video_url }}{% endverbatim %}" allowfullscreen></iframe>
+  </div>
+</div>{% verbatim %}{% endfor %}{% endverbatim %}
+</div>{% verbatim %}{% endif %}{% endverbatim %}

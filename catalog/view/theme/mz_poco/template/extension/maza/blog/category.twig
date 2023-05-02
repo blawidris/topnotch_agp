@@ -1,0 +1,13 @@
+{# 
+Here is a file location of category page component
+
+## category page specific component
+- extension/maza/blog/category/*
+
+## common component across the page including category page
+- extension/maza/blog/common/*
+
+#}
+{{ header }}
+<div id="article-category" class="content">{{ include(template_from_string(mz_content)) }}</div>
+{{ footer }}

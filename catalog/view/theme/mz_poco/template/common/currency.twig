@@ -1,0 +1,12 @@
+{% if currencies|length > 1 %}
+<div class="dropdown mx-2">
+  <div class="dropdown-toggle" data-toggle="dropdown">{% for currency in currencies %}
+  {% if currency.symbol_left and currency.code == code %} <strong>{{ currency.symbol_left }}</strong> {% elseif currency.symbol_right and currency.code == code %} <strong>{{ currency.symbol_right }}</strong> {% endif %}
+  {% endfor %} <span class="d-none d-lg-inline">{{ text_currency }}</span></div>
+  <ul class="dropdown-menu dropdown-menu-{{ position }}">
+    {% for currency in currencies %}
+    <li><button class="currency-select dropdown-item btn btn-link btn-block" type="button" data-code="{{ currency.code }}">{{ currency.symbol_left ? currency.symbol_left : currency.symbol_right }} {{ currency.title }}</button></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %} 

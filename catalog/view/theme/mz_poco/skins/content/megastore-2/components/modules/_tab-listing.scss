@@ -1,0 +1,105 @@
+.mz-tab-listing{
+    .module-title{
+        @include rtl-prop(margin-right, $spacer * 3.125);
+    }
+    .nav-tabs + .mz-tab-listing-navigation{
+        @include rtl-prop(margin-left, $spacer * 3.125);
+    }
+    .nav-tabs{
+        margin-bottom: $spacer * 1.875;
+    }
+    
+    .mz-tab-listing-navigation{
+        @include rtl-prop(text-align, right, left);
+        white-space: nowrap;
+        flex: 0 0 auto;
+        transition: all 0.3s;
+        
+        &>a{
+            cursor: pointer;
+            font-size: $module-title-font-size;
+            @include breakpoint-font-size($module-title-font-size);
+            min-height: 1em * $headings-line-height;
+        }
+        
+        &>a.mz-swiper-nav-prev{
+            @include rtl-prop(margin-right, map-get($spacers, 1));
+        }
+        &>a.mz-swiper-nav-next{
+            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+            transform: scaleX(-1);
+        }
+        
+        .icon{
+            padding: 0;
+        }
+    }
+    
+    .mz-tab-listing-header{
+        &.tabs{
+            .mz-tab-listing-navigation {
+                & > a{
+                    font-size: $nav-tab-font-size;
+                    @include breakpoint-font-size($nav-tab-font-size);
+                    min-height: calc(#{$nav-tab-padding-y * 2} + #{1em * $line-height-base});
+                }
+            }
+        }
+    }
+    
+    @include media-breakpoint-up(md){
+        .mz-tab-listing-header.flex-wrap{
+            flex-wrap: nowrap !important;
+        }
+    }
+    
+    .mz-tab-listing-banner *{
+        display: block;
+        height: 100%;
+    }
+    
+    @include media-breakpoint-up(sm){
+        .mz-tab-listing-banner{
+            @include rtl-prop(margin-right, $grid-gutter-width);
+        }
+    }
+}
+
+// Custom class
+@include media-breakpoint-up(md){
+    .left-title{
+        .mz-tab-listing{
+            display: flex;
+            position: relative;
+        }
+        .mz-tab-listing-header{
+            flex-direction: column;
+            flex: 0 0 32%;
+
+            .ml-auto{
+                @include rtl-prop(margin-left, 0 !important);
+            }
+            .mr-auto{
+                @include rtl-prop(margin-right, 0 !important);
+            }
+
+            .module-title{
+                font-size: 1.875em;
+            }
+            .nav{
+                flex-direction: column;
+            }
+
+            & > .d-flex{
+               flex-direction: column;
+               align-items: start;
+            }
+        }
+        .mz-tab-listing-navigation{
+            margin: 0 !important;
+        }
+        .nav-link{
+            text-transform: capitalize !important;
+        }
+    }
+}

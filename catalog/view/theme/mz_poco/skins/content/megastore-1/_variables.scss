@@ -1,0 +1,85 @@
+// Navs
+$nav-tab-color: $gray-500;
+$nav-tab-hover-color: $primary;
+$nav-tab-margin-bottom: $spacer;
+
+// Pagination
+$pagination-margin-right: $spacer * 0.625;
+
+// Products
+$product-title-font-size: 1em;
+$product-listview-title-font-size: 1.125em;
+
+$product-deal-font-size: $font-size-sm;
+
+$product-badge-font-size: 0.75em;
+$product-badge-padding: .5em .8em;
+$product-new-badge-color: $primary;
+$product-sale-badge-color: $secondary;
+
+$product-image-carousel-indicator-top: 15%;
+$product-image-carousel-indicator-bottom: 15%;
+$product-image-carousel-indicator-size: 3rem;
+$product-image-carousel-indicator-margin: 5px;
+
+$product-action-bottom: 110%;
+$product-action-hover-bottom: 40%;
+$product-action-border-radius: 10rem;
+$product-action-btn-padding: $spacer * 0.75;
+
+$product-caption-padding: $spacer 0 0;
+$product-caption-item-margin-bottom: $spacer * 0.625;
+$product-price-line-height: 1.1;
+$product-price-new-color: black;
+$product-price-new-size: 1.125em;
+$product-price-old-color: $gray-600;
+$product-price-old-size: 1em;
+$product-price-tax-color: $gray-600;
+$product-price-tax-font-size: .857em;
+$product-rating-color: #ffb100;
+$product-rating-font-size: .8125em;
+
+// Articles
+$article-title-font-size: 1.125em;
+$article-metadata-font-size: $font-size-sm;
+
+$article-caption-padding-top: $spacer * 1.375;
+$article-metadata-margin-bottom: $spacer;
+$article-timestamp-color: $primary;
+
+// Testimnonial
+$testimonial-quote-color: $black;
+$testimonial-description-margin-bottom: $spacer * 1.875;
+$testimonial-description-font-size: 1.25em;
+$testimonial-description-font-family: $headings-font-family;
+$testimonial-description-color: #aaaaaa;
+$testimonial-author-font-size: 2rem;
+$testimonial-rating-color: #ffb100;
+$testimonial-rating-font-size: .9em;
+$testimonial-timestamp-color: $gray-600;
+$testimonial-timestamp-font-size: $font-size-sm;
+
+// Page
+$page-gray: $gray-600;
+
+// Module
+$module-title-margin-bottom: $spacer * 1.75;
+$module-title-font-size: 1.875em;
+$module-margin-bottom: $spacer * 1.875;
+
+// Category wall
+$module-category-wall-hover-color: $primary;
+$module-category-wall-font-size: 1.125em;
+$module-category-wall-font-color: $body-color;
+$module-category-wall-font-hover-color: $primary;
+
+// Filter
+$module-filter-card-header: $spacer * 1.25 $spacer * 1.875;
+$module-filter-value-margin-bottom: $spacer * 0.5;
+$module-filter-group-header-padding: $spacer * 1.875;
+$module-filter-group-content-padding: $spacer * 1.875;
+$module-filter-reset-left-margin: $spacer * 1.875;
+$module-filter-product-total-font-size: 0.875em;
+
+// Design menu
+$design-nav-link-padding-y: .5rem;

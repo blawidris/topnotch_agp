@@ -1,0 +1,596 @@
+{{ header }}{{ column_left }} 
+{{ mz_column_left }}
+{{ mz_header }}
+<div id="content" class="mz-content">
+  
+  <!-- Alert message -->
+  {% if (success is not empty) %} 
+    <div class="alert alert-success"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{ success }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+  {% endif %} 
+  {% if (warning is not empty) %} 
+    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ warning }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+  {% endif %}
+
+  <div class="alert alert-info"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{ help_suggest }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+  
+  <!-- Form -->
+  <form action="{{ action }}" class="form-horizontal" enctype="multipart/form-data" id="form-system" method="post">
+    <div class="tab-content">
+        
+      <!--setting-->
+      <div id="menu-setting" class="tab-pane fade in active">
+        <div class="panel mz-panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-developer-mode">{{ entry_developer_mode }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_developer_mode) %} 
+                  <input type="radio" name="maza_developer_mode" value="1" id="input-developer-mode-enabled" checked>
+                  <label for="input-developer-mode-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_developer_mode" value="0" id="input-developer-mode-disabled">
+                  <label for="input-developer-mode-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_developer_mode" value="1" id="input-developer-mode-enabled" >
+                  <label for="input-developer-mode-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_developer_mode" value="0" id="input-developer-mode-disabled" checked>
+                  <label for="input-developer-mode-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                
+        <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_cache }}</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cache-status"><span data-toggle="tooltip" title="{{ help_cache }}">{{ entry_status }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_cache_status) %} 
+                  <input type="radio" name="maza_cache_status" value="1" id="input-cache-status-enabled" checked>
+                  <label for="input-cache-status-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_status" value="0" id="input-cache-status-disabled">
+                  <label for="input-cache-status-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_cache_status" value="1" id="input-cache-status-enabled" >
+                  <label for="input-cache-status-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_status" value="0" id="input-cache-status-disabled" checked>
+                  <label for="input-cache-status-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cache-partial"><span data-toggle="tooltip" title="{{ help_partial_cache }}">{{ entry_partial }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_cache_partial) %} 
+                  <input type="radio" name="maza_cache_partial" value="1" id="input-cache-partial-enabled" checked>
+                  <label for="input-cache-partial-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_partial" value="0" id="input-cache-partial-disabled">
+                  <label for="input-cache-partial-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_cache_partial" value="1" id="input-cache-partial-enabled" >
+                  <label for="input-cache-partial-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_partial" value="0" id="input-cache-partial-disabled" checked>
+                  <label for="input-cache-partial-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cache-page"><span data-toggle="tooltip" title="{{ help_page_cache }}">{{ entry_page }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_cache_page) %} 
+                  <input type="radio" name="maza_cache_page" value="1" id="input-cache-page-enabled" checked>
+                  <label for="input-cache-page-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_page" value="0" id="input-cache-page-disabled">
+                  <label for="input-cache-page-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_cache_page" value="1" id="input-cache-page-enabled" >
+                  <label for="input-cache-page-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cache_page" value="0" id="input-cache-page-disabled" checked>
+                  <label for="input-cache-page-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                
+        <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_api }}</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-google-map-key">{{ entry_google_map_key }}</label>
+              <div class="col-xs-9">
+                <input id="input-google-map-key" type="text" name="maza_api_google_map_key" value="{{ maza_api_google_map_key }}" class="form-control" placeholder="{{ entry_google_map_key }}" />
+              </div>
+            </div>
+          </div>
+        </div>
+               
+      </div>
+                
+      <!--asset-->
+      <div id="menu-asset" class="tab-pane fade">
+        <div class="panel mz-panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-combine-css"><span data-toggle="tooltip" title="{{ help_combine_css }}">{{ entry_combine_css }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_combine_css) %} 
+                  <input type="radio" name="maza_combine_css" value="1" id="input-combine-css-enabled" checked>
+                  <label for="input-combine-css-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_combine_css" value="0" id="input-combine-css-disabled">
+                  <label for="input-combine-css-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_combine_css" value="1" id="input-combine-css-enabled" >
+                  <label for="input-combine-css-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_combine_css" value="0" id="input-combine-css-disabled" checked>
+                  <label for="input-combine-css-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-combine-js"><span data-toggle="tooltip" title="{{ help_combine_js }}">{{ entry_combine_js }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_combine_js) %} 
+                  <input type="radio" name="maza_combine_js" value="1" id="input-combine-js-enabled" checked>
+                  <label for="input-combine-js-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_combine_js" value="0" id="input-combine-js-disabled">
+                  <label for="input-combine-js-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_combine_js" value="1" id="input-combine-js-enabled" >
+                  <label for="input-combine-js-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_combine_js" value="0" id="input-combine-js-disabled" checked>
+                  <label for="input-combine-js-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label"><span data-toggle="tooltip" title="{{ help_js_position }}">{{ entry_js_position }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                {% for position in js_positions %}
+                  {% if (maza_js_position == position['code']) %} 
+                  <input type="radio" name="maza_js_position" value="{{ position['code'] }}" id="input-js-position-{{ position['code'] }}" checked>
+                  <label for="input-js-position-{{ position['code'] }}" >{{ position['text'] }}</label>
+                  {% else %}
+                  <input type="radio" name="maza_js_position" value="{{ position['code'] }}" id="input-js-position-{{ position['code'] }}">
+                  <label for="input-js-position-{{ position['code'] }}" >{{ position['text'] }}</label>
+                  {% endif %}
+                {% endfor %}
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-css-autoprefix"><span data-toggle="tooltip" title="{{ help_css_autoprefix }}">{{ entry_css_autoprefix }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_css_autoprefix) %} 
+                  <input type="radio" name="maza_css_autoprefix" value="1" id="input-css-autoprefix-enabled" checked>
+                  <label for="input-css-autoprefix-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_css_autoprefix" value="0" id="input-css-autoprefix-disabled">
+                  <label for="input-css-autoprefix-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_css_autoprefix" value="1" id="input-css-autoprefix-enabled" >
+                  <label for="input-css-autoprefix-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_css_autoprefix" value="0" id="input-css-autoprefix-disabled" checked>
+                  <label for="input-css-autoprefix-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cdn"><span data-toggle="tooltip" title="{{ help_cdn }}">{{ entry_cdn }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_cdn) %} 
+                  <input type="radio" name="maza_cdn" value="1" id="input-cdn-enabled" checked>
+                  <label for="input-cdn-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cdn" value="0" id="input-cdn-disabled">
+                  <label for="input-cdn-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_cdn" value="1" id="input-cdn-enabled" >
+                  <label for="input-cdn-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cdn" value="0" id="input-cdn-disabled" checked>
+                  <label for="input-cdn-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+        
+        <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_minify }}</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-minify-html">{{ entry_html }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_minify_html) %} 
+                  <input type="radio" name="maza_minify_html" value="1" id="input-minify-html-enabled" checked>
+                  <label for="input-minify-html-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_html" value="0" id="input-minify-html-disabled">
+                  <label for="input-minify-html-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_minify_html" value="1" id="input-minify-html-enabled" >
+                  <label for="input-minify-html-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_html" value="0" id="input-minify-html-disabled" checked>
+                  <label for="input-minify-html-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-minify-css">{{ entry_css }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_minify_css) %} 
+                  <input type="radio" name="maza_minify_css" value="1" id="input-minify-css-enabled" checked>
+                  <label for="input-minify-css-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_css" value="0" id="input-minify-css-disabled">
+                  <label for="input-minify-css-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_minify_css" value="1" id="input-minify-css-enabled" >
+                  <label for="input-minify-css-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_css" value="0" id="input-minify-css-disabled" checked>
+                  <label for="input-minify-css-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+                
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-minify-js">{{ entry_javascript }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_minify_js) %} 
+                  <input type="radio" name="maza_minify_js" value="1" id="input-minify-js-enabled" checked>
+                  <label for="input-minify-js-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_js" value="0" id="input-minify-js-disabled">
+                  <label for="input-minify-js-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_minify_js" value="1" id="input-minify-js-enabled" >
+                  <label for="input-minify-js-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_minify_js" value="0" id="input-minify-js-disabled" checked>
+                  <label for="input-minify-js-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="menu-seo" class="tab-pane fade">
+        <div class="panel mz-panel-default">
+          <div class="panel-body">
+            <!--maza schema-->
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-maza-schema"><span data-toggle="tooltip" title="{{ help_schema }}">{{ entry_schema }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_schema) %} 
+                  <input type="radio" name="maza_schema" value="1" id="input-maza-schema-enabled" checked>
+                  <label for="input-maza-schema-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_schema" value="0" id="input-maza-schema-disabled">
+                  <label for="input-maza-schema-disabled">{{ text_disabled }}</label>
+                  {% else %}
+                  <input type="radio" name="maza_schema" value="1" id="input-maza-schema-enabled" >
+                  <label for="input-maza-schema-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_schema" value="0" id="input-maza-schema-disabled" checked>
+                  <label for="input-maza-schema-disabled" >{{ text_disabled }}</label>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!--maza_ogp-->
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-maza-ogp"><span data-toggle="tooltip" title="{{ help_ogp }}">{{ entry_ogp }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_ogp) %} 
+                  <input type="radio" name="maza_ogp" value="1" id="input-maza-ogp-enabled" checked>
+                  <label for="input-maza-ogp-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_ogp" value="0" id="input-maza-ogp-disabled">
+                  <label for="input-maza-ogp-disabled">{{ text_disabled }}</label>
+                  {% else %}
+                  <input type="radio" name="maza_ogp" value="1" id="input-maza-ogp-enabled" >
+                  <label for="input-maza-ogp-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_ogp" value="0" id="input-maza-ogp-disabled" checked>
+                  <label for="input-maza-ogp-disabled" >{{ text_disabled }}</label>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!--maza_query_keyword-->
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-maza-query-keyword"><span data-toggle="tooltip" title="{{ help_query_keyword }}">{{ entry_query_keyword }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_query_keyword) %} 
+                  <input type="radio" name="maza_query_keyword" value="1" id="input-maza-query-keyword-enabled" checked>
+                  <label for="input-maza-query-keyword-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_query_keyword" value="0" id="input-maza-query-keyword-disabled">
+                  <label for="input-maza-query-keyword-disabled">{{ text_disabled }}</label>
+                  {% else %}
+                  <input type="radio" name="maza_query_keyword" value="1" id="input-maza-query-keyword-enabled" >
+                  <label for="input-maza-query-keyword-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_query_keyword" value="0" id="input-maza-query-keyword-disabled" checked>
+                  <label for="input-maza-query-keyword-disabled" >{{ text_disabled }}</label>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <div id="menu-cron" class="tab-pane fade">
+        <div class="panel mz-panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cron-status">{{ entry_status }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  {% if (maza_cron_status) %} 
+                  <input type="radio" name="maza_cron_status" value="1" id="input-cron-status-enabled" checked>
+                  <label for="input-cron-status-enabled" >{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cron_status" value="0" id="input-cron-status-disabled">
+                  <label for="input-cron-status-disabled">{{ text_disabled }}</label>
+                  {% else %} 
+                  <input type="radio" name="maza_cron_status" value="1" id="input-cron-status-enabled" >
+                  <label for="input-cron-status-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_cron_status" value="0" id="input-cron-status-disabled" checked>
+                  <label for="input-cron-status-disabled" >{{ text_disabled }}</label>
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                
+        <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_gen_command }}</div>
+          <div class="panel-body">
+            <div class="alert alert-info"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ help_gen_command }}</div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cron-username">{{ entry_username }}</label>
+              <div class="col-xs-9">
+                <input id="input-cron-username" type="text" value="" class="form-control" placeholder="{{ entry_username }}" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cron-password">{{ entry_password }}</label>
+              <div class="col-xs-9">
+                <input id="input-cron-password" type="text" value="" class="form-control" placeholder="{{ entry_password }}" />
+              </div>
+            </div>
+            <div class="form-group"><div class="col-xs-3"></div><div class="col-xs-9"><button type="button" id="button-gen-command" class="btn btn-primary">{{ button_generate }}</button></div></div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-cron-command">{{ entry_command }}</label>
+              <div class="col-xs-9">
+                <input id="input-cron-command" type="text" value="" class="form-control large" placeholder="{{ entry_command }}" readonly/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+              
+      <div id="menu-backup" class="tab-pane fade">
+        <div class="alert alert-info"><i class="fa fa-check-circle"></i> {{ help_backup }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+        
+        <div class="panel mz-panel-default">
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="button-import">{{ button_import }}</label>
+              <div class="col-xs-9"><button type="button" id="button-import" class="btn btn-danger">{{ button_import }}</button></div>
+            </div>
+          </div>
+        </div>
+
+        {# <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_themeforest }}</div>
+          <div class="panel-body">
+            <div class="alert alert-info"><i class="fa fa-check-circle"></i> {{ help_themeforest }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-backup-username"><span data-toggle="tooltip" title="{{ help_envato_username }}">{{ entry_username }}</span></label>
+              <div class="col-xs-9"> 
+                <input id="input-backup-username" autocomplete="off" type="text" value="" class="form-control" placeholder="{{ entry_username }}" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-backup-purchase-code">{{ entry_purchase_code }}</label>
+              <div class="col-xs-9"> 
+                <input id="input-backup-purchase-code" type="text" value="" class="form-control" placeholder="{{ entry_purchase_code }}" />
+              </div>
+            </div>
+          </div>
+        </div> #}
+        
+        <div class="panel mz-panel-default">
+          <div class="panel-heading">{{ text_export }}</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-theme">{{ entry_theme }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_theme" value="1" id="input-export-theme-enabled" checked>
+                  <label for="input-export-theme-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_theme" value="0" id="input-export-theme-disabled">
+                  <label for="input-export-theme-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-module">{{ entry_module }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_module" value="1" id="input-export-module-enabled" checked>
+                  <label for="input-export-module-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_module" value="0" id="input-export-module-disabled">
+                  <label for="input-export-module-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-menu">{{ entry_menu }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_menu" value="1" id="input-export-menu-enabled" checked>
+                  <label for="input-export-menu-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_menu" value="0" id="input-export-menu-disabled">
+                  <label for="input-export-menu-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-blog">{{ entry_blog }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_blog" value="1" id="input-export-blog-enabled" checked>
+                  <label for="input-export-blog-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_blog" value="0" id="input-export-blog-disabled">
+                  <label for="input-export-blog-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-catalog"><span data-toggle="tooltip" title="{{ help_catalog }}">{{ entry_catalog }}</span></label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_catalog" value="1" id="input-export-catalog-enabled">
+                  <label for="input-export-catalog-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_catalog" value="0" id="input-export-catalog-disabled" checked>
+                  <label for="input-export-catalog-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-filter">{{ entry_filter }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_filter" value="1" id="input-export-filter-enabled" checked>
+                  <label for="input-export-filter-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_filter" value="0" id="input-export-filter-disabled">
+                  <label for="input-export-filter-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-xs-3 control-label" for="input-export-testimonial">{{ entry_testimonial }}</label>
+              <div class="col-xs-9">
+                <div class="mz-switch-field">
+                  <input type="radio" name="maza_export_testimonial" value="1" id="input-export-testimonial-enabled" checked>
+                  <label for="input-export-testimonial-enabled">{{ text_enabled }}</label>
+                  <input type="radio" name="maza_export_testimonial" value="0" id="input-export-testimonial-disabled">
+                  <label for="input-export-testimonial-disabled" >{{ text_disabled }}</label> 
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer text-right"><button type="button" id="button-export" class="btn btn-primary">{{ button_export }}</button></div>
+        </div>
+      </div>
+    </div>
+  </form>
+<script>
+$('#button-gen-command').click(function(){
+    var cron_url = '{{ cron_url }}';
+    var username = $('#input-cron-username').val();
+    var password = $('#input-cron-password').val();
+    
+    if(username && password){
+        cron_url = cron_url.replace('[USERNAME]', encodeURIComponent(username));
+        cron_url = cron_url.replace('[PASSWORD]', encodeURIComponent(password));
+        
+        $('#input-cron-command').val("curl '" + cron_url + "'");
+    }
+});
+</script>
+<script>
+$('#button-import').on('click', function() {
+        $('.alert-dismissible').remove();
+        
+	$('#form-upload').remove();
+	
+	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="import" accept=".zip" /></form>');
+	
+	$('#form-upload input[name=\'import\']').trigger('click');
+	
+	if (typeof timer != 'undefined') {
+		clearInterval(timer);
+	}
+	
+	timer = setInterval(function() {
+		if ($('#form-upload input[name=\'import\']').val() != '') {
+			clearInterval(timer);
+	
+			$.ajax({
+				url: 'index.php?route=extension/maza/system/import&user_token={{ user_token }}',
+				type: 'post',
+				dataType: 'json',
+				data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,
+				beforeSend: function() {
+					$('#button-import').button('loading');
+				},
+				complete: function() {
+					$('#button-import').button('reset');
+				},
+				success: function(json) {
+					if (json['error']) {
+						$('#content').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					}
+					
+					if (json['success']) {
+						$('#content').prepend('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
+	}, 500);
+});
+</script>
+<script>
+$('#button-export').on('click', function() {
+    location = '{{ export|replace({'&amp;': '&'}) }}'
+                + '&export_theme=' + $('[name="maza_export_theme"]:checked').val()
+                + '&export_filter=' + $('[name="maza_export_filter"]:checked').val()
+                + '&export_module=' + $('[name="maza_export_module"]:checked').val()
+                + '&export_menu=' + $('[name="maza_export_menu"]:checked').val()
+                + '&export_blog=' + $('[name="maza_export_blog"]:checked').val()
+                + '&export_catalog=' + $('[name="maza_export_catalog"]:checked').val()
+                + '&export_testimonial=' + $('[name="maza_export_testimonial"]:checked').val();
+                //+ '&envato_username=' + $('#input-backup-username').val()
+                //+ '&purchase_code=' + $('#input-backup-purchase-code').val();
+});
+</script>
+</div>
+{{ mz_footer }}

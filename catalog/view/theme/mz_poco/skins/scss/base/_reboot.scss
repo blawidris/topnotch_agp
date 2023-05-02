@@ -1,0 +1,68 @@
+*{
+    min-height: 0;
+    min-width: 0;
+}
+
+html{
+    @if $mz_body_background {
+        background: $mz_body_background;
+    }
+    
+    font-size: 37.5%; // 1rem = 6px
+    
+    @include media-breakpoint-up(sm){
+        font-size: 43.75%; // 1rem = 7px
+    }
+    
+    @include media-breakpoint-up(md){
+        font-size: 50%; // 1rem = 8px
+    }
+    
+    @include media-breakpoint-up(lg){
+        font-size: 56.25%; // 1rem = 9px
+    }
+    
+    @include media-breakpoint-up(xl){
+        font-size: 62.5%; // 1rem = 10px
+    }
+}
+
+body {
+    font-size: $font-size-base + 0.933; // base on 1rem = 6px
+    
+    @include media-breakpoint-up(sm){
+        font-size: $font-size-base + 0.6; // base on 1rem = 7px
+    }
+    
+    @include media-breakpoint-up(md){
+        font-size: $font-size-base + 0.35; // base on 1rem = 8px
+    }
+    
+    @include media-breakpoint-up(lg){
+        font-size: $font-size-base + 0.15555; // base on 1rem = 9px
+    }
+    
+    @include media-breakpoint-up(xl){
+        font-size: $font-size-base; // 1rem = 10px
+    }
+    
+    
+    @if $mz_box_layout { // apply box layout to body
+        max-width: map-get($grid-breakpoints, 'xl');
+        margin: auto;
+        box-shadow: $box-shadow;
+    }
+}
+
+legend{
+    font-weight: 600;
+    margin-bottom: .8rem;
+}
+
+a{
+    outline: none !important;
+}
+
+*[data-toggle]{
+    cursor: pointer;
+}

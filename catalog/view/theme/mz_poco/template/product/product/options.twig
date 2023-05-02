@@ -1,0 +1,250 @@
+{% if option_label %}
+{% verbatim %}{% if options %}{% endverbatim %}
+{% if column %}<div class="form-row">{% endif %}
+{% verbatim %}{% for option in options %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'select' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <select name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-select">
+    <option value="">{% verbatim %}{{ text_select }}{% endverbatim %}</option>
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}
+    <option value="{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}">{% verbatim %}{{ option_value.name }}{% endverbatim %}
+    {% verbatim %}{% if option_value.price %}{% endverbatim %}
+    ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+    {% verbatim %}{% endif %}{% endverbatim %} </option>
+    {% verbatim %}{% endfor %}{% endverbatim %}
+  </select>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'radio' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label>{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}<div class="custom-control custom-radio{% if radio_style == 'button' %} custom-control-inline{% endif %} {{ radio_style }}{% verbatim %}{% if option_value.image %} image {% endif %}{% endverbatim %}">
+      <input id="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" type="radio" name="option[{% verbatim %}{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" class="custom-control-input" />{% endverbatim %}
+      {% if radio_style == 'button' %}
+        <label for="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" data-toggle="tooltip" title="{% verbatim %}{{ option_value.name }}{% if option_value.price %} ({{ option_value.price_prefix }}{{ option_value.price }}){% endif %}" class="custom-control-label">{% endverbatim %}
+        {% verbatim %}{% if option_value.image %}{% endverbatim %}
+        {% verbatim %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail image-circle" />{% endverbatim %}
+        {% verbatim %}{% else %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% else %}
+        <label for="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-control-label">
+        {% verbatim %}{% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% if option_value.price %}{% endverbatim %}
+        ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% endif %}
+    </div>{% verbatim %}{% endfor %}{% endverbatim %} </div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'checkbox' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label>{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}<div class="custom-control custom-checkbox{% if checkbox_style == 'button' %} custom-control-inline{% endif %} {{ checkbox_style }}{% verbatim %}{% if option_value.image %} image {% endif %}{% endverbatim %}">
+      <input id="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" type="checkbox" name="option[{% verbatim %}{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" class="custom-control-input" />{% endverbatim %}
+      {% if checkbox_style == 'button' %}
+        <label for="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" data-toggle="tooltip" title="{% verbatim %}{{ option_value.name }}{% if option_value.price %} ({{ option_value.price_prefix }}{{ option_value.price }}){% endif %}" class="custom-control-label">{% endverbatim %}
+        {% verbatim %}{% if option_value.image %}{% endverbatim %}
+        {% verbatim %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail image-circle" />{% endverbatim %}
+        {% verbatim %}{% else %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% else %}
+        <label for="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-control-label">
+        {% verbatim %}{% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% if option_value.price %}{% endverbatim %}
+        ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% endif %}
+    </div>{% verbatim %}{% endfor %}{% endverbatim %}
+  </div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'text' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'textarea' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <textarea name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" rows="5" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control">{% verbatim %}{{ option.value }}{% endverbatim %}</textarea>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'file' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label>{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <button type="button" id="button-upload{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" data-loading-text="{% verbatim %}{{ text_loading }}{% endverbatim %}" class="btn btn-light btn-block border"><i class="fas fa-upload"></i> {% verbatim %}{{ button_upload }}{% endverbatim %}</button>
+  <input type="hidden" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" />
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'date' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group date">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="YYYY-MM-DD" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button class="btn btn-light border" type="button"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'datetime' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group datetime">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="YYYY-MM-DD HH:mm" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button type="button" class="btn btn-light border"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'time' %}{% endverbatim %}
+<div class="form-group {{ column }}{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group time">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="HH:mm" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button type="button" class="btn btn-light border"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% endfor %}{% endverbatim %}
+{% if column %}</div>{% endif %}
+{% verbatim %}{% endif %}{% endverbatim %}
+
+{% else %}
+{# Inline form #}
+{% verbatim %}{% if options %}{% endverbatim %}
+<form class="form-inline flex-column flex-sm-row align-items-start">
+{% verbatim %}{% for option in options %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'select' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <select name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-select">
+    <option value="">{% verbatim %}{{ text_select }}{% endverbatim %}</option>
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}
+    <option value="{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}">{% verbatim %}{{ option_value.name }}{% endverbatim %}
+    {% verbatim %}{% if option_value.price %}{% endverbatim %}
+    ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+    {% verbatim %}{% endif %}{% endverbatim %} </option>
+    {% verbatim %}{% endfor %}{% endverbatim %}
+  </select>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'radio' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}<div class="custom-control custom-radio custom-control-inline {{ radio_style }}{% verbatim %}{% if option_value.image %} image {% endif %}{% endverbatim %}">
+      <input id="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" type="radio" name="option[{% verbatim %}{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" class="custom-control-input" />{% endverbatim %}
+      {% if radio_style == 'button' %}
+        <label for="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" data-toggle="tooltip" title="{% verbatim %}{{ option_value.name }}{% if option_value.price %} ({{ option_value.price_prefix }}{{ option_value.price }}){% endif %}" class="custom-control-label">{% endverbatim %}
+        {% verbatim %}{% if option_value.image %}{% endverbatim %}
+        {% verbatim %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail image-circle" />{% endverbatim %}
+        {% verbatim %}{% else %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% else %}
+        <label for="input-option-radio{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-control-label">
+        {% verbatim %}{% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% if option_value.price %}{% endverbatim %}
+        ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% endif %}
+    </div>{% verbatim %}{% endfor %}{% endverbatim %}
+  </div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'checkbox' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">
+    {% verbatim %}{% for option_value in option.product_option_value %}{% endverbatim %}<div class="custom-control custom-checkbox custom-control-inline {{ checkbox_style }}{% verbatim %}{% if option_value.image %} image {% endif %}{% endverbatim %}">
+      <input id="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" type="checkbox" name="option[{% verbatim %}{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" class="custom-control-input" />{% endverbatim %}
+      {% if checkbox_style == 'button' %}
+        <label for="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" data-toggle="tooltip" title="{% verbatim %}{{ option_value.name }}{% if option_value.price %} ({{ option_value.price_prefix }}{{ option_value.price }}){% endif %}" class="custom-control-label">{% endverbatim %}
+        {% verbatim %}{% if option_value.image %}{% endverbatim %}
+        {% verbatim %}<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail image-circle" />{% endverbatim %}
+        {% verbatim %}{% else %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% else %}
+        <label for="input-option-checkbox{% verbatim %}{{ option_value.product_option_value_id }}{% endverbatim %}-{{ mz_suffix }}" class="custom-control-label">
+        {% verbatim %}{% if option_value.image %} <img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail" /> {% endif %}{% endverbatim %}
+        {% verbatim %}{{ option_value.name }}{% endverbatim %}
+        {% verbatim %}{% if option_value.price %}{% endverbatim %}
+        ({% verbatim %}{{ option_value.price_prefix }}{{ option_value.price }}{% endverbatim %})
+        {% verbatim %}{% endif %}{% endverbatim %}
+        </label>
+      {% endif %}
+    </div>{% verbatim %}{% endfor %}{% endverbatim %}
+  </div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'text' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'textarea' %}{% endverbatim %}
+<div class="form-group w-100 mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <textarea name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" rows="5" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control flex-grow-1">{% verbatim %}{{ option.value }}{% endverbatim %}</textarea>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'file' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <button type="button" id="button-upload{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" data-loading-text="{% verbatim %}{{ text_loading }}{% endverbatim %}" class="btn btn-light btn-block border"><i class="fas fa-upload"></i> {% verbatim %}{{ button_upload }}{% endverbatim %}</button>
+  <input type="hidden" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" />
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'date' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group date">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="YYYY-MM-DD" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button class="btn btn-light border" type="button"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'datetime' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group datetime">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="YYYY-MM-DD HH:mm" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button type="button" class="btn btn-light border"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% if option.type == 'time' %}{% endverbatim %}
+<div class="form-group mb-3 mr-sm-3{% verbatim %}{% if option.required %} required {% endif %}{% endverbatim %}">
+  <label class="sr-only" for="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}">{% verbatim %}{{ option.name }}{% endverbatim %}</label>
+  <div class="input-group time">
+    <input type="text" name="option[{% verbatim %}{{ option.product_option_id }}{% endverbatim %}]" value="{% verbatim %}{{ option.value }}{% endverbatim %}" data-date-format="HH:mm" placeholder="{% verbatim %}{{ option.name }}{% endverbatim %}" id="input-option{% verbatim %}{{ option.product_option_id }}{% endverbatim %}-{{ mz_suffix }}" class="form-control" />
+    <span class="input-group-append input-group-addon">
+    <button type="button" class="btn btn-light border"><i class="fas fa-calendar"></i></button>
+    </span></div>
+</div>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% endfor %}{% endverbatim %}
+</form>
+{% verbatim %}{% endif %}{% endverbatim %}
+{% endif %}

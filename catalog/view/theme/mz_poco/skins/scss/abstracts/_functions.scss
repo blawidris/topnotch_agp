@@ -1,0 +1,57 @@
+// Builtin function which come with maza sass compile
+// mz_config() // Access opencart config setting
+// mz_theme_config() // Access theme config setting
+// mz_skin_config() // Access skin config setting
+// mz_getURLExtension() // Get file extension
+
+// adjust-color with limit
+
+@function mz-adjust-color($color, $red: null, $green: null, $blue: null){
+    $r: red($color) + $red;
+    $g: green($color) + $green;
+    $b: blue($color) + $blue;
+    
+    @if($r < 0){
+        $r: 0;
+    } @elseif($r > 255){
+        $r: 255;
+    }
+    
+    @if($g < 0){
+        $g: 0;
+    } @elseif($g > 255){
+        $g: 255;
+    }
+    
+    @if($b < 0){
+        $b: 0;
+    } @elseif($b > 255){
+        $b: 255;
+    }
+    
+    @return rgb($r, $g, $b);
+}
+
+
+// Strip unit
+@function strip-unit($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+// Convert px to rem
+@function px2rem($size) {
+  $remSize: $size / 10px;
+  @return #{$remSize}rem;
+}
+
+// Convert rem to px
+@function rem2px($size) {
+  $pxSize: strip-unit($size) * 10px;
+  @return $pxSize;
+}
+
+// Convert em to rem
+@function em2rem($size){
+    $remSize: strip-unit($size) * $font-size-base;
+    @return $remSize;
+}

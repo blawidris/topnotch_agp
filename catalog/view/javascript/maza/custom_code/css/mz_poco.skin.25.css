@@ -1,0 +1,33 @@
+// Footer newsletter
+.footer-newsletter{
+@include media-breakpoint-up(sm){
+.newsletter-email{
+min-width: 30rem;
+}
+}
+}
+
+// Countdown offer banner
+.countdown-banner-1{
+padding: .75em .5em;
+font-size: 2.5vw;
+}
+@media (min-width: map-get($container-max-widths, 'xl')){
+.countdown-banner-1{
+padding: 27px 15px;
+font-size: 2.5em;
+}
+}
+
+/// Custom cart
+.custom-cart{
+.cart-icon{
+background-color: $secondary !important;
+color: color-yiq($secondary) !important;
+
+.cart-item-total{
+background-color: color-yiq($secondary);
+color: $secondary;
+}
+}
+}

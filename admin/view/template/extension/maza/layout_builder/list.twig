@@ -1,0 +1,201 @@
+{{ header }}{{ column_left }}{{ mz_column_left }}{{ mz_header }}
+<div id="content" class="mz-content">
+  
+  <div class="panel-group mz-panel-action-bar">
+    <div class="panel panel-default">
+      <div class="panel-heading clearfix" data-toggle="collapse" data-target="#filter-mz-layout">
+        <h4 class="panel-title pull-left">{{ text_filter }}</h4>
+        <span class="pull-right"><i class="fa fa-chevron-circle-down"></i></span>
+      </div>
+      <div id="filter-mz-layout" class="panel-collapse collapse">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="control-label" for="input-name">{{ entry_name }}</label>
+                <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control large" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" id="button-reset" class="btn btn-info"><i class="fa fa-times"></i> {{ button_reset }}</button>
+          <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if warning %}
+  <div class="alert alert-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ warning }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+  {% endif %}
+  {% if success %}
+  <div class="alert alert-success"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{ success }} <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a></div>
+  {% endif %}
+
+  <div class="panel mz-panel-default">
+    <div class="panel-body">
+      <form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-layout-builder">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                <td class="text-left">{% if sort == 'name' %}
+                  <a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_layout_name }}</a>
+                  {% else %}
+                  <a href="{{ sort_name }}">{{ column_name }}</a>
+                  {% endif %}</td>
+                <td class="text-right">{{ column_action }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if layouts %}
+              {% for layout in layouts %}
+              <tr>
+                <td class="text-center">{% if layout.layout_id in selected %}
+                    <input type="checkbox" name="selected[]" value="{{ layout.layout_id }}" checked="checked" />
+                    {% else %}
+                    <input type="checkbox" name="selected[]" value="{{ layout.layout_id }}" />
+                    {% endif %}</td>
+                <td class="text-left">{{ layout.name }}</td>
+                <td class="text-right">
+                  <a href="{{ layout.content_edit }}" target="_blank" class="btn btn-primary"><i class="fa fa-object-group"></i></a>
+                  <a href="#override-skin" id="override-skin-trigger-{{ layout.layout_id }}" data-toggle="modal" data-skin="{{ layout.skin|escape }}" data-layout="{{ layout.layout_id }}" title="{{ text_override_skin }}" class="btn btn-warning"><i class="fa fa-paint-brush"></i></a>
+                  <a href="{{ layout.layout_edit }}" target="_blank" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-info"><i class="fa fa-pencil"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td class="text-center" colspan="3">{{ text_no_results }}</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination }}</div>
+        <div class="col-sm-6 text-right">{{ results }}</div>
+      </div>
+    </div>
+  </div>
+              
+  {#Overwrite skin modal#}
+  <div id="override-skin" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">{{ text_override_skin }}</h4>
+        </div>
+        <div class="modal-body">
+          <form action="{{ override_skin }}" method="post" id="form-override-skin" class="form-horizontal">
+            <table class="table table-bordered">
+              <tr><th>{{ text_store }}</th><th class="text-center">{{ text_skin }}</th></tr>
+              {% for store in stores %}
+                <tr>
+                  <td><label class="control-label" for="input-override-skin-{{ store.store_id }}">{{ store['name'] }}</label></td>
+                  <td>
+                    <select name="skin[{{ store.store_id }}]" id="input-override-skin-{{ store.store_id }}" class="form-control large">
+                      <option value="0"></option>
+                      {% for skin in skins %}
+                      <option value="{{ skin.skin_id }}">{{ skin.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </td>
+              {% endfor %}
+            </table>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="save-override-skin" type="button" class="btn btn-primary">{{ button_save }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+        
+<script>
+$('#override-skin').on('show.bs.modal', function(e){
+    if($(e.relatedTarget).data('skin')){
+        var skin = $(e.relatedTarget).data('skin');
+        console.log(skin.skin);
+        for(var store_id in skin.skin){
+            $('#form-override-skin select[name="skin[' + store_id + ']"]').val(skin['skin'][store_id]);
+        }
+    }
+    
+    $('#form-override-skin').data('layout_id', $(e.relatedTarget).data('layout'));
+});
+$('#save-override-skin').on('click', function(e){
+    var form = $('#form-override-skin');
+    var save_button = $(this);
+    
+    $.ajax({
+        url: form.attr('action') + '&layout_id=' + form.data('layout_id'),
+        dataType: 'json',
+        data: form.serialize(),
+        type: 'post',
+        beforeSend: function(){
+            save_button.button('loading');
+            $('.alert').remove();
+        },
+        success: function(json){
+            if(json['error']){
+                form.prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+            }
+
+            if(json['success']){
+                $('#content').prepend('<div class="alert alert-success alert-dismissible"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+                
+                $('#override-skin-trigger-' + form.data('layout_id')).data('skin', JSON.stringify(form.serializeArray()));
+                
+                $('#override-skin').modal('hide');
+            }
+        },
+        complete: function(){
+            save_button.button('reset');
+        }
+    });
+});
+</script>
+<script>
+$('#button-filter').on('click', function() {
+	var url = '';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+        
+	location = 'index.php?route=extension/maza/layout_builder{{ default_url }}' + url;
+});
+
+$('#button-reset').on('click', function(){
+  location = 'index.php?route=extension/maza/layout_builder{{ default_url }}';
+});
+
+$('input[name=\'filter_name\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=extension/maza/layout_builder/autocomplete{{ default_url }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['layout_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_name\']').val(item['label']);
+	}
+});
+</script>
+</div>
+{{ footer }}

@@ -1,0 +1,124 @@
+{% verbatim %}{% set additional_image_status = images and {% endverbatim %}{{ additional_image_status?'true':'false' }}{% verbatim %} %}{% endverbatim %}
+{% verbatim %}{% set video_status = mz_videos and {% endverbatim %}{{ video_status?'true':'false' }}{% verbatim %} %}{% endverbatim %}
+
+<div id="image-gallery-{{ mz_suffix }}" class="image-gallery thumbnails thumbnail-{{ additional_image_position }} d-flex">
+  {# Image thumb #}
+  {% verbatim %}{% if thumb %}{% endverbatim %}
+  <div {% if additional_image_position in ['left', 'right'] %}{% verbatim %}{% if additional_image_status or video_status %}{% endverbatim %}style="width: {{ 100 - (100 / (slides_per_view + 1)) }}%"{% verbatim %}{% endif %}{% endverbatim %}{% endif %} class="image-thumb d-flex">
+    {% if wishlist_status %}{% verbatim %}{% if mz_wishlist %}{% endverbatim %}
+    <button type="button" class="btn btn-wishlist wishlist-{% verbatim %}{{ product_id }}{% endverbatim %} wished" data-wishlist="1" title="{% verbatim %}{{ button_remove }}{% endverbatim %}" onclick="wishlist.add('{% verbatim %}{{ product_id }}{% endverbatim %}', this);"><i class="fas fa-heart"></i><i class="far fa-heart"></i></button>
+    {% verbatim %}{% else %}{% endverbatim %}
+    <button type="button" class="btn btn-wishlist wishlist-{% verbatim %}{{ product_id }}{% endverbatim %}" data-wishlist="0" title="{% verbatim %}{{ button_wishlist }}{% endverbatim %}" onclick="wishlist.add('{% verbatim %}{{ product_id }}{% endverbatim %}', this);"><i class="fas fa-heart"></i><i class="far fa-heart"></i></button>
+    {% verbatim %}{% endif %}{% endverbatim %}{% endif %}
+    
+    <a class="thumbnail mfp-image" href="{% verbatim %}{{ popup }}{% endverbatim %}" title="{% verbatim %}{{ heading_title }}{% endverbatim %}"><img src="{% verbatim %}{{ thumb }}{% endverbatim %}" {% verbatim %}{% if mz_thumb_srcset %}srcset="{{ mz_thumb_srcset }}"{% endif %}{% endverbatim %} {% if srcset_sizes %}sizes="{{ srcset_sizes }}"{% endif %} class="img-fluid d-block w-100" title="{% verbatim %}{{ heading_title }}{% endverbatim %}" alt="{% verbatim %}{{ heading_title }}{% endverbatim %}" /></a>
+  </div>
+  {% verbatim %}{% endif %}{% endverbatim %}
+  
+  {# Additional Images #}
+  {% verbatim %}{% if additional_image_status or video_status %}{% endverbatim %}
+  <div {% if additional_image_position in ['left', 'right'] %}style="width: {{ 100 / (slides_per_view + 1) }}%"{% endif %} class="image-additional swiper-viewport">
+    <div class="swiper-container" dir="{{ direction }}">
+      <div class="swiper-wrapper">
+        {# Video at start #}
+        {% if video_position == 'start' and video_status %}{% verbatim %}{% for video_url in mz_videos %}{% endverbatim %}
+          <div class="swiper-slide">
+            <a class="thumbnail mfp-iframe" href="{% verbatim %}{{ video_url }}{% endverbatim %}" title="{% verbatim %}{{ heading_title }}{% endverbatim %}"><i class="far fa-play-circle"></i></a>
+          </div>
+        {% verbatim %}{% endfor %}{% endverbatim %}{% endif %}
+
+        {# Images #}
+        {% if additional_image_status %}
+          {% verbatim %}{% for image in images %}{% endverbatim %}
+            <div class="swiper-slide">
+              <a class="thumbnail mfp-image" href="{% verbatim %}{{ image.popup }}{% endverbatim %}" title="{% verbatim %}{{ heading_title }}{% endverbatim %}"> <img src="{% verbatim %}{{ image.thumb }}{% endverbatim %}" {% verbatim %}{% if image.srcset %}srcset="{{ image.srcset }}"{% endif %}{% endverbatim %} {% if additional_srcset_sizes %}sizes="{{ additional_srcset_sizes }}"{% endif %} title="{% verbatim %}{{ heading_title }}{% endverbatim %}" alt="{% verbatim %}{{ heading_title }}{% endverbatim %}" /></a>
+            </div>
+          {% verbatim %}{% endfor %}{% endverbatim %}
+        {% endif %}
+        
+        {# Video at end #}
+        {% if video_position == 'end' and video_status %}{% verbatim %}{% for video_url in mz_videos %}{% endverbatim %}
+          <div class="swiper-slide">
+            <a class="thumbnail mfp-iframe" href="{% verbatim %}{{ video_url }}{% endverbatim %}" title="{% verbatim %}{{ heading_title }}{% endverbatim %}"><i class="far fa-play-circle"></i></a>
+          </div>
+        {% verbatim %}{% endfor %}{% endverbatim %}{% endif %}
+      </div>
+        
+      <div class="mz-button-prev vertical"><i class="fas fa-chevron-up"></i></div>
+      <div class="mz-button-next vertical"><i class="fas fa-chevron-down"></i></div>
+      <div class="mz-button-prev horizontal"><i class="fas fa-chevron-left"></i></div>
+      <div class="mz-button-next horizontal"><i class="fas fa-chevron-right"></i></div>
+    </div>
+  </div>
+  {% verbatim %}{% endif %}{% endverbatim %}
+</div>
+<script>
+{% if additional_image_position in ['left', 'right'] %}
+$(function(){
+    var image_thumb = $('#image-gallery-{{ mz_suffix }} .image-thumb img');
+    var swiper_container = $('#image-gallery-{{ mz_suffix }} .swiper-container');
+
+    if (swiper_container.length == 0) {
+      return; // When no additional images for this product
+    }
+
+    var swiper = swiper_container.swiper({
+        direction: 'vertical',
+        slidesPerView: {{ slides_per_view }},
+        nextButton: '#image-gallery-{{ mz_suffix }} .mz-button-next',
+        prevButton: '#image-gallery-{{ mz_suffix }} .mz-button-prev'
+    });
+
+    var updateCount = 5;
+    var swiperUpdate = function(){
+      swiper_container.height(image_thumb.height());
+      swiper.update();
+
+      if(updateCount > 0) setTimeout(function(){
+        if(image_thumb.height() > swiper_container.height()){
+            swiperUpdate();
+        }
+        updateCount--;
+      }, 100);
+    };
+
+    if(image_thumb.prop('complete')){
+      swiperUpdate();
+    } else {
+      image_thumb.on('load', swiperUpdate);
+    }
+
+    $(window).resize(swiperUpdate);
+});
+{% else %}
+$(function(){
+    $('#image-gallery-{{ mz_suffix }} .swiper-container').swiper({
+        slidesPerView: {{ slides_per_view }},
+        nextButton: '#image-gallery-{{ mz_suffix }} .mz-button-next',
+        prevButton: '#image-gallery-{{ mz_suffix }} .mz-button-prev',
+    });
+});
+{% endif %}
+$(function(){
+  $('#image-gallery-{{ mz_suffix }}').magnificPopup({
+    delegate: 'a',
+    gallery: {
+      enabled: true
+    },
+    iframe: {
+        patterns: {
+            youtube: {
+                index: 'youtube.com/',
+                id: function (url) { return url },
+                src: '%id%'
+            },
+            vimeo: {
+                index: 'vimeo.com/',
+                id: function (url) { return url },
+                src: '%id%'
+            }
+        }
+    }
+  });
+});
+</script>

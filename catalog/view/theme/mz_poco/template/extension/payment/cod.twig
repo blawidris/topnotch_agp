@@ -1,0 +1,33 @@
+<div class="buttons clearfix">
+  <div class="float-right">
+    <input type="button" value="{{ button_confirm }}" id="button-confirm" data-loading-text="{{ text_loading }}" class="btn btn-lg btn-primary" />
+  </div>
+</div>
+<script>
+$('#button-confirm').on('click', function() {
+	$.ajax({
+		url: 'index.php?route=extension/payment/cod/confirm',
+		{% if mz_oc_flag > 2 %}
+		dataType: 'json',
+		{% endif %}
+		beforeSend: function() {
+			$('#button-confirm').prepend('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');
+		},
+		complete: function() {
+			$('#button-confirm').children('.spinner-grow').remove();
+		},
+		success: function(json) {
+			{% if mz_oc_flag > 2 %}
+			if (json['redirect']) {
+				location = json['redirect'];	
+			}
+			{% else %}
+			location = '{{ continue }}';
+			{% endif %}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+</script>

@@ -1,0 +1,71 @@
+// Horizontal separated menu
+.pipe-separated-menu{
+.menu-wraper{
+padding: 0 !important;
+.nav {
+margin: 0 !important;
+}
+}
+.horizontal{
+.design-title{
+margin: 0;
+@include rtl-prop(padding, $nav-link-padding-y 0 $nav-link-padding-y $nav-link-padding-x * 0.625, $nav-link-padding-y $nav-link-padding-x * 0.625 $nav-link-padding-y 0);
+}
+}
+.nav-link{
+padding: $nav-link-padding-y $nav-link-padding-x * 0.625;
+&:not(:last-child)::after {
+content: "|";
+position: absolute;
+@include rtl-prop(right, 0);
+}
+}
+}
+
+// Countdown banner
+.countdown-banner-1{
+padding: 27px;
+.countdown{
+&-section{
+width: 60px;
+background-color: $primary;
+color: color-yiq($primary);
+padding: 15px 10px !important;
+&:not(:last-child){
+@include rtl-prop(margin-right, 10px);
+}
+&::after{
+display: none;
+}
+}
+&-amount{
+font-size: 20px !important;
+}
+&-period{
+font-size: 14px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+}
+}
+@media (max-width: map-get($container-max-widths, 'xl')){
+.countdown-banner-1{
+padding: 2.25vw;
+.countdown{
+&-section{
+width: 5vw;
+padding: 1.25vw 0.8333333333333333vw !important;
+&:not(:last-child){
+@include rtl-prop(margin-right, 0.8333333333333333vw);
+}
+}
+&-amount{
+font-size: 1.666666666666667vw !important;
+}
+&-period{
+font-size: 1.166666666666667vw;
+}
+}
+}
+}

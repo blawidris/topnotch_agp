@@ -1,0 +1,13 @@
+{# 
+Here is a file location of search page component
+
+## search page specific component
+- extension/maza/blog/search/*
+
+## common component across the page including search page
+- extension/maza/blog/common/*
+
+#}
+{{ header }}
+<div id="article-search" class="content">{{ include(template_from_string(mz_content)) }}</div>
+{{ footer }}

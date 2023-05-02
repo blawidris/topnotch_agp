@@ -1,0 +1,93 @@
+// Button
+.swiper-button-next, .swiper-button-prev{
+    background-image: none !important;
+    font-size: 25pt;
+}
+.swiper-button-disabled{
+    opacity: 0.5;
+}
+.swiper-pager{
+    display: none;
+    
+    &.custom-pager{
+        .swiper-button-next, .swiper-button-prev{
+            background: none;
+            font-size: initial;
+            width: auto;
+            height: auto;
+            transform: translateY(-50%);
+            margin: 0;
+        }
+        .swiper-button-next{
+            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+            transform: translateY(-50%) scaleX(-1);
+        }
+    }
+}
+
+
+.swiper-viewport:hover .swiper-pager{
+    display: block;
+}
+
+
+// Pagination
+.swiper-pagination, .swiper-button-next, .swiper-button-prev{
+    color: $swiper-control-color;
+}
+.swiper-pagination-bullets{
+    position: static;
+}
+.swiper-pagination-bullet{
+    width: $swiper-pagination-bullet-size;
+    height: $swiper-pagination-bullet-size;
+    transition: all .5s;
+
+    &-active{
+        width: $swiper-pagination-bullet-size * 2;
+        border-radius: 1rem;
+    }
+}
+.swiper-pagination-bullet-active, .swiper-pagination-progress .swiper-pagination-progressbar{
+    background: $swiper-pagination-color !important;
+}
+.swiper-container-horizontal{
+    & > .swiper-pagination-progress{
+        top: auto;
+        bottom: 0;
+    }
+}
+
+// Slide
+.swiper-slide{
+    height: 100%;
+    
+    img.loader-spinner{
+        max-height: $spacer * 10;
+        background-size: 8rem;
+        mask-size: 8rem;
+    }
+    img.slide-image{
+        display: block;
+        @include border-radius();
+        
+        &[src^="http"]{
+            width: 100%;
+        }
+        &.lazy-load[src^="data"]{
+            margin: auto;
+            height: 100%;
+        }
+    }
+    
+    & > img{
+        @include border-radius();
+    }
+}
+
+/* Custom class */
+.no-border-radius .swiper-slide {
+    & > img, img.slide-image{
+        @include border-radius(0);
+    }
+}

@@ -1,0 +1,15 @@
+@if($active_footer_code == 'megastore-1'){
+    @import "skins/footer/megastore-1/style";
+}
+@elseif($active_footer_code == 'megastore-2'){
+    @import "skins/footer/megastore-2/style";
+}
+@elseif($active_footer_code == 'megastore-3'){
+    @import "skins/footer/megastore-3/style";
+}
+@elseif($active_footer_code == 'megastore-4'){
+    @import "skins/footer/megastore-4/style";
+}
+@elseif($active_footer_code == 'megastore-5'){
+    @import "skins/footer/megastore-5/style";
+}

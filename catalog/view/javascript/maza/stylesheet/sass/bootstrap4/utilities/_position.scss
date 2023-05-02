@@ -1,0 +1,32 @@
+// stylelint-disable declaration-no-important
+
+// Common values
+@each $position in $positions {
+  .position-#{$position} { position: $position !important; }
+}
+
+// Shorthand
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  @include rtl-prop(right, 0);
+  @include rtl-prop(left, 0);
+  z-index: $zindex-fixed;
+}
+
+.fixed-bottom {
+  position: fixed;
+  @include rtl-prop(right, 0);
+  bottom: 0;
+  @include rtl-prop(left, 0);
+  z-index: $zindex-fixed;
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: $zindex-sticky;
+  }
+}

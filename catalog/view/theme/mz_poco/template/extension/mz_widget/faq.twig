@@ -1,0 +1,32 @@
+{% if heading_title %}
+<h3 class="widget-title">{{ heading_title }}</h3>
+{% endif %}
+<div itemscope itemtype="https://schema.org/FAQPage" class="row" {% if accordion %}id="mz-widget-faq-{{ mz_suffix }}"{% endif %}>
+  {% for key, panel in faq %}
+  <div class="{{ column }}">
+    <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question" class="card mb-3">
+      {% if accordion %}
+      <h5 id="mz-faq-label-{{ mz_suffix }}-{{ key }}" class="card-header border-bottom-0 align-items-center d-flex collapsed" data-toggle="collapse" aria-expanded="{{ not key?'true':'false' }}" aria-controls="mz-faq-panel-{{ mz_suffix }}-{{ key }}" data-target="#mz-faq-panel-{{ mz_suffix }}-{{ key }}">
+      {% else %}
+      <h5 class="card-header border-bottom-0">
+      {% endif %}
+        {% if panel.icon_font %}
+        <i class="icon flex-shrink-0 {{ panel.icon_font }} mr-2" {{ icon_width?'style="font-size: ' ~ icon_width ~ 'px"':'' }}></i>
+        {% elseif panel.icon_svg %}
+        <div class="icon flex-shrink-0 svg-icon mr-2" style="{{ icon_width?'width:' ~ icon_width ~ 'px;' }}{{ icon_height?'height:' ~ icon_height ~ 'px;' }}">{{ panel.icon_svg }}</div>
+        {% elseif panel.icon_image %}
+        <img class="icon flex-shrink-0 mr-2" src="{{ panel.icon_image }}" width="{{ panel.image_width }}" height="{{ panel.image_height }}"  />
+        {% endif %}
+        <span itemprop="name">{{ panel.question }}</span>
+        {% if accordion %}<i class="ml-auto fas fa-plus"></i>{% endif %}
+      </h5>
+      {% if accordion %}
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" id="mz-faq-panel-{{ mz_suffix }}-{{ key }}" aria-labelledby="mz-faq-label-{{ mz_suffix }}-{{ key }}"  class="collapse" data-parent="#mz-widget-faq-{{ mz_suffix }}">
+        <div itemprop="text" class="card-body pt-0">{{ panel.answer }}</div>
+      </div>
+      {% else %}
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" class="card-body pt-0"><div itemprop="text">{{ panel.answer }}</div></div>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>

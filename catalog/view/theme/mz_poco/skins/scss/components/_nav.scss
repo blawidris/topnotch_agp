@@ -1,0 +1,110 @@
+a{
+    display: inline-flex;
+    align-items: center;
+    
+    &.nav-link, &.dropdown-item{
+        display: flex;
+        position: relative;
+        align-items: center;
+        color: inherit;
+        
+        .title, .description{
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    
+    &.icon-right, &.icon-bottom{
+        & > .icon {
+            order: 2;
+        }
+    }
+    &.icon-top,&.icon-bottom{
+        flex-direction: column;
+    }
+    
+    &.both, &.nav-link{
+        & >.icon{
+            // padding: 0 3px;
+            box-sizing: content-box;
+            // line-height: inherit;
+        }
+    }
+
+    &.both{
+        &.icon-left >.icon{
+            @include rtl-prop(margin-right, map-get($spacers, 2));
+        }
+        &.icon-right >.icon{
+            @include rtl-prop(margin-left, map-get($spacers, 2));
+        }
+        &.icon-top >.icon{
+            margin-bottom: map-get($spacers, 2);
+        }
+        &.icon-bottom >.icon{
+            margin-top: map-get($spacers, 2);
+        }
+    }
+    
+    &[data-toggle]{
+        outline: none !important;
+    }
+}
+
+.mega-menu{
+    .nav.flex-column{
+        .nav-link{
+            padding: $nav-link-padding-y * 0.5 $nav-link-padding-x;
+        }
+    }
+}
+
+// Pills
+// .nav-pills{
+//     &.border-right {
+//         .nav-link.active, .show > .nav-link{
+//             @include rtl-prop(border-right, $border-width solid $nav-pills-link-active-color);
+//             @include rtl-prop(margin-right, -$border-width);
+//             @include border-right-radius(0);
+//         }
+//     }
+    
+//     &.border-left {
+//         .nav-link.active, .show > .nav-link{
+//             @include rtl-prop(border-left, $border-width solid $nav-pills-link-active-color);
+//             @include rtl-prop(margin-left, -$border-width);
+//             @include border-left-radius(0);
+//         }
+//     }
+// }
+
+// Nav nowrap and scroll horizontally
+.nav-scroll{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+    
+    &::-webkit-scrollbar { /* Safari and Chrome */
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    .nav-item{
+        flex: 0 0 auto;
+    }
+    
+    .nav-link{
+        white-space: nowrap;
+    }
+}
+
+// Entry
+.design-link a{
+    vertical-align: middle;
+}
+

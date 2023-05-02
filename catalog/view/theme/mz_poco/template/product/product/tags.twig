@@ -1,0 +1,7 @@
+{% verbatim %}{% if tags %}{% endverbatim %}
+<p><strong>{% verbatim %}{{ text_tags }}{% endverbatim %}</strong>
+{% verbatim %}{% for i in 0..tags|length %}{% endverbatim %}
+{% verbatim %}{% if i < (tags|length - 1) %}{% endverbatim %} <a class="badge badge-{{ color }}" href="{% verbatim %}{{ tags[i].href }}{% endverbatim %}">{% verbatim %}{{ tags[i].tag }}{% endverbatim %}</a>
+{% verbatim %}{% else %}{% endverbatim %} <a class="badge badge-{{ color }}" href="{% verbatim %}{{ tags[i].href }}{% endverbatim %}">{% verbatim %}{{ tags[i].tag }}{% endverbatim %}</a> {% verbatim %}{% endif %}{% endverbatim %}
+{% verbatim %}{% endfor %}{% endverbatim %} </p>
+{% verbatim %}{% endif %}{% endverbatim %}

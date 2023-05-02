@@ -1,0 +1,17 @@
+$footer-bg-color: #eeeeee;
+$footer-text-color: color-yiq($footer-bg-color, $gray-700, #777777);
+
+$footer-headings-color: color-yiq($footer-bg-color);
+$footer-headings-margin-bottom: $spacer * 1.375;
+
+// Social
+$social-link-icon-margin: $spacer * 0.375;
+$social-link-icon-padding: $spacer * 0.8125;
+$social-link-icon-size: 1.125em;
+
+// Newsletter
+$newsletter-button-padding: $btn-padding-y-lg $spacer * 1.25;
+$newsletter-input-font-size: 0.875em;
+$newsletter-border-width: $input-border-width;
+$newsletter-border-color: $primary;
+$newsletter-border-radius: 10rem;

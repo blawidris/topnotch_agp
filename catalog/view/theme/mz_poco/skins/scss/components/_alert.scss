@@ -1,0 +1,7 @@
+.alert-notification{
+    position: fixed;
+    top: 2rem;
+    @include rtl-prop(right, 2rem);
+    z-index: 1000;
+    box-shadow: 0 0 1rem rgba($black, 0.5);
+}

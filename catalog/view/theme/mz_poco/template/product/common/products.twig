@@ -1,0 +1,12 @@
+{% verbatim %}{% if products %}{% endverbatim %}
+<div data-grid="product-layout product-grid {{ not description_status?'no-desc' }} col-xl-{{ (12/product_column_xl)|replace({'.':'_'}) }} col-lg-{{ (12/product_column_lg)|replace({'.':'_'}) }} col-md-{{ (12/product_column_md)|replace({'.':'_'}) }} col-sm-{{ (12/product_column_sm)|replace({'.':'_'}) }} col-{{ (12/product_column_xs)|replace({'.':'_'}) }}" data-list="product-layout product-list col-12" data-default_view="{{ list_grid }}" data-view_id="{{ list_grid }}" class="row">
+  {% verbatim %}{% for product_key, product in products %}{% endverbatim %}
+  {% include 'mz_poco/template/product/common/product.twig' %}
+  {% verbatim %}{% endfor %}{% endverbatim %}
+</div>
+{% verbatim %}{% else %}
+<p>{{ text_empty }}</p>
+<div class="buttons clearfix mb-3">
+  <div class="float-right"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>
+</div>
+{% endif %}{% endverbatim %}

@@ -1,0 +1,18 @@
+{# 
+Here is a file location of special page component
+
+## special page specific component
+- catalog/view/theme/mz_poco/template/product/special/*
+
+## common component across the page including special page
+- catalog/view/theme/mz_poco/template/product/common/*
+
+Do following to add custom twig code in special page
+Go to admin -> extension -> mazatheme -> layout builder -> special
+and use "HTML/Twig/PHP" widget to add your own twig code
+You can use variables from product/special controller
+
+#}
+{{ header }}
+<div id="product-special" class="content">{{ include(template_from_string(mz_content)) }}</div>
+{{ footer }}

@@ -1,0 +1,27 @@
+// Skin config
+$active_header_code: mz_skin_config('skin_header_code');
+$active_footer_code: mz_skin_config('skin_footer_code');
+$active_skin_code: mz_skin_config('skin_code');
+
+// Default
+$mz_body_background: null !default;
+
+// Swiper
+$swiper-pagination-color: $secondary !default;
+$swiper-control-color: $black !default;
+$swiper-pagination-bullet-size: 1rem !default;
+
+// Font size base
+$breakpoint-font-sizes: (sm: 0.857);
+
+// Drawer
+$drawer-transition-duration: .3s;
+$drawer-transition-timing: ease;
+$drawer-overlay-bg-color: #0006;
+$drawer-width: 80%;
+$drawer-sm-width: 300px;
+$drawer-bg-color: #fff;
+
+// z-index
+$zindex-drawer: 9998;
+$zindex-notification: 9999;

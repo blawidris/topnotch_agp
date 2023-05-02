@@ -1,0 +1,23 @@
+// RTL Propery
+// @param $prop Css property
+// @param $value ltr value
+// @param $rtl_value rtl value
+@mixin rtl-prop($prop, $value, $rtl_value: null){
+    @if $rtl and map-has-key($rtl-props, $prop) {
+        $prop: map-get($rtl-props, $prop);
+    }
+    @if $rtl and $rtl_value {
+        $value: $rtl_value;
+    }
+    #{$prop}: #{$value};
+}
+
+// RTL Value
+// @param $lv ltr value
+// @param $rv rtl value
+@function rtl-value($lv, $rv){
+    @if $rtl {
+        @return $rv;
+    }
+    @return $lv;
+}

@@ -1,0 +1,13 @@
+{# 
+Here is a file location of author page component
+
+## author page specific component
+- extension/maza/blog/author/*
+
+## common component across the page including author page
+- extension/maza/blog/common/*
+
+#}
+{{ header }}
+<div id="article-author" class="content">{{ include(template_from_string(mz_content)) }}</div>
+{{ footer }}

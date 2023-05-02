@@ -1,0 +1,54 @@
+.close.mz-modal-close{
+    position: absolute;
+    z-index: 99;
+    @include rtl-prop(right, 0);
+    top: 0;
+    background-color: $primary;
+    color: color-yiq($primary);
+    border-radius: 50rem;
+    transform: rtl-value(translate(50%, -50%), translate(-50%, -50%));
+    opacity: 1 !important;
+    box-sizing: content-box;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    padding: .5em;
+    
+    &:before{
+        content: '\f00d';
+    }
+}
+.entry-component .mz-popup-do-not-show-again{
+    padding: 5px 10px;
+}
+
+.modal-content{
+    transition: all .3s;
+    
+    .loader-spinner{
+        display: none;
+    }
+    
+    &.loading{
+        width: 18vw;
+        height: 18vw;
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        
+        .close, .modal-body{
+            display: none;
+        }
+        .loader-spinner{
+            display: block;
+        }
+    }
+    
+    @include media-breakpoint-up(sm){
+        &.loading{
+            width: 10vw;
+            height: 10vw;
+        }
+    }
+}

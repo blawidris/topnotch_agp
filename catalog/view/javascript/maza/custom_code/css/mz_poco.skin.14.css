@@ -1,0 +1,59 @@
+// Horizontal separated menu
+.pipe-separated-menu{
+.menu-wraper{
+padding: 0 !important;
+
+.nav {
+margin: 0 !important;
+}
+}
+
+.horizontal{
+.design-title{
+margin: 0;
+@include rtl-prop(padding, $nav-link-padding-y 0 $nav-link-padding-y $nav-link-padding-x * 0.625, $nav-link-padding-y $nav-link-padding-x * 0.625 $nav-link-padding-y 0);
+}
+}
+
+.nav-link{
+padding: $nav-link-padding-y $nav-link-padding-x * 0.625;
+
+&:not(:last-child)::after {
+content: "|";
+position: absolute;
+@include rtl-prop(right, 0);
+}
+}
+}
+
+// Countdown offer banner
+.countdown-banner-1{
+padding: 35px 30px;
+font-size: 2.5em;
+}
+@media (max-width: map-get($container-max-widths, 'xl')){
+.countdown-banner-1{
+padding: 0.9em 0.8em;
+font-size: 2.5vw;
+}
+}
+
+// Tab listing border header
+.mz-tab-listing-no-border-title{
+.mz-tab-listing-header:not(.tabs){
+border: none;
+
+.module-title{
+margin: 0;
+}
+}
+}
+
+// Footer newsletter
+.footer-newsletter{
+@include media-breakpoint-up(sm){
+.newsletter-email{
+min-width: 30rem;
+}
+}
+}

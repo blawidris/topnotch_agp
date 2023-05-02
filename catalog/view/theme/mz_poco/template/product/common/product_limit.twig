@@ -1,0 +1,24 @@
+{% verbatim %}
+{% if products %}
+<div class="input-group flex-nowrap">
+  <label class="input-group-prepend m-0" for="input-limit"><span class="input-group-text">{{ text_limit }}</span></label>
+  <select id="input-limit" class="custom-select" onchange="location = this.value;">
+    {% for limit_data in limits %}
+    {% if limit_data.value == limit %}
+    <option value="{{ limit_data.href }}" selected="selected">{{ limit_data.text }}</option>
+    {% else %}
+    <option value="{{ limit_data.href }}">{{ limit_data.text }}</option>
+    {% endif %}
+    {% endfor %}
+  </select>
+  {# <div id="input-limit" class="dropdown">
+    <button type="button" class="btn border dropdown-toggle" data-toggle="dropdown">{{ limit }}</button>
+    <div class="dropdown-menu">
+      {% for limit_data in limits %}
+        <a class="dropdown-item" href="{{ limit_data.href }}">{{ limit_data.text }}</a>
+      {% endfor %}
+    </div>
+  </div> #}
+</div>
+{% endif %}
+{% endverbatim %}

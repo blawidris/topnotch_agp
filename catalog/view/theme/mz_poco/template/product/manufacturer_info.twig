@@ -1,0 +1,18 @@
+{# 
+Here is a file location of manufacturer component
+
+## manufacturer specific component
+- catalog/view/theme/mz_poco/template/product/manufacturer/*
+
+## common component across the page including manufacturer page
+- catalog/view/theme/mz_poco/template/product/common/*
+
+Do following to add custom twig code in manufacturer page
+Go to admin -> extension -> mazatheme -> layout builder -> manufacturer products
+and use "HTML/Twig/PHP" widget to add your own twig code
+You can use variables from product/manufacturer controller
+
+#}
+{{ header }}
+<div id="product-manufacturer" class="content">{{ include(template_from_string(mz_content)) }}</div>
+{{ footer }}

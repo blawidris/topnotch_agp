@@ -1,0 +1,61 @@
+<label class="control-label" for="input-search">{% verbatim %}{{ entry_search }}{% endverbatim %}</label>
+<div class="form-row">
+  <div class="col-sm-5 mb-3">
+    <input type="text" name="search" value="{% verbatim %}{{ search }}{% endverbatim %}" placeholder="{{ placeholder?:'{{ text_keyword }}' }}" id="input-search" class="form-control " />
+  </div>
+  {% if category %}
+  <div class="col-sm-4 mb-3">
+    <select name="category_id" class="custom-select">
+      <option value="0">{% verbatim %}{{ text_category }}{% endverbatim %}</option>
+      {% verbatim %}{% for category_1 in categories %}
+      {% if category_1.category_id == category_id %}
+      <option value="{{ category_1.category_id }}" selected="selected">{{ category_1.name }}</option>
+      {% else %}
+      <option value="{{ category_1.category_id }}">{{ category_1.name }}</option>
+      {% endif %}
+      {% for category_2 in category_1.children %}
+      {% if category_2.category_id == category_id %}
+      <option value="{{ category_2.category_id }}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ category_2.name }}</option>
+      {% else %}
+      <option value="{{ category_2.category_id }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ category_2.name }}</option>
+      {% endif %}
+      {% for category_3 in category_2.children %}
+      {% if category_3.category_id == category_id %}
+      <option value="{{ category_3.category_id }}" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ category_3.name }}</option>
+      {% else %}
+      <option value="{{ category_3.category_id }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ category_3.name }}</option>
+      {% endif %}
+      {% endfor %}
+      {% endfor %}
+      {% endfor %}{% endverbatim %}
+    </select>
+  </div>
+  {% endif %}
+  <div class="col-sm-3 mb-3"><input type="button" value="{% verbatim %}{{ button_search }}{% endverbatim %}" id="button-search" class="btn btn-primary" /></div>
+  <div class="col-12 d-flex flex-wrap">
+    {% if sub_category %}
+      {% verbatim %}
+      <div class="custom-control mr-2 custom-checkbox">
+        {% if sub_category %}
+        <input type="checkbox" name="sub_category" value="1" class="custom-control-input" id="sub_category" checked="checked" />
+        {% else %}
+        <input type="checkbox" name="sub_category" value="1" class="custom-control-input" id="sub_category">
+        {% endif %}
+        <label class="custom-control-label" for="sub_category">{{ text_sub_category }}</label>
+      </div>
+      {% endverbatim %}
+    {% endif %}
+    {% if description %}
+    {% verbatim %}
+    <div class="custom-control custom-checkbox">
+      {% if description %}
+      <input type="checkbox" name="description" value="1" class="custom-control-input" id="description" checked="checked">
+      {% else %}
+      <input type="checkbox" name="description" value="1" class="custom-control-input" id="description">
+      {% endif %}
+      <label class="custom-control-label" for="description">{{ entry_description }}</label>
+    </div>
+    {% endverbatim %}
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,264 @@
+<!-- Form -->
+<form id="setting-content-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+    <li><a href="#tab-grid-size" data-toggle="tab">{{ tab_grid_size }}</a></li>
+    <li><a href="#tab-element" data-toggle="tab">{{ tab_element }}</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="tab-general" class="tab-pane active">
+      <!--content status-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_status }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_status) %} 
+            <input type="radio" name="content_status" value="1" id="input-setting-content-status-enabled" checked>
+            <label for="input-setting-content-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_status" value="0" id="input-setting-content-status-disabled">
+            <label for="input-setting-content-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_status" value="1" id="input-setting-content-status-enabled" >
+            <label for="input-setting-content-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_status" value="0" id="input-setting-content-status-disabled" checked>
+            <label for="input-setting-content-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--content view-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_view }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_list_grid == 'grid') %} 
+            <input type="radio" name="content_list_grid" value="grid" id="input-setting-content-list-grid-grid" checked>
+            <label for="input-setting-content-list-grid-grid" >{{ text_grid }}</label>
+            <input type="radio" name="content_list_grid" value="list" id="input-setting-content-list-grid-list">
+            <label for="input-setting-content-list-grid-list">{{ text_list }}</label>
+            {% else %} 
+            <input type="radio" name="content_list_grid" value="grid" id="input-setting-content-list-grid-grid" >
+            <label for="input-setting-content-list-grid-grid">{{ text_grid }}</label>
+            <input type="radio" name="content_list_grid" value="list" id="input-setting-content-list-grid-list" checked>
+            <label for="input-setting-content-list-grid-list" >{{ text_list }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tab-grid-size" class="tab-pane">
+      <div class="form-group">
+        <label class="col-xs-3 control-label" for="input-setting-content-column-xl"><span data-toggle="tooltip" title="{{ help_column_xl }}">{{ entry_column_xl }}</span></label>
+        <div class="col-xs-5">
+          <div class="input-group">
+            <input type="range" name="content_column_xl" min="1" max="6" value="{{ content_column_xl }}" id="input-setting-content-column-xl" class="form-control" />
+            <span class="input-group-addon">{{ content_column_xl }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-xs-3 control-label" for="input-setting-content-column-lg"><span data-toggle="tooltip" title="{{ help_column_lg }}">{{ entry_column_lg }}</span></label>
+        <div class="col-xs-5">
+          <div class="input-group">
+            <input type="range" name="content_column_lg" min="1" max="6" value="{{ content_column_lg }}" id="input-setting-content-column-lg" class="form-control" />
+            <span class="input-group-addon">{{ content_column_lg }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-xs-3 control-label" for="input-setting-content-column-md"><span data-toggle="tooltip" title="{{ help_column_md }}">{{ entry_column_md }}</span></label>
+        <div class="col-xs-5">
+          <div class="input-group">
+            <input type="range" name="content_column_md" min="1" max="6" value="{{ content_column_md }}" id="input-setting-content-column-md" class="form-control" />
+            <span class="input-group-addon">{{ content_column_md }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-xs-3 control-label" for="input-setting-content-column-sm"><span data-toggle="tooltip" title="{{ help_column_sm }}">{{ entry_column_sm }}</span></label>
+        <div class="col-xs-5">
+          <div class="input-group">
+            <input type="range" name="content_column_sm" min="1" max="6" value="{{ content_column_sm }}" id="input-setting-content-column-sm" class="form-control" />
+            <span class="input-group-addon">{{ content_column_sm }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-xs-3 control-label" for="input-setting-content-column-xs"><span data-toggle="tooltip" title="{{ help_column_xs }}">{{ entry_column_xs }}</span></label>
+        <div class="col-xs-5">
+          <div class="input-group">
+            <input type="range" name="content_column_xs" min="1" max="6" value="{{ content_column_xs }}" id="input-setting-content-column-xs" class="form-control" />
+            <span class="input-group-addon">{{ content_column_xs }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tab-element" class="tab-pane">
+      <!--Add to cart-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_add_to_cart }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_cart_status) %} 
+            <input type="radio" name="content_cart_status" value="1" id="input-setting-content-cart-status-enabled" checked>
+            <label for="input-setting-content-cart-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_cart_status" value="0" id="input-setting-content-cart-status-disabled">
+            <label for="input-setting-content-cart-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_cart_status" value="1" id="input-setting-content-cart-status-enabled" >
+            <label for="input-setting-content-cart-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_cart_status" value="0" id="input-setting-content-cart-status-disabled" checked>
+            <label for="input-setting-content-cart-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--Add to compare-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_add_to_compare }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_compare_status) %} 
+            <input type="radio" name="content_compare_status" value="1" id="input-setting-content-compare-status-enabled" checked>
+            <label for="input-setting-content-compare-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_compare_status" value="0" id="input-setting-content-compare-status-disabled">
+            <label for="input-setting-content-compare-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_compare_status" value="1" id="input-setting-content-compare-status-enabled" >
+            <label for="input-setting-content-compare-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_compare_status" value="0" id="input-setting-content-compare-status-disabled" checked>
+            <label for="input-setting-content-compare-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--Add to wishlist-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_add_to_wishlist }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_wishlist_status) %} 
+            <input type="radio" name="content_wishlist_status" value="1" id="input-setting-content-wishlist-status-enabled" checked>
+            <label for="input-setting-content-wishlist-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_wishlist_status" value="0" id="input-setting-content-wishlist-status-disabled">
+            <label for="input-setting-content-wishlist-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_wishlist_status" value="1" id="input-setting-content-wishlist-status-enabled" >
+            <label for="input-setting-content-wishlist-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_wishlist_status" value="0" id="input-setting-content-wishlist-status-disabled" checked>
+            <label for="input-setting-content-wishlist-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--quick view-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_quick_view }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_quick_view_status) %} 
+            <input type="radio" name="content_quick_view_status" value="1" id="input-setting-content-quick-view-status-enabled" checked>
+            <label for="input-setting-content-quick-view-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_quick_view_status" value="0" id="input-setting-content-quick-view-status-disabled">
+            <label for="input-setting-content-quick-view-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_quick_view_status" value="1" id="input-setting-content-quick-view-status-enabled" >
+            <label for="input-setting-content-quick-view-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_quick_view_status" value="0" id="input-setting-content-quick-view-status-disabled" checked>
+            <label for="input-setting-content-quick-view-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--Rating-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_rating }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_rating_status) %} 
+            <input type="radio" name="content_rating_status" value="1" id="input-setting-content-rating-status-enabled" checked>
+            <label for="input-setting-content-rating-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_rating_status" value="0" id="input-setting-content-rating-status-disabled">
+            <label for="input-setting-content-rating-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_rating_status" value="1" id="input-setting-content-rating-status-enabled" >
+            <label for="input-setting-content-rating-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_rating_status" value="0" id="input-setting-content-rating-status-disabled" checked>
+            <label for="input-setting-content-rating-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+
+      <!--manufacturer-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_manufacturer }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_manufacturer_status) %} 
+            <input type="radio" name="content_manufacturer_status" value="1" id="input-setting-content-manufacturer-status-enabled" checked>
+            <label for="input-setting-content-manufacturer-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_manufacturer_status" value="0" id="input-setting-content-manufacturer-status-disabled">
+            <label for="input-setting-content-manufacturer-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_manufacturer_status" value="1" id="input-setting-content-manufacturer-status-enabled" >
+            <label for="input-setting-content-manufacturer-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_manufacturer_status" value="0" id="input-setting-content-manufacturer-status-disabled" checked>
+            <label for="input-setting-content-manufacturer-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+
+      <!--tax-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_tax }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_tax_status) %} 
+            <input type="radio" name="content_tax_status" value="1" id="input-setting-content-tax-status-enabled" checked>
+            <label for="input-setting-content-tax-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_tax_status" value="0" id="input-setting-content-tax-status-disabled">
+            <label for="input-setting-content-tax-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_tax_status" value="1" id="input-setting-content-tax-status-enabled" >
+            <label for="input-setting-content-tax-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_tax_status" value="0" id="input-setting-content-tax-status-disabled" checked>
+            <label for="input-setting-content-tax-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+          
+      <!--Description-->
+      <div class="form-group">
+        <label class="col-sm-3 control-label">{{ entry_description }}</label>
+        <div class="col-sm-9">
+          <div class="mz-switch-field">
+            {% if (content_description_status) %} 
+            <input type="radio" name="content_description_status" value="1" id="input-setting-content-description-status-enabled" checked>
+            <label for="input-setting-content-description-status-enabled" >{{ text_enabled }}</label>
+            <input type="radio" name="content_description_status" value="0" id="input-setting-content-description-status-disabled">
+            <label for="input-setting-content-description-status-disabled">{{ text_disabled }}</label>
+            {% else %} 
+            <input type="radio" name="content_description_status" value="1" id="input-setting-content-description-status-enabled" >
+            <label for="input-setting-content-description-status-enabled">{{ text_enabled }}</label>
+            <input type="radio" name="content_description_status" value="0" id="input-setting-content-description-status-disabled" checked>
+            <label for="input-setting-content-description-status-disabled" >{{ text_disabled }}</label>
+            {% endif %} 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $('input[type="range"]').on('input change', function(){
+        $(this).siblings('.input-group-addon').text($(this).val());
+    });
+  </script>
+</form>
