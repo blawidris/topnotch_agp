@@ -172,16 +172,16 @@ class ControllerAccountAddress extends Controller {
 			}
 
 			$find = array(
-				'{firstname}',
-				'{lastname}',
-				'{company}',
-				'{address_1}',
-				'{address_2}',
-				'{city}',
-				'{postcode}',
-				'{zone}',
-				'{zone_code}',
-				'{country}'
+				'first_name'=>'{firstname}',
+				'last_name' => '{lastname}',
+				'company' => '{company}',
+				'address_1' => '{address_1}',
+				'address_1' => '{address_2}',
+				'city' => '{city}',
+				'postcode' => '{postcode}',
+				'zone' => '{zone}',
+				'zone_code' => '{zone_code}',
+				'country' => '{country}'
 			);
 
 			$replace = array(
@@ -199,7 +199,8 @@ class ControllerAccountAddress extends Controller {
 
 			$data['addresses'][] = array(
 				'address_id' => $result['address_id'],
-				'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))),
+				// 'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))),
+				'address' => $replace,
 				'update'     => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], true),
 				'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], true)
 			);

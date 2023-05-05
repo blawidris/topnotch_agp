@@ -1,4 +1,5 @@
 {{ header }}
+
 <div id="account-login" class="container content pb-5">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -24,13 +25,13 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
       <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-6 order-sm-2">
           <div class="card mb-4">
             <div class="card-body p-4">
               <h2>{{ text_new_customer }}</h2>
               <p><strong>{{ text_register }}</strong></p>
               <p>{{ text_register_account }}</p>
-              <a href="{{ register }}" class="btn btn-primary">{{ button_continue }}</a></div>
+              <a href="{{ register }}" class="btn btn-primary mt-2">{{ button_continue }}</a></div>
             </div>
         </div>
         <div class="col-lg-6">
@@ -46,7 +47,7 @@
                 <div class="form-group">
                   <label for="input-password">{{ entry_password }}</label>
                   <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
-                  <a href="{{ forgotten }}">{{ text_forgotten }}</a></div>
+                  <a href="{{ forgotten }}" class="mt-2">{{ text_forgotten }}</a></div>
                 <input type="submit" value="{{ button_login }}" class="btn btn-primary" />
                 {% if redirect %}
                 <input type="hidden" name="redirect" value="{{ redirect }}" />

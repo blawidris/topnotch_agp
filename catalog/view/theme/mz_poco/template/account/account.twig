@@ -24,11 +24,11 @@
         <h2 class="card-header h5">{{ text_my_account }}</h2>
         <div class="card-body text-center">
           <div class="row">
-            <div class="col-6 col-sm-4 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ edit }}"><i class="fas fa-2x mb-1 fa-user-edit"></i> {{ text_edit }}</a></div>
-            <div class="col-6 col-sm-4 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ password }}"><i class="fas fa-2x mb-1 fa-key"></i> {{ text_password }}</a></div>
-            <div class="col-6 col-sm-4 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ address }}"><i class="fas fa-2x mb-1 fa-address-card"></i> {{ text_address }}</a></div>
-            <div class="col-6 col-sm-4 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ wishlist }}"><i class="far fa-2x mb-1 fa-grin-hearts"></i> {{ text_wishlist }}</a></div>
-            <div class="col-6 col-sm-4 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ newsletter }}"><i class="fas fa-2x mb-1 fa-envelope-open-text"></i> {{ text_newsletter }}</a></div>
+            <div class="col-6 col-sm-12 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ edit }}"><i class="fas fa-2x mb-1 fa-user-edit"></i> {{ text_edit }}</a></div>
+            <div class="col-6 col-sm-12 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ password }}"><i class="fas fa-2x mb-1 fa-key"></i> {{ text_password }}</a></div>
+            <div class="col-6 col-sm-12 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ address }}"><i class="fas fa-2x mb-1 fa-address-card"></i> {{ text_address }}</a></div>
+            <div class="col-6 col-sm-12 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ wishlist }}"><i class="far fa-2x mb-1 fa-grin-hearts"></i> {{ text_wishlist }}</a></div>
+            <div class="col-6 col-sm-12 col-lg-2_4"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ newsletter }}"><i class="fas fa-2x mb-1 fa-envelope-open-text"></i> {{ text_newsletter }}</a></div>
           </div>
         </div>
       </div>
@@ -46,9 +46,9 @@
         <h2 class="card-header h5">{{ text_my_orders }}</h2>
         <div class="card-body text-center">
           {% if reward %}
-          {% set class = 'col-6 col-sm-4 col-lg-2' %}
+          {% set class = 'col-6 col-sm-12 col-lg-2' %}
           {% else %}
-          {% set class = 'col-6 col-sm-4 col-lg-2_5' %}
+          {% set class = 'col-6 col-sm-12 col-lg-2_5' %}
           {% endif %}
           <div class="row">
             <div class="{{ class }}"><a class="d-inline-flex text-decoration-none text-reset flex-column my-3" href="{{ order }}"><i class="fas fa-2x mb-1 fa-boxes"></i> {{ text_order }}</a></div>

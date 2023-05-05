@@ -8,8 +8,10 @@
     <i class="fas fa-chevron-circle-down ml-auto" aria-hidden="true"></i>
   </div>
   {% endif %}
+  
   <div id="mz-filter-content-{{ module_class_id }}" class="{% if heading_title %}collapse{{ collapsed != 1?' show' }} {% endif %}mz-list-filter-group">
   {% for key,filter in filters %} 
+  
     {% if (filter['type'] == 'price') %} {# price range #}
     <div class="mz-filter-group">
       <div class="mz-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" data-target="#mz-filter-panel-{{ module_class_id }}-{{ key }}">
@@ -333,6 +335,7 @@
         </div>
       </div>
     </div>
+
     {% elseif (filter['type'] == 'custom') %} {# Custom filter #}
     <div class="mz-filter-group">
       <div class="mz-filter-group-header {{ filter['collapse']?'collapsed' }}" data-toggle="collapse" data-target="#mz-filter-panel-{{ module_class_id }}-{{ key }}">

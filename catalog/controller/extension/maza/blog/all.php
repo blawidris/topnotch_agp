@@ -1,5 +1,6 @@
 <?php
 class ControllerExtensionMazaBlogAll extends Controller {
+	
 	public function index() {
 		$this->load->language('extension/maza/blog/all');
 
@@ -70,9 +71,11 @@ class ControllerExtensionMazaBlogAll extends Controller {
 			'href' => $this->url->link('extension/maza/blog/all', $url)
 		);
 
-		$data['heading_title'] = $this->language->get('heading_title');
+		// var_dump($this->language);
 
-		$this->document->setTitle($this->language->get('heading_title'));
+		$data['heading_title'] = $this->language->get('text_blog');
+
+		$this->document->setTitle($this->language->get('text_blog'));
 
 		$data['articles'] = array();
                         

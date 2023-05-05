@@ -1,11 +1,15 @@
 <?php
 class ModelExtensionMazaCatalogProduct extends Model {
+
+
 	public function getProducts(array $data = array()): array {
 		// Get sort order list
 		$sort = array();
+
 		if(isset($data['sort_order'])){
 			$sort = array_column($data['sort_order'], 'sort');
 		}
+		
 		if(isset($data['sort'])){
 			array_push($sort, $data['sort']);
 		}
@@ -232,6 +236,7 @@ class ModelExtensionMazaCatalogProduct extends Model {
 		}
                 
 		$sort_data = array(
+			'p.id' => 'id',
 			'pd.name' => 'name',
 			'p.model' => 'model',
 			'p.quantity' => 'quantity',
@@ -270,6 +275,7 @@ class ModelExtensionMazaCatalogProduct extends Model {
 				}
 			}
 		} elseif (isset($data['sort']) && isset($sort_data[$data['sort']])) {
+			
 			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 				$sql .= ' ORDER BY LCASE(' . $sort_data[$data['sort']] . ')';
 			} elseif ($data['sort'] == 'p.price') {
@@ -281,7 +287,7 @@ class ModelExtensionMazaCatalogProduct extends Model {
 			}
 			
 			if (isset($data['order']) && ($data['order'] == 'DESC')) {
-					$sql .= ' DESC, product_id ASC';
+					$sql .= ' DESC, product_id DESC';
 			} else {
 					$sql .= ' ASC, product_id ASC';
 			}

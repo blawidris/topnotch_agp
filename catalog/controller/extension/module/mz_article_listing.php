@@ -64,8 +64,8 @@ class ControllerExtensionModuleMzArticleListing extends maza\layout\Module {
         if($setting['banner_status']){
             // svg image
             $banner_svg = maza\getOfLanguage($setting['banner_svg']);
-            if(banner_svg && is_file(MZ_CONFIG::$DIR_SVG_IMAGE . banner_svg)){
-                $data['banner_svg'] = $this->mz_document->addSVG(MZ_CONFIG::$DIR_SVG_IMAGE . banner_svg);
+            if('banner_svg' && is_file(MZ_CONFIG::$DIR_SVG_IMAGE . 'banner_svg')){
+                $data['banner_svg'] = $this->mz_document->addSVG(MZ_CONFIG::$DIR_SVG_IMAGE . 'banner_svg');
             } else {
                 $data['banner_svg'] = false;
             }

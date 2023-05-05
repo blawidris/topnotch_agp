@@ -36,7 +36,7 @@
               </div>
               {% verbatim %}{% endfor %}{% endverbatim %}
             </div>
-            <ul class="carousel-indicators">
+            {# <ul class="carousel-indicators">
               <li data-target="#mz-product-grid-image-{% verbatim %}{{ product.product_id }}{% endverbatim %}-{{ mz_suffix }}" data-slide-to="0" class="active">
                 {% if lazy_loading %}
                 <img class="lazy-load img-thumbnail" src="{{ transparent }}" data-src="{% verbatim %}{{ product.thumb }}{% endverbatim %}" {% verbatim %}{% if product.mz_srcset %}data-srcset="{{ product.mz_srcset }}"{% endif %}{% endverbatim %} {% if srcset_sizes %}data-sizes="{{ srcset_sizes }}"{% endif %} alt="{% verbatim %}{{ product.name|e }}{% endverbatim %}"/>
@@ -55,7 +55,7 @@
               </li>
               {% verbatim %}{% set slide_to = slide_to + 1 %}{% endverbatim %}
               {% verbatim %}{% endfor %}{% endverbatim %}
-            </ul>
+            </ul> #}
           </a>
         {% verbatim %}{% endif %}{% endverbatim %}
       </div>

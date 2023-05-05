@@ -73,8 +73,8 @@ class ControllerExtensionMazaProducts extends Controller {
 		$data['products'] = array();
 
 		$filter_data = array(
-			'sort'                => $sort,
-			'order'               => $order,
+			'sort'                => $sort ?: 'pd.name',
+			'order'               => $order ?: 'DESC',
 			'start'               => ($page - 1) * $limit,
 			'limit'               => $limit
 		);
@@ -143,8 +143,8 @@ class ControllerExtensionMazaProducts extends Controller {
 
 		$data['sorts'][] = array(
 			'text'  => $this->language->get('text_default'),
-			'value' => 'p.sort_order-ASC',
-			'href'  => $this->url->link('extension/maza/products', 'sort=p.sort_order&order=ASC' . $url)
+			'value' => 'p.sort_order-DESC',
+			'href'  => $this->url->link('extension/maza/products', 'sort=p.sort_order&order=DESC' . $url)
 		);
 
 		$data['sorts'][] = array(
