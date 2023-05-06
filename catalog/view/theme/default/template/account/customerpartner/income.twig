@@ -27,9 +27,12 @@
         
             <div id="content" class="{{ class }}">
                 {{ content_top }}
-                <h1>{{ heading_title }}</h1>
+
+                <div class="header">
+                    <h1 class="header-title">{{ heading_title }}</h1>
+                </div>
                 <fieldset>
-                    <legend><i class="fa fa-list"></i> {{ heading_title }}</legend>
+                    {# <legend><i class="fa fa-list"></i> {{ heading_title }}</legend> #}
                     <div class="well">
                         <div class="row">
                             <div class="col-sm-6">
@@ -51,15 +54,15 @@
                                         <option value="day" {% if filter_display_group is defined and filter_display_group == 'day' %}{{'selected'}}{% endif %}>{{ text_days }}</option>
                                     </select>
                                 </div>
-                                <div class="filter_button">
-                                    <a href="{{ reset }}" class="btn btn-danger pull-right" style="margin-left:10px;"><i class="fa fa-reply"></i> {{ button_reset }}</a>
-                                    <button class="btn btn-primary pull-right" id="button-filter"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+                                <div class="filter_button buttons mt-4">
+                                    <a href="{{ reset }}" class="btn btn-danger pull-right px-4 py-2"><i class="fa fa-reply"></i> {{ button_reset }}</a>
+                                    <button class="btn btn-primary pull-right px-4 py-2" id="button-filter"><i class="fa fa-filter"></i> {{ button_filter }}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </fieldset>
-                <div class="table-responsive">
+                <div class="table-responsive mt-5">
                     {% if filter_display_type is defined and  filter_display_type == 'product'%}
                         <table class="table table-bordered table-hover" id="table-product">
                             <thead>

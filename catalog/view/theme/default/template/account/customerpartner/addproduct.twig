@@ -71,13 +71,12 @@
       {% endif %}
 
       <ul class="breadcrumb">
-        {% for breadcrumb in breadcrumbs %}
-          <li>
-            <a href="{{ breadcrumb['href'] }}">
-              {{ breadcrumb['text'] }}
-            </a>
+        {% for breadcrumb in breadcrumbs|slice(0,-1) %}
+          <li class="breadcrumb-item">
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
           </li>
         {% endfor %}
+        <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs|last.text }}</li>
       </ul>
 
       {% if (error_warning) %}
@@ -119,14 +118,14 @@
         <div id="content" class="{{ class }}">
           {{ content_top }}
 
-          <fieldset>
+          <fieldset class="mb-5">
 
-            <legend>
+            {# <legend>
               <h3>
                 <i class="fas fa-pencil"></i>
                 {{ heading_title }}
               </h3>
-            </legend>
+            </legend> #}
 
             {% if access_error is not defined and isMember %}
               <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-save" class="form-horizontal">
@@ -1618,7 +1617,7 @@
                                       {% set wkcustom_option_row = 0 %}
                                       {% if (wkPreCustomFields is not empty) %}
                                         {% for tabs in wkPreCustomFields %}
-                                          <div id="wktab-option-{{ tabCount }}" class="tab-pane">
+                                          <div id="wktab-option-{{ tabCount }}" class="tab-pane mb-5">
                                             <div class="alert alert-info">
                                               <i class="fa fa-info-circle"></i>
                                               {{ tabs['fieldDes'] }}
@@ -1826,14 +1825,14 @@
 
                                           </div>
                                           <!--tab-content-->
-                                          <div class="pull-right mt-4 d-flex align-items-center mb-4">
-                                            <button onclick="$('#form-save').submit();" data-toggle="tooltip" class="btn {{ product_id ? 'btn-info' : 'btn-success' }}" title="{{ button_continue }}" id="submit">
+                                          <div class="buttons mt-4 d-flex align-items-center mb-4 justify-content-end col-9">
+                                            <button onclick="$('#form-save').submit();" data-toggle="tooltip" class="btn {{ product_id ? 'btn-info' : 'btn-success' }} px-4 py-2" title="{{ button_continue }}" id="submit">
+                                              <span class="pr-3">Save</span>
                                               <i class="fa fa-save"></i>
-                                              Save
                                             </button>
-                                            <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-default" data-original-title="Cancel">
+                                            <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_back }}" class="btn btn-warning px-4 py-2 ml-3" data-original-title="Cancel">
+                                              <span class="pr-3">Cancel</span>
                                               <i class="fa fa-reply"></i>
-                                              Cancel
                                             </a>
                                           </div>
                                         </form>

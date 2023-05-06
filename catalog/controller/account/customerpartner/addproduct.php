@@ -232,12 +232,12 @@ class ControllerAccountCustomerpartnerAddproduct extends Controller {
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('heading_title_productlist'),
+			'text'      => $this->language->get('heading_title_product'),
 			'href'      => $this->url->link('account/customerpartner/productlist'),
 		);
 
 		$data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_product'),
+			'text'      => $this->language->get('heading_title_add_product'),
 			'href'      => $data['action'],
 		);
 

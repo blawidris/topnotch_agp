@@ -3,7 +3,7 @@
 $_['heading_title']     		= 'Add New Product';
 $_['heading_title_add_product']	= 'Add New Product';
 $_['heading_title_update']     	= 'Update Product';
-$_['heading_title_productlist'] = 'Products List';
+$_['heading_title_product'] = 'Products';
 $_['heading_category'] = 'Choose Category';
 
 // Text

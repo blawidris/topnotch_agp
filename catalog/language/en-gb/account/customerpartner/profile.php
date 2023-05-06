@@ -21,7 +21,7 @@ $_['text_aview']				= 'View File';
 $_['entry_pdf']				= 'Select A pdf file';
 $_['tab_achive']				= 'Achievement';
 //profile
-$_['text_screen_name']				='SEF Keyword for Shop';
+$_['text_screen_name']				='SEO Keyword for Shop';
 $_['text_gender']					='Gender';
 $_['text_short_profile']			='Short Profile';
 $_['text_avatar']					='Avatar';
@@ -57,6 +57,7 @@ $_['button_continue']			    ='Save';
 $_['tab_general']					='General';
 $_['tab_profile_details']			='Profile Details';
 $_['tab_paymentmode']				='Payment Mode';
+$_['tab_shop']				    ='Shop';
 
 $_['text_general']					= 'Customer Details';
 $_['text_profile_info'] 			= 'Add your details about you and your shop which will display to customers like name, company logo etc.';

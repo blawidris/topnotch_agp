@@ -36,9 +36,9 @@
   {{ content_top}}
   <h1>{{ heading_title}}</h1>
   <fieldset>
-    <legend><i class="fa fa-list"></i> {{ text_transactionList}}</legend>
+    {# <legend><i class="fa fa-list"></i> {{ text_transactionList}}</legend> #}
       {% if isMember %}
-      <div class="well">
+      <div class="well mb-5">
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
@@ -64,7 +64,7 @@
                   </span>
                 </div>
               </div>
-              <a onclick="filter();" class="btn btn-primary pull-right">{{ button_filter}}</a>
+              <a onclick="filter();" class="btn btn-primary pull-right text-white px-4 py-2">{{ button_filter}}</a>
             </div>
           </div>
         </div>

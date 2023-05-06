@@ -5,11 +5,10 @@
   <div class="container">
 {% endif %}
   <ul class="breadcrumb">
-    {% for breadcrumb in breadcrumbs %}
-      <li>
-        <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
-      </li>
-    {% endfor %}
+     {% for breadcrumb in breadcrumbs|slice(0,-1) %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+      {% endfor %}
+      <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs|last.text }}</li>
   </ul>
   {% if error_warning %}
     <div class="alert alert-danger">
@@ -30,27 +29,28 @@
     {% endif %}
     <div id="content" class="{{ class }}">{{ content_top }}
       {% if chkIsPartner %}
-      <h1>{{ heading_title }}
-        <div class="pull-right">
-          <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
-          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-category').submit() : false;"><i class="fa fa-trash-o"></i></button>
-        </div>
-      </h1>
 
+    <div class="header d-flex mb-5">
+      <h1 class="header-title">{{ heading_title }} </h1>
+      <div class="buttons">
+          <a href="{{ add }}" data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary">Add <i class="fa fa-plus"></i></a>
+          <button type="button" data-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-category').submit() : false;">{{ button_delete }} <i class="fas fa-trash"></i></button>
+        </div>
+    </div>
       <div class="well">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-lg-5 col-sm-6 mb-4">
             <div class="form-group">
-              <div class='input-group'>
-                <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ column_name }}" id="input-name" class="form-control" />
-                <span class="input-group-addon"><span class="fa fa-angle-double-down"></span></span>
+              <div class='input-group d-flex align-items-center'>
+                <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ column_name }}" id="input-name" class="form-control h-40" />
+                <span class="input-group-addon ml-2"><span class="fa fa-angle-double-down"></span></span>
               </div>
             </div>
           </div>
 
           <div class="col-sm-5">
             <div class="form-group">
-              <select name="filter_status" class="form-control" id="input-status">
+              <select name="filter_status" class="form-control h-40" id="input-status">
                 <option value="*">{{ column_status }}</option>
                 {% if filter_status %}
                 <option value="1" selected="selected">{{ text_enabled }}</option>
@@ -66,9 +66,9 @@
             </div>
           </div>
 
-          <div class="col-sm-1">
+          <div class="col-sm-1 pl-lg-0">
             <div class="form-group">
-              <a onclick="filter();" class="btn btn-primary pull-right">{{ button_filter }}</a>
+              <a onclick="filter();" class="btn btn-primary pull-right text-white py-2 px-5">{{ button_filter }}</a>
             </div>
           </div>
         </div>

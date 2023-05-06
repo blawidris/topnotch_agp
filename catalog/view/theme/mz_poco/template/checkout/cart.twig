@@ -104,7 +104,7 @@
         </div>
       </form>
       <br/>
-      <div class="row mb-3 align-items-end">
+      <div class="row mb-5 align-items-end mb-4">
         <div class="col-md-8">
           {% if modules %}
             <h4>{{ text_next }}</h4>
@@ -116,20 +116,20 @@
             </div>
           {% endif %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 ">
           <table class="table table-bordered m-0">
             {% for total in totals %}
               <tr>
-                <td class="text-right">{{ total.title }}:</td>
+                <td class="text-right mb-2">{{ total.title }}:</td>
                 <td class="text-right"><strong>{{ total.text }}</strong></td>
               </tr>
             {% endfor %}
           </table>
         </div>
       </div>
-      <div class="buttons clearfix">
-        <div class="float-left"><a href="{{ continue }}" class="btn btn-lg btn-secondary">{{ button_shopping }}</a></div>
-        <div class="float-right"><a href="{{ checkout }}" class="btn btn-lg btn-primary">{{ button_checkout }}</a></div>
+      <div class="buttons d-flex align-items-center  clearfix">
+        <a href="{{ continue }}" class="btn btn-lg btn-secondary">{{ button_shopping }}</a>
+        <a href="{{ checkout }}" class="btn btn-lg btn-primary ml-auto">{{ button_checkout }}</a>
       </div>
       {{ content_bottom }}</div>
     {{ column_right }}</div>
