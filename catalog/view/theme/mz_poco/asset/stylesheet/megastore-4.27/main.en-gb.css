@@ -4829,6 +4829,10 @@ div[id^="product-product"] .breadcrumb {
 	--active-color: #3bb77e;
 }
 
+.close.mz-modal-close:before {
+	content: "";
+}
+
 .mm {
 	-ms-flex-direction: column;
 	flex-direction: column;
@@ -4963,13 +4967,22 @@ textarea.form-control {
 	margin-right: 10px;
 }
 
-#entry_215722, #entry_215828, #entry_215904, #entry_215880, #entry_215903, #entry_215934, #entry_216095, #entry_216118 {
+#entry_215722, #entry_217589, #entry_215828, #entry_215904, #entry_215880, #entry_215903, #entry_215934, #entry_216095, #entry_216118 {
 	background: transparent !important;
 }
 
-#entry_215904, #entry_216063, #entry_216118, #entry_216095, #entry_216117 {
+#entry_215904, #entry_216063, #entry_216118, #entry_216095, #entry_216117, #entry_21753, #entry_217590 {
 	padding: 0 !important;
 	border: none !important;
+}
+
+.content-image .btn-wishlist {
+	border: none !important;
+}
+
+#entry_217595 {
+	-ms-flex-align: center;
+	align-items: center;
 }
 
 #entry_216125 {
@@ -5002,11 +5015,11 @@ textarea.form-control {
 	}
 }
 
-.close.mz-modal-close {
-	right: 7px;
-}
-
 @media (max-width: 567px) {
+	.close.mz-modal-close {
+		right: 7px;
+	}
+	
 	#entry_215318.align-items-center {
 		-ms-flex-align: end !important;
 		align-items: end !important;
@@ -5233,6 +5246,10 @@ textarea.form-control {
 	margin-top: 0;
 }
 
+.module-mz_category_wall .module-title {
+	margin-bottom: 5rem;
+}
+
 .swiper-wrapper {
 	padding: 0 !important;
 }
@@ -5409,6 +5426,57 @@ textarea.form-control {
 	font-size: 14px;
 	font-weight: 600;
 	text-transform: capitalize;
+}
+
+.content-extra ul {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	gap: 10px;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+.content-extra ul li {
+	line-height: 1.5;
+}
+
+.content-extra .badge {
+	padding: 5px 6px;
+	border-radius: 50%;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.form-control {
+	display: block;
+	width: 100%;
+	padding: .375rem .75rem;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #6b6a75;
+	background-color: #fff;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	border-radius: 2px;
+	-webkit-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	box-shadow: none;
+}
+
+.border-0 {
+	border: 0 !important;
+}
+
+.border-bottom-1 {
+	border-bottom: 1px solid #ced4da !important;
 }
 
 #common-home {

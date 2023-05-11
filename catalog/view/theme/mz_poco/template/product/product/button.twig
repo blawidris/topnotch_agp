@@ -9,7 +9,7 @@
 {% endif %}
 {% if buynow %}
 <button type="button" data-redirectToCart="1" {{ show == 'icon'?'data-toggle="tooltip"' }} class="{{ show }} btn btn-{{ size }} btn-{{ outline?'outline-' }}{{ color }} {{ block?'btn-block' }} btn-buynow button-buynow cart-{% verbatim %}{{ product_id }}{% endverbatim %}" data-loading-text="{% verbatim %}{{ text_loading }}{% endverbatim %}" title="{% verbatim %}{{ button_buynow }}{% endverbatim %}" {% verbatim %}{% if quantity <= 0 and not oc_config('config_stock_checkout') %}disabled{% endif %}{% endverbatim %}>
-{% if show != 'text' %}<i class="fas fa-shopping-bag"></i>{% endif %}
+{% if show != 'text' %}<i class="fas fa-shopping-bag mr-2"></i>{% endif %}
 {% if show != 'icon' %}{% verbatim %}{% if {% endverbatim %}{{ stock_status }}{% verbatim %} and quantity <= 0 %}{{ stock_status }}{% else %}{{ button_buynow }}{% endif %}{% endverbatim %}{% endif %}
 </button>
 {% endif %}

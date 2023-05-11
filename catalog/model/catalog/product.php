@@ -165,6 +165,7 @@ class ModelCatalogProduct extends Model {
 			'p.date_added'
 		);
 
+
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 				$sql .= " ORDER BY LCASE(" . $data['sort'] . ")";
@@ -174,13 +175,13 @@ class ModelCatalogProduct extends Model {
 				$sql .= " ORDER BY " . $data['sort'];
 			}
 		} else {
-			$sql .= " ORDER BY p.sort_order";
+			$sql .= " ORDER BY p.created";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
 			$sql .= " DESC, LCASE(pd.name) DESC";
 		} else {
-			$sql .= " ASC, LCASE(pd.name) ASC";
+			$sql .= " DESC, LCASE(pd.created) DESC";
 		}
 
 		if (isset($data['start']) || isset($data['limit'])) {
