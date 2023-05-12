@@ -34,7 +34,7 @@ $(function(){
 <div id="notification-box-top"></div>
 <div id="notification-box-bottom"></div>
 <!-- Quick view -->
-<div id="quick-view" class="modal fade quick-view" role="dialog"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><button type="button" class="close btn btn-link fas mz-modal-close" data-dismiss="modal"></button><div class="modal-body p-0"></div><div class="loader-spinner"></div></div></div></div>
+<div id="quick-view" class="modal fade quick-view" role="dialog"><div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><button type="button" class="close btn btn-link mz-modal-close" data-dismiss="modal"><i class="fa fa-times"></i></button><div class="modal-body p-0"></div><div class="loader-spinner"></div></div></div></div>
 <!-- Back to top-->
 {% if back_to_top %}
 <a id="back-to-top" data-show="0" href="#" class="btn btn-primary shadow back-to-top" style="display: none" role="button"><i class="fas fa-chevron-up"></i></a>
@@ -72,7 +72,7 @@ window.addEventListener("scroll", function(){
             <button type="button" class="close fas fa-times" aria-label="Close" data-dismiss="modal"></button>
             {% endif %}
         </div>
-        {% elseif popup.close_button %}<button type="button" class="close fas mz-modal-close" aria-label="Close" data-dismiss="modal"></button>
+        {% elseif popup.close_button %}<button type="button" class="close mz-modal-close" aria-label="Close" data-dismiss="modal"><i class="fas fa-times"></i></button>
         {% endif %}
         <div class="modal-body">{{ popup.content }}</div>
         {% if popup.do_not_show_again %}

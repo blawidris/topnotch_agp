@@ -4,7 +4,7 @@
   <label class="input-group-prepend m-0" for="input-sort"><span class="input-group-text">{{ text_sort }}</span></label>
   <select id="input-sort" class="custom-select" onchange="location = this.value;">
   {% for sort_data in sorts %}
-    {% if sort_data.value == '%s-%s'|format(sort, order) %}
+    {% if sort_data.value == '%s-%s'|format(sort, order) %} #}
     <option value="{{ sort_data.href }}" selected>{{ sort_data.text }}</option>
     {% else %}
     <option value="{{ sort_data.href }}">{{ sort_data.text }}</option>

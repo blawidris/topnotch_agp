@@ -66,10 +66,10 @@
           <div class="modal-header border-0 bg-{{ component_color?:'primary' }} text-{{ component_color?:'primary' }}-inverse">
             <h5 class="modal-title">{{ component_title }}</h5>
             {% if component_popup_close_button %}
-            <button type="button" class="close fas fa-times" aria-label="Close" data-dismiss="modal"></button>
+            <button type="button" class="close far fa-times" aria-label="Close" data-dismiss="modal"></button>
             {% endif %}
           </div>
-          {% elseif component_popup_close_button %}<button type="button" class="close fas mz-modal-close" aria-label="Close" data-dismiss="modal"></button>
+          {% elseif component_popup_close_button %}<button type="button" class="close mz-modal-close" aria-label="Close" data-dismiss="modal"><i class="fas fa-times"></i></button>
           {% endif %}
           <div id="entry{{ suffix }}_{{ entry_id }}" class="modal-body entry-component {{ custom_class }} {{ class }}">{{ child_entry|trim }}</div>
           {% if component_popup_do_not_show_again.status %}

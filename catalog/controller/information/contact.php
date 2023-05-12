@@ -20,7 +20,10 @@ class ControllerInformationContact extends Controller {
 			$mail->setFrom($this->request->post['email']);
 			$mail->setReplyTo($this->request->post['email']);
 			$mail->setSender(html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8'));
-			$mail->setSubject(html_entity_decode(sprintf($this->language->get('email_subject'), $this->request->post['name']), ENT_QUOTES, 'UTF-8'));
+
+			$email_subject = $this->request->post['email'] . '%s' ?: $this->language->get('email_subject');
+
+			$mail->setSubject(html_entity_decode(sprintf($email_subject, $this->request->post['name']), ENT_QUOTES, 'UTF-8'));
 			$mail->setText($this->request->post['enquiry']);
 			$mail->send();
 
@@ -50,6 +53,12 @@ class ControllerInformationContact extends Controller {
 		} else {
 			$data['error_email'] = '';
 		}
+		
+		if (isset($this->error['subject'])) {
+			$data['error_subject'] = $this->error['subject'];
+		} else {
+			$data['error_subject'] = '';
+		}
 
 		if (isset($this->error['enquiry'])) {
 			$data['error_enquiry'] = $this->error['enquiry'];
@@ -71,12 +80,16 @@ class ControllerInformationContact extends Controller {
 
 		$data['store'] = $this->config->get('config_name');
 		$data['address'] = nl2br($this->config->get('config_address'));
+		$data['config_email'] = $this->config->get('config_email');
 		$data['geocode'] = $this->config->get('config_geocode');
 		$data['geocode_hl'] = $this->config->get('config_language');
 		$data['telephone'] = $this->config->get('config_telephone');
 		$data['fax'] = $this->config->get('config_fax');
 		$data['open'] = nl2br($this->config->get('config_open'));
 		$data['comment'] = $this->config->get('config_comment');
+
+		var_dump($data['config_email']);
+		return;
 
 		$data['locations'] = array();
 
@@ -96,6 +109,7 @@ class ControllerInformationContact extends Controller {
 					'location_id' => $location_info['location_id'],
 					'name'        => $location_info['name'],
 					'address'     => nl2br($location_info['address']),
+					'email'     => nl2br($location_info['email']),
 					'geocode'     => $location_info['geocode'],
 					'telephone'   => $location_info['telephone'],
 					'fax'         => $location_info['fax'],
@@ -116,6 +130,12 @@ class ControllerInformationContact extends Controller {
 			$data['email'] = $this->request->post['email'];
 		} else {
 			$data['email'] = $this->customer->getEmail();
+		}
+
+		if (isset($this->request->post['subject'])) {
+			$data['subject'] = $this->request->post['subject'];
+		}else{
+			$data['subject'] = '';
 		}
 
 		if (isset($this->request->post['enquiry'])) {
@@ -144,6 +164,10 @@ class ControllerInformationContact extends Controller {
 	protected function validate() {
 		if ((utf8_strlen($this->request->post['name']) < 3) || (utf8_strlen($this->request->post['name']) > 32)) {
 			$this->error['name'] = $this->language->get('error_name');
+		}
+		
+		if ((utf8_strlen($this->request->post['subject']) < 10)) {
+			$this->error['subject'] = $this->language->get('error_subject');
 		}
 
 		if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
