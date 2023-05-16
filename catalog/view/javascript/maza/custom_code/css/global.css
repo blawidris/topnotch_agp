@@ -130,6 +130,7 @@ textarea.form-control {
     margin-right:0;
 }
 
+
 #entry_215326, #entry_215324{
     margin-right:10px;
 }
@@ -443,7 +444,7 @@ textarea.form-control {
 }
 
 
-// featured
+/* featured*/
 .feature-card-alpha{
     padding:20px 10px;
     -webkit-box-shadow:4px 8px 30px rgba(141,141,141,.1);
