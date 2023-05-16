@@ -38,24 +38,15 @@
 							{% else %}
 								<select class="form-control" name="account_type" id="input-account-type">
 									<option value="">Select type</option>
-									{% if account_type == 'Seller' %}
-										<option value="Seller" selected="selected">Seller</option>
-									{% else %}
-										<option value="Seller">Seller</option>
-									{% endif %}
-
-									{% if account_type == 'Buyer' %}
-										<option value="Buyer" selected="selected">Buyer</option>
-									{% else %}
-										<option value="Buyer">Buyer</option>
-									{% endif %}
-
+									<option value="Seller" {% if account_type == 'seller' %} selected {% endif %}>Seller</option>
+									<option value="Buyer" {% if account_type == 'buyer' %} selected {% endif %}>Buyer</option>
 								</select>
+								{% if error_account_type %}
+									<div class="text-danger">{{ error_account_type }}</div>
+								{% endif %}
 							{% endif %}
 
-							{% if error_account_type %}
-								<div class="text-danger">{{ error_account_type }}</div>
-							{% endif %}
+
 						</div>
 					</div>
 					<div class="form-group row required">
@@ -358,7 +349,8 @@ alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
 }
 }, 500);
 });
-//-->
+//
+	-->
 </script>
 <script>
 	<!--
@@ -373,6 +365,7 @@ down: "fas fa-arrow-down"
 }
 });
 });
-//-->
+//
+	-->
 </script>
 {{ footer }}

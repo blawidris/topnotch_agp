@@ -175,13 +175,13 @@ class ModelCatalogProduct extends Model {
 				$sql .= " ORDER BY " . $data['sort'];
 			}
 		} else {
-			$sql .= " ORDER BY p.created";
+			$sql .= " ORDER BY p.date_added";
 		}
 
 		if (isset($data['order']) && ($data['order'] == 'DESC')) {
 			$sql .= " DESC, LCASE(pd.name) DESC";
 		} else {
-			$sql .= " DESC, LCASE(pd.created) DESC";
+			$sql .= " DESC";
 		}
 
 		if (isset($data['start']) || isset($data['limit'])) {

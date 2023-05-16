@@ -56,7 +56,7 @@ class ModelAccountCustomer extends Model {
 	}
 
 	public function getCustomerByCode($code) {
-		$query = $this->db->query("SELECT customer_id, firstname, lastname, email FROM `" . DB_PREFIX . "customer` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
+		$query = $this->db->query("SELECT customer_id, firstname, lastname, email, account_type FROM `" . DB_PREFIX . "customer` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
 		return $query->row;
 	}

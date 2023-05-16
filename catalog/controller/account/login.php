@@ -37,12 +37,12 @@ class ControllerAccountLogin extends Controller {
 					$this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
 				}
 
-				$this->response->redirect($this->url->link('account/account', '', true));
+				$this->response->redirect($this->url->link('common/home', '', true));
 			}
 		}
 
 		if ($this->customer->isLogged()) {
-			$this->response->redirect($this->url->link('account/account', '', true));
+			$this->response->redirect($this->url->link('common/home', '', true));
 		}
 
 		$this->load->language('account/login');

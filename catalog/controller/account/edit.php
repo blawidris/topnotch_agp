@@ -64,6 +64,12 @@ class ControllerAccountEdit extends Controller
 		} else {
 			$data['error_lastname'] = '';
 		}
+		
+		if (isset($this->error['account_type'])) {
+			$data['error_account_type'] = $this->error['account_type'];
+		} else {
+			$data['error_account_type'] = '';
+		}
 
 		if (isset($this->error['email'])) {
 			$data['error_email'] = $this->error['email'];
@@ -85,6 +91,8 @@ class ControllerAccountEdit extends Controller
 
 		$data['action'] = $this->url->link('account/edit', '', true);
 
+		// $customer_info = null;
+
 		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
 			$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
 		}
@@ -96,15 +104,14 @@ class ControllerAccountEdit extends Controller
 		} else {
 			$data['firstname'] = '';
 		}
+
 		if (isset($this->request->post['account_type'])) {
 			$data['account_type'] = $this->request->post['account_type'];
-		} elseif (!empty($customer_info)) {
+		} elseif (!empty($customer_info['account_type'])) {
 			$data['account_type'] = $customer_info['account_type'];
 		} else {
 			$data['account_type'] = '';
 		}
-
-		$data['account_type'] = $customer_info['account_type'];
 
 		if (isset($this->request->post['lastname'])) {
 			$data['lastname'] = $this->request->post['lastname'];
@@ -185,8 +192,9 @@ class ControllerAccountEdit extends Controller
 
 	protected function validate()
 	{
-		if (trim($this->request->post['account_type']) == '') {
-			$this->error['account_type'] = $this->language->get('error_account_type');
+		if (empty($this->request->post['account_type'])) {
+			$this->error['account_type'] = 'Select an account type';
+			// $this->error['account_type'] = $this->language->get('error_account_type');
 		}
 		
 		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {

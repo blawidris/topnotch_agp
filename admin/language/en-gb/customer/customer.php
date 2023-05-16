@@ -48,6 +48,7 @@ $_['entry_firstname']           = 'First Name';
 $_['entry_lastname']            = 'Last Name';
 $_['entry_email']               = 'E-Mail';
 $_['entry_telephone']           = 'Telephone';
+$_['entry_account_type']           = 'Account type';
 $_['entry_newsletter']          = 'Newsletter';
 $_['entry_status']              = 'Status';
 $_['entry_approved']            = 'Approved';
