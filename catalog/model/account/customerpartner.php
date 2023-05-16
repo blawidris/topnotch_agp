@@ -1,27 +1,30 @@
 <?php
 const MPIMAGEFOLDER = 'catalog/';
 
-class ModelAccountCustomerpartner extends Model {
+class ModelAccountCustomerpartner extends Model
+{
 
-		/*Membership functions*/
+	/*Membership functions*/
 
 	/**
 	 * [checkIsMember to check that logged in seller is a member or not and if a member then membership expiry date and other details]
 	 * @param  [integer] $seller_id [customer id of seller]
 	 * @return [array|boolean]            [details about membership|false]
 	 */
-	public function checkIsMember($seller_id) {
-		$membershipDetails = $this->db->query("SELECT * FROM ".DB_PREFIX."seller_group_customer sgc LEFT JOIN ".DB_PREFIX."seller_group_name sgn ON (sgc.gid = sgn.id) WHERE sgc.customer_id = '".(int)$seller_id."' AND sgn.language_id = '".(int)$this->config->get('config_language_id')."' ")->row;
-		if($membershipDetails && isset($membershipDetails['membership_expiry'])) {
+	public function checkIsMember($seller_id)
+	{
+		$membershipDetails = $this->db->query("SELECT * FROM " . DB_PREFIX . "seller_group_customer sgc LEFT JOIN " . DB_PREFIX . "seller_group_name sgn ON (sgc.gid = sgn.id) WHERE sgc.customer_id = '" . (int)$seller_id . "' AND sgn.language_id = '" . (int)$this->config->get('config_language_id') . "' ")->row;
+		if ($membershipDetails && isset($membershipDetails['membership_expiry'])) {
 			return $membershipDetails;
 		} else {
 			return false;
 		}
 	}
 
-	public function checkSeller($seller_id) {
-		$membershipDetails = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_to_customer WHERE customer_id = '".(int)$seller_id."'")->row;
-		if($membershipDetails && isset($membershipDetails['customer_id'])) {
+	public function checkSeller($seller_id)
+	{
+		$membershipDetails = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_customer WHERE customer_id = '" . (int)$seller_id . "'")->row;
+		if ($membershipDetails && isset($membershipDetails['customer_id'])) {
 			return true;
 		} else {
 			return false;
@@ -33,9 +36,10 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id of product]
 	 * @return [boolean]             [product belongs to seller or not (true/false)]
 	 */
-	public function checkSellerOwnProduct($product_id) {
-		$result = $this->db->query("SELECT product_id FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = '".(int)$product_id."' AND customer_id = '".(int)$this->customer->getId()."' ")->row;
-		if($result) {
+	public function checkSellerOwnProduct($product_id)
+	{
+		$result = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' ")->row;
+		if ($result) {
 			return true;
 		} else {
 			return false;
@@ -47,8 +51,9 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id of product]
 	 * @return [boolean]             [true]
 	 */
-	public function publishProduct($product_id) {
-		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET current_status = 'active' WHERE product_id = '".(int)$product_id."' ");
+	public function publishProduct($product_id)
+	{
+		$this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_product SET current_status = 'active' WHERE product_id = '" . (int)$product_id . "' ");
 		// $this->db->query("UPDATE ".DB_PREFIX."product SET status = '1' WHERE product_id = '".(int)$product_id."' ");
 		return true;
 	}
@@ -58,8 +63,9 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id of product]
 	 * @return [boolean]             [true]
 	 */
-	public function unpublishProduct($product_id) {
-		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET current_status = 'inactive' WHERE product_id = '".(int)$product_id."' ");
+	public function unpublishProduct($product_id)
+	{
+		$this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_product SET current_status = 'inactive' WHERE product_id = '" . (int)$product_id . "' ");
 	}
 
 	/**
@@ -67,41 +73,42 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id of product]
 	 * @return [boolean]             [true/false]
 	 */
-	public function relist($product_id) {
-		$relist = $this->db->query("SELECT relist_count FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = '".(int)$product_id."' AND customer_id = '".(int)$this->customer->getId()."' ")->row;
+	public function relist($product_id)
+	{
+		$relist = $this->db->query("SELECT relist_count FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' ")->row;
 		$category = $this->getProductCategory($product_id);
 
 		$relist_count = $relist['relist_count'] + 1;
 
-		$this->db->query("UPDATE ".DB_PREFIX."customerpartner_to_product SET current_status = 'active', relist_count = '".$relist_count."' WHERE product_id = '".(int)$product_id."' AND customer_id = '".(int)$this->customer->getId()."' ");
+		$this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_product SET current_status = 'active', relist_count = '" . $relist_count . "' WHERE product_id = '" . (int)$product_id . "' AND customer_id = '" . (int)$this->customer->getId() . "' ");
 
-		if(isset($category) && $category) {
+		if (isset($category) && $category) {
 			foreach ($category as $key => $value) {
 
-				$result = $this->db->query("SELECT sgpl.quantity,sgpld.days FROM ".DB_PREFIX."seller_group_product_listing sgpl LEFT JOIN ".DB_PREFIX."seller_group_product_listing_duration sgpld ON (sgpld.seller_id=sgpl.seller_id) WHERE sgpl.seller_id = '".(int)$this->customer->getId()."' AND sgpl.category_id = '".(int)$value['category_id']."' ")->row;
+				$result = $this->db->query("SELECT sgpl.quantity,sgpld.days FROM " . DB_PREFIX . "seller_group_product_listing sgpl LEFT JOIN " . DB_PREFIX . "seller_group_product_listing_duration sgpld ON (sgpld.seller_id=sgpl.seller_id) WHERE sgpl.seller_id = '" . (int)$this->customer->getId() . "' AND sgpl.category_id = '" . (int)$value['category_id'] . "' ")->row;
 
-				if($result && isset($result['quantity']) && $result['quantity']) {
+				if ($result && isset($result['quantity']) && $result['quantity']) {
 					$quantity = $result['quantity'] - 1;
-					$this->db->query("UPDATE ".DB_PREFIX."seller_group_product_listing SET quantity = '".(int)$quantity."' WHERE seller_id = '".(int)$this->customer->getId()."' AND category_id = '".(int)$value['category_id']."' ");
-					$this->getListingCommission((int)$this->customer->getId(),(int)$value['category_id']);
+					$this->db->query("UPDATE " . DB_PREFIX . "seller_group_product_listing SET quantity = '" . (int)$quantity . "' WHERE seller_id = '" . (int)$this->customer->getId() . "' AND category_id = '" . (int)$value['category_id'] . "' ");
+					$this->getListingCommission((int)$this->customer->getId(), (int)$value['category_id']);
 				} else {
-					$result = $this->db->query("SELECT customerDefaultNoOfListing, customerDefaultListingDuration FROM ".DB_PREFIX."seller_group_customer WHERE customer_id = '".(int)$this->customer->getId()."' ")->row;
+					$result = $this->db->query("SELECT customerDefaultNoOfListing, customerDefaultListingDuration FROM " . DB_PREFIX . "seller_group_customer WHERE customer_id = '" . (int)$this->customer->getId() . "' ")->row;
 
-					if($result && isset($result['customerDefaultNoOfListing']) && $result['customerDefaultNoOfListing']) {
+					if ($result && isset($result['customerDefaultNoOfListing']) && $result['customerDefaultNoOfListing']) {
 						$customerDefaultNoOfListing = $result['customerDefaultNoOfListing'] - 1;
-						$this->db->query("UPDATE ".DB_PREFIX."seller_group_customer SET customerDefaultNoOfListing = '".$customerDefaultNoOfListing."' WHERE customer_id = '".(int)$this->customer->getId()."' ");
-						$this->getListingCommission((int)$this->customer->getId(),(int)$value['category_id']);
+						$this->db->query("UPDATE " . DB_PREFIX . "seller_group_customer SET customerDefaultNoOfListing = '" . $customerDefaultNoOfListing . "' WHERE customer_id = '" . (int)$this->customer->getId() . "' ");
+						$this->getListingCommission((int)$this->customer->getId(), (int)$value['category_id']);
 					} else {
 						return false;
 					}
 				}
 			}
 		} else {
-			$result = $this->db->query("SELECT customerDefaultNoOfListing, customerDefaultListingDuration FROM ".DB_PREFIX."seller_group_customer WHERE customer_id = '".(int)$this->customer->getId()."' ")->row;
-			if($result && isset($result['customerDefaultNoOfListing']) && $result['customerDefaultNoOfListing']) {
+			$result = $this->db->query("SELECT customerDefaultNoOfListing, customerDefaultListingDuration FROM " . DB_PREFIX . "seller_group_customer WHERE customer_id = '" . (int)$this->customer->getId() . "' ")->row;
+			if ($result && isset($result['customerDefaultNoOfListing']) && $result['customerDefaultNoOfListing']) {
 				$customerDefaultNoOfListing = $result['customerDefaultNoOfListing'] - 1;
-				$this->getListingCommission((int)$this->customer->getId(),(int)$value['category_id']);
-				$this->db->query("UPDATE ".DB_PREFIX."seller_group_customer SET customerDefaultNoOfListing = '".$customerDefaultNoOfListing."' WHERE customer_id = '".(int)$this->customer->getId()."' ");
+				$this->getListingCommission((int)$this->customer->getId(), (int)$value['category_id']);
+				$this->db->query("UPDATE " . DB_PREFIX . "seller_group_customer SET customerDefaultNoOfListing = '" . $customerDefaultNoOfListing . "' WHERE customer_id = '" . (int)$this->customer->getId() . "' ");
 				return true;
 			} else {
 				return false;
@@ -109,31 +116,31 @@ class ModelAccountCustomerpartner extends Model {
 		}
 	}
 
-	public function getListingCommission($customer_id = 0, $category_id = 0) {
+	public function getListingCommission($customer_id = 0, $category_id = 0)
+	{
 
-		$commission_fee =  $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_commission` WHERE  seller_id = '".(int)$customer_id."'")->row;
+		$commission_fee =  $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_commission` WHERE  seller_id = '" . (int)$customer_id . "'")->row;
 
 		if (!isset($commission_fee['commission_amount'])) {
 			$commission_fee['commission_amount'] = 0.00;
 		}
 
-		$commission = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_fee` WHERE seller_id = '".(int)$customer_id."' AND category_id = '".(int)$category_id."'")->row;
+		$commission = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_fee` WHERE seller_id = '" . (int)$customer_id . "' AND category_id = '" . (int)$category_id . "'")->row;
 
 		if (isset($commission['fee'])) {
-				$commission_fee['commission_amount'] = $commission_fee['commission_amount'] + $commission['fee'];
+			$commission_fee['commission_amount'] = $commission_fee['commission_amount'] + $commission['fee'];
 		} else {
-			$commission = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_customer` WHERE customer_id = '".(int)$customer_id."'") ->row;
+			$commission = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_customer` WHERE customer_id = '" . (int)$customer_id . "'")->row;
 			if ($commission['customerDefaultListingFee']) {
 				$commission_fee['commission_amount'] = $commission_fee['commission_amount'] + $commission['customerDefaultListingFee'];
 			}
 		}
 
-		if ($this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_commission` WHERE  seller_id = '".(int)$customer_id."'")->num_rows) {
-			$this->db->query("UPDATE `" . DB_PREFIX . "seller_group_product_listing_commission` SET commission_amount = '" . (float)$commission_fee['commission_amount'] . "' WHERE seller_id = '".(int)$customer_id."'");
+		if ($this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_product_listing_commission` WHERE  seller_id = '" . (int)$customer_id . "'")->num_rows) {
+			$this->db->query("UPDATE `" . DB_PREFIX . "seller_group_product_listing_commission` SET commission_amount = '" . (float)$commission_fee['commission_amount'] . "' WHERE seller_id = '" . (int)$customer_id . "'");
 		} else {
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "seller_group_product_listing_commission` SET seller_id = '".(int)$customer_id."',commission_amount = '" . (float)$commission_fee['commission_amount'] . "' ");
+			$this->db->query("INSERT INTO `" . DB_PREFIX . "seller_group_product_listing_commission` SET seller_id = '" . (int)$customer_id . "',commission_amount = '" . (float)$commission_fee['commission_amount'] . "' ");
 		}
-
 	}
 
 	/**
@@ -141,9 +148,10 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id of product]
 	 * @return [integer|boolean]             [category id or false]
 	 */
-	public function getProductCategory($product_id) {
-		$result = $this->db->query("SELECT category_id FROM ".DB_PREFIX."product_to_category p2c WHERE product_id = '".(int)$product_id."' ")->rows;
-		if($result) {
+	public function getProductCategory($product_id)
+	{
+		$result = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "product_to_category p2c WHERE product_id = '" . (int)$product_id . "' ")->rows;
+		if ($result) {
 			return $result;
 		} else {
 			return false;
@@ -156,24 +164,25 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [id pf product]
 	 * @return [boolean]             [product exist in cart/wishlist or not (true/false)]
 	 */
-	public function checkProductInCartWishlist($product_id) {
-		$product = $this->db->query("SELECT current_status FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = '".(int)$product_id."' ")->row;
-		if($product && ( $product['current_status'] == 'expired' || $product['current_status'] == 'inactive' || $product['current_status'] == 'disabled' || $product['current_status'] == 'deleted' ) ) {
-			if(!$this->customer->isLogged()) {
+	public function checkProductInCartWishlist($product_id)
+	{
+		$product = $this->db->query("SELECT current_status FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "' ")->row;
+		if ($product && ($product['current_status'] == 'expired' || $product['current_status'] == 'inactive' || $product['current_status'] == 'disabled' || $product['current_status'] == 'deleted')) {
+			if (!$this->customer->isLogged()) {
 				return false;
 			}
-			$result = $this->db->query("SELECT wishlist FROM ".DB_PREFIX."customer WHERE customer_id = '".(int)$this->customer->getId()."' ")->row;
+			$result = $this->db->query("SELECT wishlist FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$this->customer->getId() . "' ")->row;
 
-			if($result && unserialize($result['wishlist'])) {
+			if ($result && unserialize($result['wishlist'])) {
 				$wishlist = unserialize($result['wishlist']);
-				if($this->cart->getProducts()) {
+				if ($this->cart->getProducts()) {
 					foreach ($this->cart->getProducts() as $key => $product) {
-						if($product['product_id'] == $product_id || ( is_array($wishlist) && in_array($product['product_id'], $wishlist) )) {
+						if ($product['product_id'] == $product_id || (is_array($wishlist) && in_array($product['product_id'], $wishlist))) {
 							return false;
 						}
 					}
 				}
-				if(in_array($product_id, $wishlist)) {
+				if (in_array($product_id, $wishlist)) {
 					return false;
 				}
 			}
@@ -188,12 +197,13 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $seller_id [seller is of logged in seller]
 	 * @return [array] [list of low stock products]
 	 */
-	public function getLowStockProducts($seller_id) {
-		$result['products'] = $this->db->query("SELECT p.model,pd.name,p.quantity FROM ".DB_PREFIX."customerpartner_to_product cp2p LEFT JOIN ".DB_PREFIX."product p ON (p.product_id=cp2p.product_id) LEFT JOIN ".DB_PREFIX."product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '".(int)$seller_id."' AND p.quantity <= '". (int)$this->config->get('marketplace_low_stock_quantity') ."' AND pd.language_id = '".(int)$this->config->get('config_language_id')."' ORDER BY p.quantity ASC LIMIT 0,5 ")->rows;
+	public function getLowStockProducts($seller_id)
+	{
+		$result['products'] = $this->db->query("SELECT p.model,pd.name,p.quantity FROM " . DB_PREFIX . "customerpartner_to_product cp2p LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id=cp2p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '" . (int)$seller_id . "' AND p.quantity <= '" . (int)$this->config->get('marketplace_low_stock_quantity') . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY p.quantity ASC LIMIT 0,5 ")->rows;
 
-		$result['count'] = count($this->db->query("SELECT p.model,pd.name,p.quantity FROM ".DB_PREFIX."customerpartner_to_product cp2p LEFT JOIN ".DB_PREFIX."product p ON (p.product_id=cp2p.product_id) LEFT JOIN ".DB_PREFIX."product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '".(int)$seller_id."' AND p.quantity <= '". (int)$this->config->get('marketplace_low_stock_quantity') ."' AND pd.language_id = '".(int)$this->config->get('config_language_id')."' ORDER BY p.quantity ASC ")->rows);
+		$result['count'] = count($this->db->query("SELECT p.model,pd.name,p.quantity FROM " . DB_PREFIX . "customerpartner_to_product cp2p LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id=cp2p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '" . (int)$seller_id . "' AND p.quantity <= '" . (int)$this->config->get('marketplace_low_stock_quantity') . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY p.quantity ASC ")->rows);
 
-		if($result) {
+		if ($result) {
 			return $result;
 		} else {
 			return false;
@@ -205,9 +215,10 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $seller_id [seller is of logged in seller]
 	 * @return [array]            [list of top 5 viewed products]
 	 */
-	public function getMostViewedProducts($seller_id) {
-		$products = $this->db->query("SELECT p.model,pd.name,p.viewed FROM ".DB_PREFIX."customerpartner_to_product cp2p LEFT JOIN ".DB_PREFIX."product p ON (p.product_id=cp2p.product_id) LEFT JOIN ".DB_PREFIX."product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '".(int)$seller_id."' AND p.viewed >= 5 AND pd.language_id = '".(int)$this->config->get('config_language_id')."' ORDER BY p.viewed DESC LIMIT 0,5 ")->rows;
-		if($products) {
+	public function getMostViewedProducts($seller_id)
+	{
+		$products = $this->db->query("SELECT p.model,pd.name,p.viewed FROM " . DB_PREFIX . "customerpartner_to_product cp2p LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id=cp2p.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id=pd.product_id) WHERE cp2p.customer_id = '" . (int)$seller_id . "' AND p.viewed >= 5 AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY p.viewed DESC LIMIT 0,5 ")->rows;
+		if ($products) {
 			return $products;
 		} else {
 			return false;
@@ -218,9 +229,10 @@ class ModelAccountCustomerpartner extends Model {
 	 * [getSellerDetails to get membership groups with their details]
 	 * @return [array] [list of all membership groups]
 	 */
-	public function getSellerDetails() {
-		$query_detail = $this->db->query("SELECT * FROM ".DB_PREFIX."seller_group sg LEFT JOIN ".DB_PREFIX."seller_group_name sgn ON (sg.groupid=sgn.id) ")->rows;
-		if($query_detail) {
+	public function getSellerDetails()
+	{
+		$query_detail = $this->db->query("SELECT * FROM " . DB_PREFIX . "seller_group sg LEFT JOIN " . DB_PREFIX . "seller_group_name sgn ON (sg.groupid=sgn.id) ")->rows;
+		if ($query_detail) {
 			return $query_detail;
 		} else {
 			return false;
@@ -232,31 +244,33 @@ class ModelAccountCustomerpartner extends Model {
 	 * [getRamainingQuantity to get quantity of remaining products that a seller can add]
 	 * @return [integer] [exact quantity that is left and seller can add that much more products]
 	 */
-	public function getRamainingQuantity(){
-        $products = $this->getTotalProductsSeller();
-        $sql = "SELECT gcquantity FROM ".DB_PREFIX."seller_group_customer WHERE customer_id = '".(int)$this->customer->getId()."' ";
-        $inStock = $this->db->query($sql)->row;
-        if($inStock && $inStock['gcquantity'] == 0) {
-            return $inStock['gcquantity'];
-        } else if(isset($inStock['gcquantity']) && $inStock['gcquantity'] > $products) {
-            return ($inStock['gcquantity'] - $products);
-        }
-    }
+	public function getRamainingQuantity()
+	{
+		$products = $this->getTotalProductsSeller();
+		$sql = "SELECT gcquantity FROM " . DB_PREFIX . "seller_group_customer WHERE customer_id = '" . (int)$this->customer->getId() . "' ";
+		$inStock = $this->db->query($sql)->row;
+		if ($inStock && $inStock['gcquantity'] == 0) {
+			return $inStock['gcquantity'];
+		} else if (isset($inStock['gcquantity']) && $inStock['gcquantity'] > $products) {
+			return ($inStock['gcquantity'] - $products);
+		}
+	}
 
 	/**
 	 * [chkSellerProductAccess to check seller has access over that product or not]
 	 * @param  [integer] $product_id [product id of any product]
 	 * @return [boolean]             [true or false]
 	 */
-	public function chkSellerProductAccess($product_id) {
-		$sql = $this->db->query("SELECT c2p.customer_id FROM ".DB_PREFIX ."customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX ."product p ON (c2p.product_id = p.product_id) WHERE p.product_id = '".(int)$product_id."' ORDER BY c2p.id ASC");
+	public function chkSellerProductAccess($product_id)
+	{
+		$sql = $this->db->query("SELECT c2p.customer_id FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN " . DB_PREFIX . "product p ON (c2p.product_id = p.product_id) WHERE p.product_id = '" . (int)$product_id . "' ORDER BY c2p.id ASC");
 
-		if($sql->row){
-			if($sql->row['customer_id'] == (int)$this->customer->getId())
+		if ($sql->row) {
+			if ($sql->row['customer_id'] == (int)$this->customer->getId())
 				return true;
 			else
 				return false;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -266,7 +280,8 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [string]             [keyword related to that particular product]
 	 */
-	public function getProductKeyword($product_id){
+	public function getProductKeyword($product_id)
+	{
 		$result = $this->db->query("SELECT keyword,language_id FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'")->rows;
 		if ($result) {
 			foreach ($result as $key => $value) {
@@ -276,7 +291,6 @@ class ModelAccountCustomerpartner extends Model {
 		} else {
 			return array();
 		}
-
 	}
 
 	/**
@@ -284,10 +298,11 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [detail about total sold quantity of particular product]
 	 */
-	public function getProductSoldQuantity($product_id){
-		$sql = $this->db->query("SELECT SUM(c2o.quantity) quantity, (SUM(c2o.price) - SUM(c2o.admin)) total FROM ".DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN ".DB_PREFIX ."customerpartner_to_product c2p ON (c2o.product_id = c2p.product_id AND c2o.customer_id = c2p.customer_id ) WHERE c2o.customer_id = '".(int)$this->customer->getId()."' and c2p.product_id = '".(int)$product_id."'");
+	public function getProductSoldQuantity($product_id)
+	{
+		$sql = $this->db->query("SELECT SUM(c2o.quantity) quantity, (SUM(c2o.price) - SUM(c2o.admin)) total FROM " . DB_PREFIX . "customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2o.product_id = c2p.product_id AND c2o.customer_id = c2p.customer_id ) WHERE c2o.customer_id = '" . (int)$this->customer->getId() . "' and c2p.product_id = '" . (int)$product_id . "'");
 
-		return($sql->row);
+		return ($sql->row);
 	}
 
 	/**
@@ -295,25 +310,26 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [detail of particular product]
 	 */
-	public function getProduct($product_id) {
+	public function getProduct($product_id)
+	{
 
 		$query = $this->db->query("SELECT DISTINCT *, pd.name AS name, p.image, m.name AS manufacturer, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, (SELECT points FROM " . DB_PREFIX . "product_reward pr WHERE pr.product_id = p.product_id AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "') AS reward, (SELECT ss.name FROM " . DB_PREFIX . "stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, (SELECT wcd.unit FROM " . DB_PREFIX . "weight_class_description wcd WHERE p.weight_class_id = wcd.weight_class_id AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, (SELECT lcd.unit FROM " . DB_PREFIX . "length_class_description lcd WHERE p.length_class_id = lcd.length_class_id AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT COUNT(*) AS total FROM " . DB_PREFIX . "review r2 WHERE r2.product_id = p.product_id AND r2.status = '1' GROUP BY r2.product_id) AS reviews, p.sort_order FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-		$result = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_to_product WHERE product_id = '" . (int)$product_id . "'")->row;
+		$result = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "'")->row;
 
 
-			if(!isset($result['expiry_date'])) {
-				$result['expiry_date'] = '';
-			}
-			if(!isset($result['relist_duration'])) {
-				$result['relist_duration'] = '';
-			}
-			if(!isset($result['auto_relist'])) {
-				$result['auto_relist'] = '';
-			}
-			if(!isset($result['current_status'])) {
-				$result['current_status'] = '';
-			}
+		if (!isset($result['expiry_date'])) {
+			$result['expiry_date'] = '';
+		}
+		if (!isset($result['relist_duration'])) {
+			$result['relist_duration'] = '';
+		}
+		if (!isset($result['auto_relist'])) {
+			$result['auto_relist'] = '';
+		}
+		if (!isset($result['current_status'])) {
+			$result['current_status'] = '';
+		}
 
 
 		if ($query->num_rows) {
@@ -380,29 +396,30 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [product's details]
 	 */
-	public function getProductsSeller($data = array()) {
+	public function getProductsSeller($data = array())
+	{
 
-		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		$sql = "SELECT p.product_id, (SELECT AVG(rating) AS total FROM " . DB_PREFIX . "review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
 
-		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
-			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
+		if (isset($data['filter_category_id']) and $data['filter_category_id']) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() ";
 
-		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
+		if (isset($data['filter_category_id']) and $data['filter_category_id']) {
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 		}
 
-		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
+		if (isset($data['filter_name']) and !empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
+		if (isset($data['filter_model']) and !empty($data['filter_model'])) {
 			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
 
-		if (isset($data['filter_price']) AND !empty($data['filter_price'])) {
+		if (isset($data['filter_price']) and !empty($data['filter_price'])) {
 			$sql .= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
 		}
 
@@ -424,10 +441,10 @@ class ModelAccountCustomerpartner extends Model {
 
 
 
-		if(!isset($data['customer_id']) || !$data['customer_id'])
-			$sql .= " AND c2p.customer_id = ". (int)$this->customer->getId() ;
+		if (!isset($data['customer_id']) || !$data['customer_id'])
+			$sql .= " AND c2p.customer_id = " . (int)$this->customer->getId();
 		else
-			$sql .= " AND c2p.customer_id = ". (int)$data['customer_id'] ;
+			$sql .= " AND c2p.customer_id = " . (int)$data['customer_id'];
 
 		$sql .= " GROUP BY p.product_id";
 
@@ -480,25 +497,26 @@ class ModelAccountCustomerpartner extends Model {
 	 * @param  [array]  $data [filter keywords]
 	 * @return [integer]       [number of products]
 	 */
-	public function getTotalProductsSeller($data = array()) {
+	public function getTotalProductsSeller($data = array())
+	{
 
-		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN ".DB_PREFIX."product_to_store p2s ON (p.product_id = p2s.product_id)";
+		$sql = "SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (c2p.product_id = p.product_id) LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
 
-		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
-			$sql .= " LEFT JOIN " . DB_PREFIX ."product_to_category p2c ON (p.product_id = p2c.product_id)";
+		if (isset($data['filter_category_id']) and $data['filter_category_id']) {
+			$sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";
 		}
 
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.date_available <= NOW() ";
 
-		if (isset($data['filter_category_id']) AND $data['filter_category_id']) {
+		if (isset($data['filter_category_id']) and $data['filter_category_id']) {
 			$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
 		}
 
-		if (isset($data['filter_name']) AND !empty($data['filter_name'])) {
+		if (isset($data['filter_name']) and !empty($data['filter_name'])) {
 			$sql .= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
 		}
 
-		if (isset($data['filter_model']) AND !empty($data['filter_model'])) {
+		if (isset($data['filter_model']) and !empty($data['filter_model'])) {
 			$sql .= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
 		}
 
@@ -506,7 +524,7 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " AND p2s.store_id = '" . (int)$data['filter_store'] . "'";
 		}
 
-		if (isset($data['filter_price']) AND !empty($data['filter_price'])) {
+		if (isset($data['filter_price']) and !empty($data['filter_price'])) {
 			$sql .= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
 		}
 
@@ -522,10 +540,10 @@ class ModelAccountCustomerpartner extends Model {
 			$sql .= " AND p.quantity <= '" . (int)$this->config->get('marketplace_low_stock_quantity') . "'";
 		}
 
-		if(!isset($data['customer_id']) || !$data['customer_id'])
-			$sql .= " AND c2p.customer_id = ". (int)$this->customer->getId() ;
+		if (!isset($data['customer_id']) || !$data['customer_id'])
+			$sql .= " AND c2p.customer_id = " . (int)$this->customer->getId();
 		else
-			$sql .= " AND c2p.customer_id = ". (int)$data['customer_id'] ;
+			$sql .= " AND c2p.customer_id = " . (int)$data['customer_id'];
 
 		$query = $this->db->query($sql);
 
@@ -536,16 +554,17 @@ class ModelAccountCustomerpartner extends Model {
 	 * [deleteProduct to delete product]
 	 * @param  [integer] $product_id [product id of particular product]
 	 */
-	public function deleteProduct($product_id) {
+	public function deleteProduct($product_id)
+	{
 
-		if($this->chkSellerProductAccess($product_id)){
+		if ($this->chkSellerProductAccess($product_id)) {
 
 			$this->db->query("DELETE FROM " . DB_PREFIX . "customerpartner_to_product WHERE product_id = '" . (int)$product_id . "'");
 
-$this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '" . (int)$product_id . "' AND `key` = 'product_stock'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '" . (int)$product_id . "' AND `key` = 'product_stock'");
 
 			//if seller can delete product from store
-			if($this->config->get('marketplace_sellerdeleteproduct')){
+			if ($this->config->get('marketplace_sellerdeleteproduct')) {
 
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "'");
@@ -563,11 +582,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
 				$this->db->query("DELETE FROM " . DB_PREFIX . "review WHERE product_id = '" . (int)$product_id . "'");
-				$this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id. "'");
-         	}
-
+				$this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "'");
+			}
 		}
-
 	}
 
 	/**
@@ -575,13 +592,14 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param [array] $data [detail about the product that is going to be added]
 	 * @return [integer] [product id of added product]
 	 */
-	public function addProduct($data){
+	public function addProduct($data)
+	{
 
 		$data['status'] = $this->config->get('marketplace_productapprov');
 
 		$sql = "INSERT INTO `" . DB_PREFIX . "product` SET ";
 
-		$sql = $this->productQuery($sql,$data);
+		$sql = $this->productQuery($sql, $data);
 
 		$sql .= " date_added = NOW() ";
 
@@ -592,30 +610,30 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		/*
 		Code to add custom fields
 		*/
-		if(isset($data['product_custom_field'])) {
+		if (isset($data['product_custom_field'])) {
 			$this->load->model("account/wkcustomfield");
-			$this->model_account_wkcustomfield->addCustomFields($data['product_custom_field'],$product_id);
+			$this->model_account_wkcustomfield->addCustomFields($data['product_custom_field'], $product_id);
 		}
 		/*
 		end here
 		*/
 
-		if (isset($data['product_image']) AND $data['product_image']) {
-		 	foreach ($data['product_image'] as $product_image) {
-		 		$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '".$product_image['sort_order']."'");
-		 	}
+		if (isset($data['product_image']) and $data['product_image']) {
+			foreach ($data['product_image'] as $product_image) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . $product_image['sort_order'] . "'");
+			}
 		}
 
 		if (isset($this->request->get['clone']) && $this->request->get['clone'] == 1) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "product` SET image = '" . $this->db->escape($data['image']) . "' WHERE product_id = '" . (int)$product_id . "'");
 			if (!empty($data['product_image'])) {
 				foreach ($data['product_image'] as $index => $product_image) {
-					$this->db->query("INSERT INTO " . DB_PREFIX ."product_image SET product_id = '" . (int)$product_id . "', image = '" . $product_image['image'] . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $product_image['image'] . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
 				}
 			}
 		}
 
-		$this->productAddUpdate($product_id,$data);
+		$this->productAddUpdate($product_id, $data);
 
 
 		/**
@@ -626,33 +644,33 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		if ($this->config->get('module_wk_seller_group_status')) {
 
-			if(isset($data['relist_duration']) && $data['relist_duration']) {
-			$date = date('y-m-d');
-			$date = strtotime($date);
-			$date = strtotime("+".$data['relist_duration']." day", $date);
-			$expiry_date = date('Y-m-d', $date);
-			} else if(isset($data['relist_duration'])) {
+			if (isset($data['relist_duration']) && $data['relist_duration']) {
+				$date = date('y-m-d');
+				$date = strtotime($date);
+				$date = strtotime("+" . $data['relist_duration'] . " day", $date);
+				$expiry_date = date('Y-m-d', $date);
+			} else if (isset($data['relist_duration'])) {
 				$expiry_date = '0000:00:00';
 			} else if (isset($data['expiry_date'])) {
 				$expiry_date = $data['expiry_date'];
 			}
 
-			if(!$data['status']) {
+			if (!$data['status']) {
 				$current_status = 'inactive';
 			}
 
-			$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id . ",customer_id = '".(int)$this->customer->getId()."',current_status = '".$current_status."', expiry_date = '".$expiry_date."',seller_price = '".(float)$this->db->escape($data['price'])."',currency_code = '".$this->session->data['currency']."' ";
+			$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id . ",customer_id = '" . (int)$this->customer->getId() . "',current_status = '" . $current_status . "', expiry_date = '" . $expiry_date . "',seller_price = '" . (float)$this->db->escape($data['price']) . "',currency_code = '" . $this->session->data['currency'] . "' ";
 
 			if (isset($data['quantity'])) {
 				$sql .= ", quantity = '" . $this->db->escape($data['quantity']) . "'";
 			}
 
 			if (isset($data['price'])) {
-				$sql .= ", price = '" .(float)$this->db->escape($this->currency->convert($data['price'],$this->session->data['currency'], $this->config->get('config_currency'))) . "'";
+				$sql .= ", price = '" . (float)$this->db->escape($this->currency->convert($data['price'], $this->session->data['currency'], $this->config->get('config_currency'))) . "'";
 			}
 
 			if (isset($data['relist_duration'])) {
-				$sql .= ", relist_duration = '".$data['relist_duration']."' ";
+				$sql .= ", relist_duration = '" . $data['relist_duration'] . "' ";
 			}
 
 			if (isset($data['auto_relist'])) {
@@ -662,59 +680,57 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			$this->db->query($sql);
 
 			$this->relist($product_id);
+		} else {
 
-		}else{
-
-			$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id . ",customer_id = '".(int)$this->customer->getId()."',currency_code = '".$this->session->data['currency']."'";
+			$sql = "INSERT INTO `" . DB_PREFIX . "customerpartner_to_product` SET `product_id` = " . (int)$product_id . ",customer_id = '" . (int)$this->customer->getId() . "',currency_code = '" . $this->session->data['currency'] . "'";
 
 			if (isset($data['quantity'])) {
 				$sql .= ", quantity = '" . $this->db->escape($data['quantity']) . "'";
 			}
 
 			if (isset($data['price'])) {
-				$sql .= ", price = '" .(float)$this->db->escape($this->currency->convert($data['price'],$this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '".(float)$this->db->escape($data['price'])."'";
+				$sql .= ", price = '" . (float)$this->db->escape($this->currency->convert($data['price'], $this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '" . (float)$this->db->escape($data['price']) . "'";
 			}
 
 			$this->db->query($sql);
-
 		}
 
 
 		$mailData = array(
 			'name' => isset($data['product_description'][(int)$this->config->get('config_language_id')]['name']) ? $data['product_description'][(int)$this->config->get('config_language_id')]['name'] : '',
 			'seller_id' => (int)$this->customer->getId(),
-        	'customer_id' => false,
-        	'mail_id' => $this->config->get('marketplace_mail_product_request'),
-        	'mail_from' => $this->config->get('marketplace_adminmail'),
-        	'mail_to' => $this->customer->getEmail(),
-        );
+			'customer_id' => false,
+			'mail_id' => $this->config->get('marketplace_mail_product_request'),
+			'mail_from' => $this->config->get('marketplace_adminmail'),
+			'mail_to' => $this->customer->getEmail(),
+		);
 
 		$commission = $this->getSellerCommission((int)$this->customer->getId());
 
-        $values = array(
-        	'product_name' => $mailData['name'],
-			'commission' => $commission."%",
-        );
+		$values = array(
+			'product_name' => $mailData['name'],
+			'commission' => $commission . "%",
+		);
 
 		/**
 		 * send maila after product added
 		 */
-        $this->load->model('customerpartner/mail');
+		$this->load->model('customerpartner/mail');
 
 		/**
 		 * add product mail to seller
 		 */
-        $this->model_customerpartner_mail->mail($mailData,$values);
+		$this->model_customerpartner_mail->mail($mailData, $values);
 
-        /**
-         * add product mail end to admin
-         */
+		/**
+		 * add product mail end to admin
+		 */
 		$mailData['mail_id'] = $this->config->get('marketplace_mail_product_admin');
-        $mailData['mail_from'] = $this->customer->getEmail();
-        $mailData['mail_to'] = $this->config->get('marketplace_adminmail');
+		$mailData['mail_from'] = $this->customer->getEmail();
+		$mailData['mail_to'] = $this->config->get('marketplace_adminmail');
 
-		if($this->config->get('marketplace_productaddemail'))
-        	$this->model_customerpartner_mail->mail($mailData,$values);
+		if ($this->config->get('marketplace_productaddemail'))
+			$this->model_customerpartner_mail->mail($mailData, $values);
 
 		return $product_id;
 	}
@@ -724,9 +740,10 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $seller_id [particular seller id]
 	 * @return [integer, boolean]            [seller's commission or false value]
 	 */
-	public function getSellerCommission($seller_id){
-		$result = $this->db->query("SELECT commission FROM ".DB_PREFIX."customerpartner_to_customer WHERE customer_id = '".(int)$seller_id."' AND is_partner = 1 ")->row;
-		if(isset($result['commission'])) {
+	public function getSellerCommission($seller_id)
+	{
+		$result = $this->db->query("SELECT commission FROM " . DB_PREFIX . "customerpartner_to_customer WHERE customer_id = '" . (int)$seller_id . "' AND is_partner = 1 ")->row;
+		if (isset($result['commission'])) {
 			return $result['commission'];
 		} else {
 			return false;
@@ -737,47 +754,48 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [editProduct to edit any product]
 	 * @param  [array] $data [detail regarding the product that has to be updated]
 	 */
-	public function editProduct($data) {
-		if(!isset($this->request->get['product_id']))
+	public function editProduct($data)
+	{
+		if (!isset($this->request->get['product_id']))
 			return;
 
-		if($this->config->get('marketplace_product_reapprove')) {
+		if ($this->config->get('marketplace_product_reapprove')) {
 			$data['status'] = 0;
 		} else {
-      $data['status'] = 1;
-    }
+			$data['status'] = 1;
+		}
 
 
 		$product_id = $this->request->get['product_id'];
 
-		if(isset($data['product_custom_field'])) {
+		if (isset($data['product_custom_field'])) {
 			$this->load->model("account/wkcustomfield");
-			$this->model_account_wkcustomfield->editCustomFields($data['product_custom_field'],$product_id);
-		} else if(isset($data['wkcustomfield'])) {
+			$this->model_account_wkcustomfield->editCustomFields($data['product_custom_field'], $product_id);
+		} else if (isset($data['wkcustomfield'])) {
 			$this->load->model("account/wkcustomfield");
 			$this->model_account_wkcustomfield->removeFromProduct($product_id);
 		}
 
 		$sql = "UPDATE `" . DB_PREFIX . "product` SET ";
 
-		$sql = $this->productQuery($sql,$data);
+		$sql = $this->productQuery($sql, $data);
 
-		$sql .= " date_modified = NOW() WHERE product_id = '".(int)$product_id."'";
+		$sql .= " date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'";
 
 		$this->db->query($sql);
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
-		if (isset($data['product_image']) AND $data['product_image']) {
-		 	foreach ($data['product_image'] as $product_image) {
-		 		$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '".$product_image['sort_order']."'");
-		 	}
+		if (isset($data['product_image']) and $data['product_image']) {
+			foreach ($data['product_image'] as $product_image) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . $product_image['sort_order'] . "'");
+			}
 		}
 
-		if(isset($data['status'])) {
-      $this->db->query("UPDATE ".DB_PREFIX."product SET status = '".$data['status']."' WHERE product_id = '".(int)$product_id."' ");
-    }
+		if (isset($data['status'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "product SET status = '" . $data['status'] . "' WHERE product_id = '" . (int)$product_id . "' ");
+		}
 
-		$this->productAddUpdate($product_id,$data);
+		$this->productAddUpdate($product_id, $data);
 
 		/**
 		 * for customerpartner_to_product
@@ -790,18 +808,18 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				$sql .= " quantity = '" . $this->db->escape($data['quantity']) . "'";
 			}
 
-			$sql .= ", currency_code = '".$this->session->data['currency']."'";
+			$sql .= ", currency_code = '" . $this->session->data['currency'] . "'";
 
 			if (isset($data['price'])) {
-				$sql .= ", price = '" .(float)$this->db->escape($this->currency->convert($data['price'],$this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '".(float)$this->db->escape($data['price'])."'";
+				$sql .= ", price = '" . (float)$this->db->escape($this->currency->convert($data['price'], $this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '" . (float)$this->db->escape($data['price']) . "'";
 			}
 			if (isset($data['relist_duration']) && $data['relist_duration']) {
 				$date = date('y-m-d');
 				$date = strtotime($date);
-				$date = strtotime("+".$data['relist_duration']." day", $date);
+				$date = strtotime("+" . $data['relist_duration'] . " day", $date);
 				$expiry_date = date('Y-m-d', $date);
-				$sql .= ", relist_duration = '" . (int)$data['relist_duration'] . "', current_status = 'active', expiry_date = '".$expiry_date."' ";
-			} else if(isset($data['relist_duration'])) {
+				$sql .= ", relist_duration = '" . (int)$data['relist_duration'] . "', current_status = 'active', expiry_date = '" . $expiry_date . "' ";
+			} else if (isset($data['relist_duration'])) {
 				$sql .= ", relist_duration = '', current_status = 'active', expiry_date = '0000-00-00' ";
 			}
 
@@ -809,19 +827,19 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				$sql .= ", auto_relist = '1' ";
 			}
 
-			$sql .= " WHERE `product_id` = " . (int)$this->request->get['product_id'] ." AND customer_id = '".(int)$this->customer->getId()."' ";
+			$sql .= " WHERE `product_id` = " . (int)$this->request->get['product_id'] . " AND customer_id = '" . (int)$this->customer->getId() . "' ";
 
-			if(isset($data['quantity']) || isset($data['price']) || isset($data['relist_duration']) || isset($data['auto_relist']) ) {
+			if (isset($data['quantity']) || isset($data['price']) || isset($data['relist_duration']) || isset($data['auto_relist'])) {
 				$this->db->query($sql);
 			}
-			if(isset($data['relist']) && $data['relist']) {
-				$this->db->query("UPDATE ".DB_PREFIX."product SET status = 1 WHERE product_id = '".(int)$product_id."' ");
+			if (isset($data['relist']) && $data['relist']) {
+				$this->db->query("UPDATE " . DB_PREFIX . "product SET status = 1 WHERE product_id = '" . (int)$product_id . "' ");
 
-			   $this->relist($product_id);
+				$this->relist($product_id);
 			}
-		}else{
+		} else {
 
-            if(isset($data['quantity']) || isset($data['price'])){
+			if (isset($data['quantity']) || isset($data['price'])) {
 
 				$sql = "UPDATE `" . DB_PREFIX . "customerpartner_to_product` SET ";
 
@@ -831,11 +849,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				}
 
 				if (isset($data['price'])) {
-					$sqlarray[] = "price = '" .(float)$this->db->escape($this->currency->convert($data['price'],$this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '".(float)$this->db->escape($data['price'])."',currency_code = '".$this->session->data['currency']."'";
+					$sqlarray[] = "price = '" . (float)$this->db->escape($this->currency->convert($data['price'], $this->session->data['currency'], $this->config->get('config_currency'))) . "',seller_price = '" . (float)$this->db->escape($data['price']) . "',currency_code = '" . $this->session->data['currency'] . "'";
 				}
 
 				$sql .= implode(',', $sqlarray);
-				$sql .= " WHERE `product_id` = " . (int)$this->request->get['product_id'] ." AND customer_id = '".(int)$this->customer->getId()."'";
+				$sql .= " WHERE `product_id` = " . (int)$this->request->get['product_id'] . " AND customer_id = '" . (int)$this->customer->getId() . "'";
 
 				$this->db->query($sql);
 			}
@@ -844,24 +862,24 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		/**
 		 * Mail to admin and seller if disapprove on edit is enabled
 		 */
-		if(isset($data['status']) && !$data['status']) {
+		if (isset($data['status']) && !$data['status']) {
 			$this->load->model('customerpartner/mail');
 
-			$mailData = array (
+			$mailData = array(
 				'name' => isset($data['product_description'][(int)$this->config->get('config_language_id')]['name']) ? $data['product_description'][(int)$this->config->get('config_language_id')]['name'] : '',
 				'seller_id' => (int)$this->customer->getId(),
-      	'customer_id' => false,
-      	'mail_id' => $this->config->get('marketplace_mail_seller_on_edit'),
-      	'mail_from' => $this->config->get('marketplace_adminmail') ? $this->config->get('marketplace_adminmail') : $this->config->get('config_email'),
-      	'mail_to' => $this->customer->getEmail(),
+				'customer_id' => false,
+				'mail_id' => $this->config->get('marketplace_mail_seller_on_edit'),
+				'mail_from' => $this->config->get('marketplace_adminmail') ? $this->config->get('marketplace_adminmail') : $this->config->get('config_email'),
+				'mail_to' => $this->customer->getEmail(),
 			);
 
 			$commission = $this->getSellerCommission((int)$this->customer->getId());
 
-      $values = array(
-      	'product_name' => $mailData['name'],
-	     	'commission' => $commission."%",
-      );
+			$values = array(
+				'product_name' => $mailData['name'],
+				'commission' => $commission . "%",
+			);
 
 			/**
 			 * mail to seller
@@ -884,7 +902,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array] $data [filter keyword]
 	 * @return [string]       [sql query string]
 	 */
-	public function productQuery($sql,$data){
+	public function productQuery($sql, $data)
+	{
 
 		$implode = array();
 
@@ -896,9 +915,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 			if ($data['sku']) {
 
-			   $implode[] = "sku = '" . $this->db->escape($data['sku']) . "'";
-			}elseif (isset($data['model']) && $data['model'] && $this->config->get('marketplace_auto_generate_sku')){
-               $implode[] = "sku = '" . $this->db->escape($data['model']) . "'";
+				$implode[] = "sku = '" . $this->db->escape($data['sku']) . "'";
+			} elseif (isset($data['model']) && $data['model'] && $this->config->get('marketplace_auto_generate_sku')) {
+				$implode[] = "sku = '" . $this->db->escape($data['model']) . "'";
 			}
 		}
 
@@ -955,7 +974,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		}
 
 		if (isset($data['price'])) {
-			$implode[] = "price = '" . $this->db->escape($this->currency->convert($data['price'],$this->session->data['currency'], $this->config->get('config_currency'))) . "'";
+			$implode[] = "price = '" . $this->db->escape($this->currency->convert($data['price'], $this->session->data['currency'], $this->config->get('config_currency'))) . "'";
 		}
 
 		if (isset($data['points'])) {
@@ -1003,7 +1022,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		}
 
 		if ($implode) {
-			$sql .=  implode(" , ", $implode)." , " ;
+			$sql .=  implode(" , ", $implode) . " , ";
 		}
 
 		return $sql;
@@ -1015,45 +1034,44 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of any product]
 	 * @param  [array] $data       [detail of product that will be added to particular product]
 	 */
-	public function productAddUpdate($product_id,$data){
+	public function productAddUpdate($product_id, $data)
+	{
 
-	//always check the module status to run the events
-  if ($this->config->get('module_wk_pricealert_status')) {
+		//always check the module status to run the events
+		if ($this->config->get('module_wk_pricealert_status')) {
 
-    $data_pa['is_alert_product'] = 1;
+			$data_pa['is_alert_product'] = 1;
 
-		$data_pa['created_by'] =  $this->customer->getId();
-    // addProduct always return product so the o/p is treated as product_id
-    $data_pa['product_id'] = $product_id;
-    // post value for the alert
-    $data_pa['status'] = isset($this->request->post['pricealert']) ? $this->request->post['pricealert'] : 0;
-    //set regisrty to use library funtinality
-    $this->registry->set('prolert', new Productalert($this->registry));
-    // run query if we have valid >0 product id
-    if ($data_pa['product_id']) {
-			$this->prolert->removeAlertProduct($data_pa['product_id']);
-      $this->prolert->addAlertProduct($data_pa);
-    }
-   }
+			$data_pa['created_by'] =  $this->customer->getId();
+			// addProduct always return product so the o/p is treated as product_id
+			$data_pa['product_id'] = $product_id;
+			// post value for the alert
+			$data_pa['status'] = isset($this->request->post['pricealert']) ? $this->request->post['pricealert'] : 0;
+			//set regisrty to use library funtinality
+			$this->registry->set('prolert', new Productalert($this->registry));
+			// run query if we have valid >0 product id
+			if ($data_pa['product_id']) {
+				$this->prolert->removeAlertProduct($data_pa['product_id']);
+				$this->prolert->addAlertProduct($data_pa);
+			}
+		}
 		$this->load->model('customerpartner/htmlfilter');
 		$htmlfilter = $this->model_customerpartner_htmlfilter;
 
-		if(isset($data['product_description'])){
+		if (isset($data['product_description'])) {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
 
 			foreach ($data['product_description'] as $language_id => $value) {
 
 				if (!$value['meta_description'] && $this->config->get('marketplace_auto_generate_sku')) {
-					 $value['meta_description'] = $value['name'];
+					$value['meta_description'] = $value['name'];
 				}
 
-                if (!$value['meta_keyword']) {
-					  $value['meta_keyword'] = $this->db->escape($value['tag']);
+				if (!$value['meta_keyword']) {
+					$value['meta_keyword'] = $this->db->escape($value['tag']);
 				}
 
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "product_description` SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_keyword = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($value['meta_keyword']),'',true))) . "', meta_description = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($value['meta_description']),'',true))) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "'");
-
-
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "product_description` SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_keyword = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($value['meta_keyword']), '', true))) . "', meta_description = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($value['meta_description']), '', true))) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "'");
 			}
 		}
 		// when we have reason indes set and has the some value in it.
@@ -1065,25 +1083,25 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		if ($this->config->get('marketplace_seller_product_store')) {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
 
-		   if ($this->config->get('marketplace_seller_product_store') == 'choose_store') {
+			if ($this->config->get('marketplace_seller_product_store') == 'choose_store') {
 
 				foreach ($data['product_store'] as $store_id) {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
 				}
-			}elseif($this->config->get('marketplace_seller_product_store') == 'own_store'){
-              $seller_store_id = $this->db->query("SELECT store_id FROM " . DB_PREFIX . "customer WHERE customer_id = '".(int)$this->customer->getId(). "'")->row;
+			} elseif ($this->config->get('marketplace_seller_product_store') == 'own_store') {
+				$seller_store_id = $this->db->query("SELECT store_id FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$this->customer->getId() . "'")->row;
 
-              $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$seller_store_id['store_id']. "'");
-			}else{
-              $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = " . (int)$this->config->get('config_store_id'));
-              $this->load->model('setting/store');
-              $stores = $this->model_setting_store->getStores();
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$seller_store_id['store_id'] . "'");
+			} else {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = " . (int)$this->config->get('config_store_id'));
+				$this->load->model('setting/store');
+				$stores = $this->model_setting_store->getStores();
 
-              foreach ($stores as $key => $store) {
-              	$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '".(int)$store['store_id']."'");
-              }
+				foreach ($stores as $key => $store) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store['store_id'] . "'");
+				}
 			}
-		}else{
+		} else {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = " . (int)$this->config->get('config_store_id'));
 		}
 
@@ -1100,7 +1118,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 						$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "' AND language_id = '" . (int)$language_id . "'");
 
-						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($product_attribute_description['text']),'',true))) . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($product_attribute_description['text']), '', true))) . "'");
 					}
 				}
 			}
@@ -1108,7 +1126,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		if (isset($data['product_option_tab']) && $data['product_option_tab']) {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
-		    $this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
 		}
 
 		if (isset($data['product_option'])) {
@@ -1118,16 +1136,16 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 					$product_option_id = $this->db->getLastId();
 
-					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0 ) {
+					if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0) {
 						foreach ($product_option['product_option_value'] as $product_option_value) {
-							$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" .(float)$this->currency->convert($product_option_value['price'],$this->session->data['currency'], $this->config->get('config_currency')). "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
+							$this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$this->currency->convert($product_option_value['price'], $this->session->data['currency'], $this->config->get('config_currency')) . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
 						}
-					}else{
-						$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_option_id = '".$product_option_id."'");
+					} else {
+						$this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_option_id = '" . $product_option_id . "'");
 					}
 				} else {
 					if (isset($product_option['option_id']) && isset($product_option['option_value']) && isset($product_option['required'])) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', value = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($product_option['option_value']),'',true))) . "', required = '" . (int)$product_option['required'] . "'");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', value = '" . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($product_option['option_value']), '', true))) . "', required = '" . (int)$product_option['required'] . "'");
 					}
 				}
 			}
@@ -1139,7 +1157,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		if (isset($data['product_discount'])) {
 			foreach ($data['product_discount'] as $product_discount) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$this->currency->convert($product_discount['price'],$this->session->data['currency'], $this->config->get('config_currency')). "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$this->currency->convert($product_discount['price'], $this->session->data['currency'], $this->config->get('config_currency')) . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
 			}
 		}
 
@@ -1149,17 +1167,17 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		if (isset($data['product_special'])) {
 			foreach ($data['product_special'] as $product_special) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_special['customer_group_id'] . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$this->currency->convert($product_special['price'],$this->session->data['currency'], $this->config->get('config_currency')). "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
+				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_special['customer_group_id'] . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$this->currency->convert($product_special['price'], $this->session->data['currency'], $this->config->get('config_currency')) . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
 			}
 		}
 
 		if (isset($data['product_link_tab']) && $data['product_link_tab']) {
-        	$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
-        	$this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
-        	$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
-        	$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
-		    $this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
-        }
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
+		}
 
 		if (isset($data['product_download'])) {
 			foreach ($data['product_download'] as $download_id) {
@@ -1187,15 +1205,14 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				$this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
 			}
 		}
-		if (isset($data['keyword']) AND $data['keyword']) {
+		if (isset($data['keyword']) and $data['keyword']) {
 			$this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "' AND store_id = " . (int)$this->config->get('config_store_id') . "");
 			foreach ($data['keyword'][(int)$this->config->get('config_store_id')] as $language_id => $keyword) {
-	      if (trim($keyword)) {
-	        $this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$this->config->get('config_store_id') . "', language_id = '" . (int)$language_id . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "'");
-	      }
-	    }
+				if (trim($keyword)) {
+					$this->db->query("INSERT INTO " . DB_PREFIX . "seo_url SET store_id = '" . (int)$this->config->get('config_store_id') . "', language_id = '" . (int)$language_id . "', query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "'");
+				}
+			}
 		}
-
 	}
 
 	/**
@@ -1203,7 +1220,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [description of particular product]
 	 */
-	public function getProductDescriptions($product_id) {
+	public function getProductDescriptions($product_id)
+	{
 		$product_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_description WHERE product_id = '" . (int)$product_id . "'");
@@ -1227,7 +1245,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [categories of particular product]
 	 */
-	public function getProductCategories($product_id) {
+	public function getProductCategories($product_id)
+	{
 		$product_category_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
@@ -1244,10 +1263,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [filters of particular product]
 	 */
-	public function getProductFilters($product_id) {
+	public function getProductFilters($product_id)
+	{
 		$product_filter_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."product_filter WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
 
 		foreach ($query->rows as $result) {
 			$product_filter_data[] = $result['filter_id'];
@@ -1261,34 +1281,35 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [attributes of particular product]
 	 */
-	public function getProductAttributes($product_id) {
+	public function getProductAttributes($product_id)
+	{
 
-	    $product_attribute_data = array();
+		$product_attribute_data = array();
 
-	    $product_attribute_query = $this->db->query("SELECT DISTINCT a.attribute_id, ad.name FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+		$product_attribute_query = $this->db->query("SELECT DISTINCT a.attribute_id, ad.name FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
 
-	    foreach ($product_attribute_query->rows as $product_attribute) {
+		foreach ($product_attribute_query->rows as $product_attribute) {
 
-	        $product_attribute_description_data = array();
+			$product_attribute_description_data = array();
 
-	        $product_attribute_description_query = $this->db->query("SELECT pa.language_id, ad.name, pa.text FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (pa.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND pa.attribute_id = '" . (int)$product_attribute['attribute_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			$product_attribute_description_query = $this->db->query("SELECT pa.language_id, ad.name, pa.text FROM " . DB_PREFIX . "product_attribute pa LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (pa.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND pa.attribute_id = '" . (int)$product_attribute['attribute_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-	        foreach ($product_attribute_description_query->rows as $product_attribute_description) {
+			foreach ($product_attribute_description_query->rows as $product_attribute_description) {
 
-	            $product_attribute_description_data[$product_attribute_description['language_id']] = array(
-	                                                            'name' => $product_attribute_description['name'],
-	                                                            'text' => $product_attribute_description['text']
-	                                                            );
-	        }
+				$product_attribute_description_data[$product_attribute_description['language_id']] = array(
+					'name' => $product_attribute_description['name'],
+					'text' => $product_attribute_description['text']
+				);
+			}
 
-	        $product_attribute_data[] = array(
-	            'attribute_id'                  => $product_attribute['attribute_id'],
-	            'name'                          => $product_attribute['name'],
-	            'product_attribute_description' => $product_attribute_description_data
-	        );
-	    }
+			$product_attribute_data[] = array(
+				'attribute_id'                  => $product_attribute['attribute_id'],
+				'name'                          => $product_attribute['name'],
+				'product_attribute_description' => $product_attribute_description_data
+			);
+		}
 
-	    return $product_attribute_data;
+		return $product_attribute_data;
 	}
 
 	/**
@@ -1297,15 +1318,16 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [string] $tabletype  [to define marketplace's tables or opencart's tables]
 	 * @return [array]             [options of particular product]
 	 */
-	public function getProductOptions($product_id,$tabletype = '') {
+	public function getProductOptions($product_id, $tabletype = '')
+	{
 		$product_option_data = array();
 
-		$product_option_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . $tabletype."product_option` po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		$product_option_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . $tabletype . "product_option` po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		foreach ($product_option_query->rows as $product_option) {
 			$product_option_value_data = array();
 
-			$product_option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . $tabletype."product_option_value WHERE product_option_id = '" . (int)$product_option['product_option_id'] . "'");
+			$product_option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . $tabletype . "product_option_value WHERE product_option_id = '" . (int)$product_option['product_option_id'] . "'");
 
 			foreach ($product_option_value_query->rows as $product_option_value) {
 				$product_option_value_data[] = array(
@@ -1341,8 +1363,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [discounts of particular product]
 	 */
-	public function getProductDiscounts($product_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX ."product_discount WHERE product_id = '" . (int)$product_id . "' ORDER BY quantity, priority, price");
+	public function getProductDiscounts($product_id)
+	{
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "' ORDER BY quantity, priority, price");
 
 		return $query->rows;
 	}
@@ -1352,7 +1375,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [specials of particular product]
 	 */
-	public function getProductSpecials($product_id) {
+	public function getProductSpecials($product_id)
+	{
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "' ORDER BY priority, price");
 
 		return $query->rows;
@@ -1363,7 +1387,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [downloads of particular product]
 	 */
-	public function getProductDownloads($product_id) {
+	public function getProductDownloads($product_id)
+	{
 		$product_download_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
@@ -1381,10 +1406,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [string] $tabletype  [to define marketplace's tables or opencart's tables]
 	 * @return [array]             [rewards of particular product]
 	 */
-	public function getProductRelated($product_id,$tabletype = '') {
+	public function getProductRelated($product_id, $tabletype = '')
+	{
 		$product_related_data = array();
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . $tabletype."product_related WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . $tabletype . "product_related WHERE product_id = '" . (int)$product_id . "'");
 
 		foreach ($query->rows as $result) {
 			$product_related_data[] = $result['related_id'];
@@ -1398,8 +1424,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of product]
 	 * @return [array]             [related products of particular product]
 	 */
-	public function getProductRelatedInfo($product_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "' AND language_id = '".(int)$this->config->get('config_language_id')."' AND store_id='".$this->config->get('config_store_id')."') AS keyword FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+	public function getProductRelatedInfo($product_id)
+	{
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND store_id='" . $this->config->get('config_store_id') . "') AS keyword FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
@@ -1407,42 +1434,43 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	/**
 	 * [IsApplyForSellership to check that a customer is already applied for sellership/partnership or not]
 	 */
-	public function IsApplyForSellership(){
-		$query = $this->db->query("SELECT customer_id FROM ".DB_PREFIX ."customerpartner_to_customer WHERE customer_id = '".(int)$this->customer->getId()."'")->row;
+	public function IsApplyForSellership()
+	{
+		$query = $this->db->query("SELECT customer_id FROM " . DB_PREFIX . "customerpartner_to_customer WHERE customer_id = '" . (int)$this->customer->getId() . "'")->row;
 
-		if($query){
+		if ($query) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
-
 	}
 
 	/**
 	 * [chkIsPartner to check customer is partner or not]
 	 * @return [boolean] [true or false]
 	 */
-	public function chkIsPartner(){
+	public function chkIsPartner()
+	{
 
-		$sql = $this->db->query("SELECT * FROM ".DB_PREFIX ."customerpartner_to_customer WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+		$sql = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_customer WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 
-		if(count($sql->row) && $sql->row['is_partner']==1){
+		if (count($sql->row) && $sql->row['is_partner'] == 1) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-    /**
-     * [CustomerCountry_Id fetch current customer's country id]
-     * @param [type] $customer_id [current customer's customer_id]
-     */
-	public function CustomerCountry_Id($customer_id){
+	/**
+	 * [CustomerCountry_Id fetch current customer's country id]
+	 * @param [type] $customer_id [current customer's customer_id]
+	 */
+	public function CustomerCountry_Id($customer_id)
+	{
 
-		$countryid = $this->db->query("SELECT country_id FROM ".DB_PREFIX."address WHERE customer_id = '".(int)$customer_id."' ")->row;
+		$countryid = $this->db->query("SELECT country_id FROM " . DB_PREFIX . "address WHERE customer_id = '" . (int)$customer_id . "' ")->row;
 
 		return $countryid;
-
 	}
 
 	/**
@@ -1451,150 +1479,154 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $country_id [country id of registered customer]
 	 * @param  [string] $message    [just a meesage while registering]
 	 */
-	public function becomePartner($shop, $country_id, $customer_id, $message = ''){
+	public function becomePartner($data = array())
+	{
 
-		$country = $this->db->query("SELECT iso_code_2 FROM ".DB_PREFIX."country WHERE country_id = '".(int)$country_id."' ")->row;
+		$country = $this->db->query("SELECT iso_code_2 FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$data['country_id'] . "' ")->row;
 
 		$countryCode = '';
 		$countryCodeFlag = '';
-		if($country && isset($country['iso_code_2'])) {
+		if ($country && isset($country['iso_code_2'])) {
 			$countryCode = $country['iso_code_2'];
-			$countryCodeFlag = 'image/flags/'.strtolower($countryCode).'.png';
+			$countryCodeFlag = 'image/flags/' . strtolower($countryCode) . '.png';
 		}
 
-        $commission = (int)$this->config->get('marketplace_commission') ? (int)$this->config->get('marketplace_commission') : 0;
+		$commission = (int)$this->config->get('marketplace_commission') ? (int)$this->config->get('marketplace_commission') : 0;
 
-        if($this->config->get('marketplace_partnerapprov')) {
-        	$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_customer set customer_id = '" .(int)$customer_id."', is_partner='1', country = '".$this->db->escape($countryCode)."', commission = '".(float)$commission."', companyname = '".$this->db->escape($shop)."', screenname = '".$this->db->escape($shop)."', countrylogo = '".$this->db->escape($countryCodeFlag)."' ");
+		if ($this->config->get('marketplace_partnerapprov')) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_customer set customer_id = '" . (int)$data['customer_id'] . "', is_partner='1', country = '" . $this->db->escape($countryCode) . "', commission = '" . (float)$commission . "', companyname = '" . $this->db->escape($data['business_name']) . "', screenname = '" . $this->db->escape($data['business_name']) . "', company_type = '" . $this->db->escape($data['business_type']) . "', countrylogo = '" . $this->db->escape($countryCodeFlag) . "' ");
 
-            // membership modification : if partner approve enable then membership automatic membershhip will be assigned
-        	if($this->config->get('module_wk_seller_group_status') && !$this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_customer_seller_group` WHERE seller_id = '" . (int)$customer_id . "'")->num_rows) {
-		        $this->load->model('account/wk_membership_catalog');
-		        $freeMembership = $this->db->query("SELECT * FROM ".DB_PREFIX."seller_group WHERE autoApprove = 1 ")->row;
-		        if($freeMembership && isset($freeMembership['product_id']) && $freeMembership['product_id']) {
-							$group_id = $freeMembership['groupid'];
-							$this->model_account_wk_membership_catalog->update_customer_quantity($this->customer->getId(),$group_id,'unpaid',true);
+			// membership modification : if partner approve enable then membership automatic membershhip will be assigned
+			if ($this->config->get('module_wk_seller_group_status') && !$this->db->query("SELECT * FROM `" . DB_PREFIX . "seller_group_customer_seller_group` WHERE seller_id = '" . (int)$data['customer_id'] . "'")->num_rows) {
+				$this->load->model('account/wk_membership_catalog');
+				$freeMembership = $this->db->query("SELECT * FROM " . DB_PREFIX . "seller_group WHERE autoApprove = 1 ")->row;
+				if ($freeMembership && isset($freeMembership['product_id']) && $freeMembership['product_id']) {
+					$group_id = $freeMembership['groupid'];
+					$this->model_account_wk_membership_catalog->update_customer_quantity($this->customer->getId(), $group_id, 'unpaid', true);
 				}
 			}
 			// membership code ends
 
-        } else {
-        	$this->db->query("INSERT INTO ".DB_PREFIX."customerpartner_to_customer set customer_id = '" .(int)$customer_id."', is_partner='0', country = '".$this->db->escape($countryCode)."', countrylogo = '".$this->db->escape($countryCodeFlag)."', companyname = '".$this->db->escape($shop)."', screenname = '".$this->db->escape($shop)."' ");
-        }
+		} else {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_customer set customer_id = '" . (int)$data['customer_id'] . "', is_partner='0', country = '" . $this->db->escape($countryCode) . "', countrylogo = '" . $this->db->escape($countryCodeFlag) . "', companyname = '" . $this->db->escape($data['business_name']) . "', screenname = '" . $this->db->escape($data['business_name']) . "', company_type = '" . $this->db->escape($data['business_type']) . "' ");
+		}
 
-        $data = array(
-        	'message' => $message,
-        	'shop' => $shop,
-        	'commission' => $commission,
-        	'seller_id' => $customer_id,
-        	'customer_id' => false,
-        	'mail_id' => $this->config->get('marketplace_mail_partner_request'),
-        	'mail_from' => $this->config->get('marketplace_adminmail'),
-        	'mail_to' => $this->customer->getEmail(),
-        );
+		$data = array(
+			'message' => $data['message'],
+			'shop' => $data['business_name'],
+			'commission' => $commission,
+			'seller_id' => $data['customer_id'],
+			'customer_id' => false,
+			'mail_id' => $this->config->get('marketplace_mail_partner_request'),
+			'mail_from' => $this->config->get('marketplace_adminmail'),
+			'mail_to' => $this->customer->getEmail(),
+		);
 
-        $values = array(
-        	'message' => $data['message'],
-			'commission' => $data['commission']."%",
-        );
+		$values = array(
+			'message' => $data['message'],
+			'commission' => $data['commission'] . "%",
+		);
 
-        /**
-         * send mail to Admin / Customer after request for Partnership
-         */
-        $this->load->model('customerpartner/mail');
+		/**
+		 * send mail to Admin / Customer after request for Partnership
+		 */
+		$this->load->model('customerpartner/mail');
 
-       	/**
-       	 * customer applied for sellership to customer
-       	 */
-        $this->model_customerpartner_mail->mail($data,$values);
+		/**
+		 * customer applied for sellership to customer
+		 */
+		$this->model_customerpartner_mail->mail($data, $values);
 
-        /**
-         * customer applied for sellership to admin
-         */
-        $data['mail_id'] = $this->config->get('marketplace_mail_partner_admin');
-        $data['mail_from'] = $this->customer->getEmail();
-        $data['mail_to'] = $this->config->get('marketplace_adminmail');
+		/**
+		 * customer applied for sellership to admin
+		 */
+		$data['mail_id'] = $this->config->get('marketplace_mail_partner_admin');
+		$data['mail_from'] = $this->customer->getEmail();
+		$data['mail_to'] = $this->config->get('marketplace_adminmail');
 
-        $this->model_customerpartner_mail->mail($data,$values);
-
+		$this->model_customerpartner_mail->mail($data, $values);
 	}
 
 	/**
 	 * [updateProfile to update the existing seller's profile]
 	 * @param  [array] $data [details about the seller's profile]
 	 */
-	public function updateProfile($data){
+	public function updateProfile($data)
+	{
 
 		$this->load->model('customerpartner/htmlfilter');
 		$htmlfilter = $this->model_customerpartner_htmlfilter;
 
 		$impolde = array();
 
-		if(isset($data['screenName']))
-			$impolde[] = 'screenname = "'.$this->db->escape(preg_replace('/[^A-Za-z0-9_-]/', '', $data['screenName'])).'"';
+		if (isset($data['screenName']))
+			$impolde[] = 'screenname = "' . $this->db->escape(preg_replace('/[^A-Za-z0-9_-]/', '', $data['screenName'])) . '"';
 
-		if(isset($data['gender']))
-			$impolde[] = 'gender = "'.$this->db->escape($data['gender']).'"';
+		if (isset($data['gender']))
+			$impolde[] = 'gender = "' . $this->db->escape($data['gender']) . '"';
 
-		if(isset($data['shortProfile']))
-		$impolde[] = 'shortprofile = "'.$this->db->escape($data['shortProfile']).'"';
+		if (isset($data['shortProfile']))
+			$impolde[] = 'shortprofile = "' . $this->db->escape($data['shortProfile']) . '"';
 
-		if(isset($data['twitterId']))
-			$impolde[] = 'twitterid = "'.$this->db->escape($data['twitterId']).'"';
+		if (isset($data['twitterId']))
+			$impolde[] = 'twitterid = "' . $this->db->escape($data['twitterId']) . '"';
 
-		if(isset($data['facebookId']))
-			$impolde[] = 'facebookid = "'.$this->db->escape($data['facebookId']).'"';
+		if (isset($data['facebookId']))
+			$impolde[] = 'facebookid = "' . $this->db->escape($data['facebookId']) . '"';
 
-		if(isset($data['backgroundcolor']))
-			$impolde[] = 'backgroundcolor = "'.$this->db->escape($data['backgroundcolor']).'"';
+		if (isset($data['backgroundcolor']))
+			$impolde[] = 'backgroundcolor = "' . $this->db->escape($data['backgroundcolor']) . '"';
 
-		if(isset($data['companyLocality']))
-			$impolde[] = 'companylocality = "'.$this->db->escape($data['companyLocality']).'"';
+		if (isset($data['companyLocality']))
+			$impolde[] = 'companylocality = "' . $this->db->escape($data['companyLocality']) . '"';
 
-		if(isset($data['companyName']))
-			$impolde[] = 'companyname = "'.$this->db->escape($data['companyName']).'"';
+		if (isset($data['companyName']))
+			$impolde[] = 'companyname = "' . $this->db->escape($data['companyName']) . '"';
 
-		if(isset($data['companyDescription']))
-			$impolde[] = 'companydescription = "'.$this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['companyDescription']),'',true))).'"';
+		if (isset($data['companyType']))
+			$impolde[] = 'company_type = "' . $this->db->escape($data['companyType']) . '"';
 
-		if(isset($data['otherpayment']))
-			$impolde[] = 'otherpayment = "'.$this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['otherpayment']),'',true))).'"';
+		if (isset($data['companyDescription']))
+			$impolde[] = 'companydescription = "' . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['companyDescription']), '', true))) . '"';
 
-		if(isset($data['taxinfo']))
-			$impolde[] = 'taxinfo = "'.$this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['taxinfo']),'',true))).'"';
+		if (isset($data['otherpayment']))
+			$impolde[] = 'otherpayment = "' . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['otherpayment']), '', true))) . '"';
 
-		if(isset($data['country']))
-			$impolde[] = 'country = "'.$this->db->escape($data['country']).'"';
+		if (isset($data['taxinfo']))
+			$impolde[] = 'taxinfo = "' . $this->db->escape(htmlentities($htmlfilter->HTMLFilter(html_entity_decode($data['taxinfo']), '', true))) . '"';
 
-		if(isset($data['countryLogo']))
-			$impolde[] = 'countrylogo = "'.$this->db->escape($data['countryLogo']).'"';
+		if (isset($data['country']))
+			$impolde[] = 'country = "' . $this->db->escape($data['country']) . '"';
 
-		if(isset($data['paypalid']))
-			$impolde[] = 'paypalid = "'.$this->db->escape($data['paypalid']).'"';
+		if (isset($data['countryLogo']))
+			$impolde[] = 'countrylogo = "' . $this->db->escape($data['countryLogo']) . '"';
 
-		if(isset($data['paypalfirst']))
-			$impolde[] = 'paypalfirstname = "'.$this->db->escape($data['paypalfirst']).'"';
+		if (isset($data['paypalid']))
+			$impolde[] = 'paypalid = "' . $this->db->escape($data['paypalid']) . '"';
 
-		if(isset($data['paypallast']))
-			$impolde[] = 'paypallastname = "'.$this->db->escape($data['paypallast']).'"';
+		if (isset($data['paypalfirst']))
+			$impolde[] = 'paypalfirstname = "' . $this->db->escape($data['paypalfirst']) . '"';
 
-		if(isset($data['avatar']))
-			$impolde[] = 'avatar = "'.$this->db->escape($data['avatar']).'"';
+		if (isset($data['paypallast']))
+			$impolde[] = 'paypallastname = "' . $this->db->escape($data['paypallast']) . '"';
 
-		if(isset($data['companybanner']))
-			$impolde[] = 'companybanner = "'.$this->db->escape($data['companybanner']).'"';
+		if (isset($data['avatar']))
+			$impolde[] = 'avatar = "' . $this->db->escape($data['avatar']) . '"';
 
-		if(isset($data['companylogo']))
-			$impolde[] = 'companylogo = "'.$this->db->escape($data['companylogo']).'"';
+		if (isset($data['companybanner']))
+			$impolde[] = 'companybanner = "' . $this->db->escape($data['companybanner']) . '"';
 
-		if(isset($data['google_analytic_id']))
-			$impolde[] = 'google_analytic_id = "'.$this->db->escape($data['google_analytic_id']).'"';
-			
-		if($impolde){
+		if (isset($data['companylogo']))
+			$impolde[] = 'companylogo = "' . $this->db->escape($data['companylogo']) . '"';
 
-			$sql = "UPDATE ".DB_PREFIX ."customerpartner_to_customer SET ";
-			$sql .= implode(", ",$impolde);
-			$sql .= " WHERE customer_id = '".(int)$this->customer->getId()."'";
+		if (isset($data['google_analytic_id']))
+			$impolde[] = 'google_analytic_id = "' . $this->db->escape($data['google_analytic_id']) . '"';
+
+		if ($impolde) {
+
+			$sql = "UPDATE " . DB_PREFIX . "customerpartner_to_customer SET ";
+			$sql .= implode(", ", $impolde);
+			$sql .= " WHERE customer_id = '" . (int)$this->customer->getId() . "'";
 
 			$this->db->query($sql);
 		}
@@ -1604,8 +1636,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [getProfile to get seller's profile]
 	 * @return [array] [details of seller]
 	 */
-	public function getProfile(){
-		return $this->db->query("SELECT * FROM ".DB_PREFIX ."customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX."customer c ON (c2c.customer_id = c.customer_id) where c2c.customer_id = '".(int)$this->customer->getId()."'")->row;
+	public function getProfile()
+	{
+		return $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN " . DB_PREFIX . "customer c ON (c2c.customer_id = c.customer_id) where c2c.customer_id = '" . (int)$this->customer->getId() . "'")->row;
 	}
 
 	/**
@@ -1613,9 +1646,10 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $seller_id [customer id of particuler seller]
 	 * @return [string|boolean]            [email of false value]
 	 */
-	public function getsellerEmail($seller_id){
-		$result = $this->db->query("SELECT email FROM ".DB_PREFIX ."customerpartner_to_customer c2c LEFT JOIN ".DB_PREFIX."customer c ON (c2c.customer_id = c.customer_id) where c2c.customer_id = '".(int)$seller_id."'")->row;
-		if(isset($result['email'])) {
+	public function getsellerEmail($seller_id)
+	{
+		$result = $this->db->query("SELECT email FROM " . DB_PREFIX . "customerpartner_to_customer c2c LEFT JOIN " . DB_PREFIX . "customer c ON (c2c.customer_id = c.customer_id) where c2c.customer_id = '" . (int)$seller_id . "'")->row;
+		if (isset($result['email'])) {
 			return $result['email'];
 		} else {
 			return false;
@@ -1626,8 +1660,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [getCountry to get seller's country]
 	 * @return [string] [country of seller]
 	 */
-	public function getCountry(){
-		return $this->db->query("SELECT * FROM ".DB_PREFIX ."country")->rows;
+	public function getCountry()
+	{
+		return $this->db->query("SELECT * FROM " . DB_PREFIX . "country")->rows;
 	}
 
 	/**
@@ -1635,7 +1670,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $order_id [order id of particular order]
 	 * @return [array]           [order histories of particular order]
 	 */
-	public function getOrderHistories($order_id) {
+	public function getOrderHistories($order_id)
+	{
 		$query = $this->db->query("SELECT date_added, os.name AS status, oh.comment FROM " . DB_PREFIX . "customerpartner_to_order_status oh LEFT JOIN " . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int)$order_id . "' AND (oh.customer_id = '" . (int)$this->customer->getId() . "' OR oh.customer_id ='0') AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY oh.date_added");
 
 		return $query->rows;
@@ -1646,31 +1682,31 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param [integer] $order_id [order id on particular order]
 	 * @param [array] $data     [detail about what have to added to order history]
 	 */
-	public function addOrderHistory($order_id,$data,$seller_change_order_status_name = '') {
+	public function addOrderHistory($order_id, $data, $seller_change_order_status_name = '')
+	{
 
-        if (isset($data['product_ids']) && $data['product_ids']) {
+		if (isset($data['product_ids']) && $data['product_ids']) {
 
-        	$products = explode(",", $data['product_ids']);
+			$products = explode(",", $data['product_ids']);
 
 			foreach ($products as $value) {
-	       	  $product_details = $this->getProduct($value);
-	       	  $product_names[] = $product_details['name'];
-	        }
+				$product_details = $this->getProduct($value);
+				$product_names[] = $product_details['name'];
+			}
 
-	        $product_name = implode(",",$product_names);
+			$product_name = implode(",", $product_names);
 
-	         if ($data['comment']) {
+			if ($data['comment']) {
 
-	        	$comment = $product_name.' status has been changed to'.' '.$seller_change_order_status_name. "\n\n";
-	        	$comment .= strip_tags(html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-	        }else{
-	        	$comment = $product_name.' status has been changed to'.' '.$seller_change_order_status_name;
-	        }
+				$comment = $product_name . ' status has been changed to' . ' ' . $seller_change_order_status_name . "\n\n";
+				$comment .= strip_tags(html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
+			} else {
+				$comment = $product_name . ' status has been changed to' . ' ' . $seller_change_order_status_name;
+			}
+		} else {
 
-        }else{
-
-        	$comment = strip_tags(html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-        }
+			$comment = strip_tags(html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
+		}
 
 		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$data['order_status_id'] . "', notify = '1', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
@@ -1700,7 +1736,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 
 		if ($order_status_query->num_rows && isset($product_name) && $product_name) {
-			$message .= sprintf($this->language->get('m_text_order_status'),$product_name) . "\n";
+			$message .= sprintf($this->language->get('m_text_order_status'), $product_name) . "\n";
 			$message .= $order_status_query->row['name'] . "\n\n";
 		}
 
@@ -1716,7 +1752,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		$message .= $this->language->get('m_text_footer');
 
-		if(version_compare(VERSION, '2.0.1.1', '<=')) {
+		if (version_compare(VERSION, '2.0.1.1', '<=')) {
 
 			/*Old mail code*/
 			$mail = new Mail($this->config->get('config_mail'));
@@ -1726,7 +1762,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 			$mail->send();
-		}else{
+		} else {
 
 			$mail = new Mail();
 			$mail->protocol = $this->config->get('config_mail_protocol');
@@ -1743,7 +1779,6 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 			$mail->send();
-
 		}
 
 
@@ -1757,7 +1792,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 
 			if ($order_status_query->num_rows && isset($product_name) && $product_name) {
-				$message .= sprintf($this->language->get('m_text_order_status_admin'),$product_name) . "\n";
+				$message .= sprintf($this->language->get('m_text_order_status_admin'), $product_name) . "\n";
 				$message .= $order_status_query->row['name'] . "\n\n";
 			}
 
@@ -1768,7 +1803,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 			$message .= $this->language->get('m_text_footer');
 
-			if(version_compare(VERSION, '2.0.1.1', '<=')) {
+			if (version_compare(VERSION, '2.0.1.1', '<=')) {
 
 				/*Old mail code*/
 				$mail = new Mail($this->config->get('config_mail'));
@@ -1778,7 +1813,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 				$mail->send();
-			}else{
+			} else {
 
 				$mail = new Mail();
 				$mail->protocol = $this->config->get('config_mail_protocol');
@@ -1807,12 +1842,13 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $page       [fetched data limit start and end]
 	 * @return [array]             [order details]
 	 */
-	public function getSellerOrdersByProduct($product_id,$page){
+	public function getSellerOrdersByProduct($product_id, $page)
+	{
 		$limit = 12;
-		$start = ($page-1)*$limit;
+		$start = ($page - 1) * $limit;
 
-		$sql = $this->db->query("SELECT o.order_id ,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus, c2o.price, c2o.quantity, c2o.paid_status  FROM " . DB_PREFIX ."order_status os LEFT JOIN `".DB_PREFIX ."order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '".(int)$this->customer->getId()."'  AND os.language_id = '".(int)$this->config->get('config_language_id')."' AND c2o.product_id = '".(int)$product_id."' ORDER BY o.order_id DESC LIMIT $start,$limit ");
-		return($sql->rows);
+		$sql = $this->db->query("SELECT o.order_id ,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus, c2o.price, c2o.quantity, c2o.paid_status  FROM " . DB_PREFIX . "order_status os LEFT JOIN `" . DB_PREFIX . "order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '" . (int)$this->customer->getId() . "'  AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2o.product_id = '" . (int)$product_id . "' ORDER BY o.order_id DESC LIMIT $start,$limit ");
+		return ($sql->rows);
 	}
 
 	/**
@@ -1820,10 +1856,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $product_id [product id of particular product]
 	 * @return [integer]             [total number of products]
 	 */
-	public function getSellerOrdersTotalByProduct($product_id){
-		$sql = $this->db->query("SELECT o.order_id ,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN `".DB_PREFIX ."order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '".(int)$this->customer->getId()."'  AND os.language_id = '".(int)$this->config->get('config_language_id')."' AND c2o.product_id = '".(int)$product_id."' ORDER BY o.order_id ");
+	public function getSellerOrdersTotalByProduct($product_id)
+	{
+		$sql = $this->db->query("SELECT o.order_id ,o.date_added, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX . "order_status os LEFT JOIN `" . DB_PREFIX . "order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '" . (int)$this->customer->getId() . "'  AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2o.product_id = '" . (int)$product_id . "' ORDER BY o.order_id ");
 
-		return(count($sql->rows));
+		return (count($sql->rows));
 	}
 
 	/**
@@ -1831,9 +1868,10 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [order details]
 	 */
-	public function getSellerOrders($data = array()){
+	public function getSellerOrders($data = array())
+	{
 
-		$sql = "SELECT DISTINCT o.order_id ,o.date_added,c2o.currency_code,c2o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os INNER JOIN `".DB_PREFIX ."order` o ON (os.order_status_id = o.order_status_id) INNER JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id AND c2o.customer_id = '".(int)$this->customer->getId()."') WHERE os.language_id = '".(int)$this->config->get('config_language_id')."' AND c2o.seller_access = '1'";
+		$sql = "SELECT DISTINCT o.order_id ,o.date_added,c2o.currency_code,c2o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX . "order_status os INNER JOIN `" . DB_PREFIX . "order` o ON (os.order_status_id = o.order_status_id) INNER JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id AND c2o.customer_id = '" . (int)$this->customer->getId() . "') WHERE os.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2o.seller_access = '1'";
 
 		if (isset($data['filter_order']) && !is_null($data['filter_order'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order'] . "'";
@@ -1849,7 +1887,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			foreach ($order_statuss as $key => $order_status) {
 				$sql .= "(os.name LIKE '%" . $this->db->escape($order_status) . "%' OR os.order_status_id = '" . $this->db->escape($order_status) . "') OR ";
 			}
-			$sql = substr($sql,0,-3);
+			$sql = substr($sql, 0, -3);
 		}
 
 
@@ -1898,9 +1936,10 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [integer]       [total number of orders]
 	 */
-	public function getSellerOrdersTotal($data = array()){
+	public function getSellerOrdersTotal($data = array())
+	{
 
-		$sql = "SELECT DISTINCT o.order_id ,o.date_added,c2o.currency_code,c2o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX ."order_status os LEFT JOIN `".DB_PREFIX ."order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN ".DB_PREFIX ."customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '".(int)$this->customer->getId()."'  AND os.language_id = '".(int)$this->config->get('config_language_id')."' AND c2o.seller_access = '1'";
+		$sql = "SELECT DISTINCT o.order_id ,o.date_added,c2o.currency_code,c2o.currency_value, CONCAT(o.firstname ,' ',o.lastname) name ,os.name orderstatus  FROM " . DB_PREFIX . "order_status os LEFT JOIN `" . DB_PREFIX . "order` o ON (os.order_status_id = o.order_status_id) LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE c2o.customer_id = '" . (int)$this->customer->getId() . "'  AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2o.seller_access = '1'";
 
 		if (isset($data['filter_order']) && !is_null($data['filter_order'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order'] . "'";
@@ -1928,11 +1967,12 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $order_id [order id of particular order]
 	 * @return [array]           [details of products]
 	 */
-	public function getSellerOrderProducts($order_id){
+	public function getSellerOrderProducts($order_id)
+	{
 
-		$sql = $this->db->query("SELECT op.*,c2o.price c2oprice, c2o.shipping_applied,c2o.paid_status,c2o.order_product_status FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '".(int)$order_id."'  AND c2o.customer_id = '".(int)$this->customer->getId()."' ORDER BY op.product_id ");
+		$sql = $this->db->query("SELECT op.*,c2o.price c2oprice, c2o.shipping_applied,c2o.paid_status,c2o.order_product_status FROM " . DB_PREFIX . "customerpartner_to_order c2o LEFT JOIN " . DB_PREFIX . "order_product op ON (c2o.order_product_id = op.order_product_id AND c2o.order_id = op.order_id) WHERE c2o.order_id = '" . (int)$order_id . "'  AND c2o.customer_id = '" . (int)$this->customer->getId() . "' ORDER BY op.product_id ");
 
-		return($sql->rows);
+		return ($sql->rows);
 	}
 
 	/**
@@ -1940,9 +1980,10 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $order_id [order id of particular order]
 	 * @return [array|boolean]           [details of particular order|false]
 	 */
-	public function getOrder($order_id) {
+	public function getOrder($order_id)
+	{
 
-		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE o.order_id = '" . (int)$order_id . "' AND o.order_status_id > '0' AND c2o.customer_id = '".(int)$this->customer->getId()."'");
+		$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` o LEFT JOIN " . DB_PREFIX . "customerpartner_to_order c2o ON (o.order_id = c2o.order_id) WHERE o.order_id = '" . (int)$order_id . "' AND o.order_status_id > '0' AND c2o.customer_id = '" . (int)$this->customer->getId() . "'");
 
 		if ($order_query->num_rows) {
 			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
@@ -2052,8 +2093,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $order_id [order id of particular order]
 	 * @return [integer]           [sum of order]
 	 */
-	public function getOrderTotals($order_id) {
-		$query = $this->db->query("SELECT SUM((customer + admin) * currency_value) total, SUM(shipping_applied) shipping_applied, shipping  FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '" . (int)$order_id . "' AND customer_id = '".(int)$this->customer->getId()."'");
+	public function getOrderTotals($order_id)
+	{
+		$query = $this->db->query("SELECT SUM((customer + admin) * currency_value) total, SUM(shipping_applied) shipping_applied, shipping  FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '" . (int)$order_id . "' AND customer_id = '" . (int)$this->customer->getId() . "'");
 
 		return $query->rows;
 	}
@@ -2065,11 +2107,12 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $customer_id [customer id of customer]
 	 * @return [array]       [tracking details of an order]
 	 */
-	public function getOdrTracking($order_id,$product_id,$customer_id){
+	public function getOdrTracking($order_id, $product_id, $customer_id)
+	{
 
-		$sql = "SELECT tracking FROM " . DB_PREFIX ."customerpartner_sold_tracking where customer_id='".(int)$customer_id."' AND product_id='".(int)$product_id."' AND order_id='".(int)$order_id."'";
+		$sql = "SELECT tracking FROM " . DB_PREFIX . "customerpartner_sold_tracking where customer_id='" . (int)$customer_id . "' AND product_id='" . (int)$product_id . "' AND order_id='" . (int)$order_id . "'";
 
-		return($this->db->query($sql)->row);
+		return ($this->db->query($sql)->row);
 	}
 
 	/**
@@ -2077,7 +2120,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param [integer] $order_id [order id of order]
 	 * @param [string|number] $tracking [tracking number/string]
 	 */
-	public function addOdrTracking($order_id,$tracking){
+	public function addOdrTracking($order_id, $tracking)
+	{
 		/**
 		 * have to add product_order_id condition here too
 		 */
@@ -2085,41 +2129,41 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 
 		$count = 0;
 
-		foreach($tracking as $product_id => $tracking_no){
+		foreach ($tracking as $product_id => $tracking_no) {
 
-			if($tracking_no){
-				$sql = $this->db->query("SELECT c2t.* FROM " . DB_PREFIX ."customerpartner_sold_tracking c2t WHERE c2t.customer_id='".(int)$this->customer->getId()."' AND c2t.product_id='".(int)$product_id."' AND c2t.order_id='".(int)$order_id."'")->row;
+			if ($tracking_no) {
+				$sql = $this->db->query("SELECT c2t.* FROM " . DB_PREFIX . "customerpartner_sold_tracking c2t WHERE c2t.customer_id='" . (int)$this->customer->getId() . "' AND c2t.product_id='" . (int)$product_id . "' AND c2t.order_id='" . (int)$order_id . "'")->row;
 
-				if(isset($sql) && !$sql){
+				if (isset($sql) && !$sql) {
 
 					$count++;
 
-					$this->db->query("INSERT INTO " . DB_PREFIX ."customerpartner_sold_tracking SET customer_id='".(int)$this->customer->getId()."' ,tracking='".$this->db->escape($tracking_no)."' ,product_id='".(int)$product_id."' ,order_id='".(int)$order_id."'");
+					$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_sold_tracking SET customer_id='" . (int)$this->customer->getId() . "' ,tracking='" . $this->db->escape($tracking_no) . "' ,product_id='" . (int)$product_id . "' ,order_id='" . (int)$order_id . "'");
 
-					$sql = $this->db->query("SELECT name FROM " . DB_PREFIX ."order_product WHERE product_id='".(int)$product_id."' AND order_id='".(int)$order_id."'")->row;
+					$sql = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_product WHERE product_id='" . (int)$product_id . "' AND order_id='" . (int)$order_id . "'")->row;
 
-					if($sql){
-						$comment .= 'Product - '. $sql['name'].'<br/>'.'Seller Tracking No - '. $tracking_no.'<br/>';
+					if ($sql) {
+						$comment .= 'Product - ' . $sql['name'] . '<br/>' . 'Seller Tracking No - ' . $tracking_no . '<br/>';
 
-						$commentForproduct = 'Product - '. $sql['name'].'<br/>'.'Seller Tracking No - '. $tracking_no.'<br/>';
+						$commentForproduct = 'Product - ' . $sql['name'] . '<br/>' . 'Seller Tracking No - ' . $tracking_no . '<br/>';
 
-						$productOrderStatus = $this->db->query("SELECT os.order_status_id FROM " . DB_PREFIX ."customerpartner_to_order c2o LEFT JOIN  ". DB_PREFIX ."order_status os ON (c2o.order_product_status = os.order_status_id) WHERE c2o.product_id='".(int)$product_id."' AND c2o.customer_id='".(int)$this->customer->getId()."'")->row;
+						$productOrderStatus = $this->db->query("SELECT os.order_status_id FROM " . DB_PREFIX . "customerpartner_to_order c2o LEFT JOIN  " . DB_PREFIX . "order_status os ON (c2o.order_product_status = os.order_status_id) WHERE c2o.product_id='" . (int)$product_id . "' AND c2o.customer_id='" . (int)$this->customer->getId() . "'")->row;
 
-						$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '" . (int)$order_id . "',product_id = '".(int)$product_id."',customer_id='".(int)$this->customer->getId()."',order_status_id = '".(int)$productOrderStatus['order_status_id']."',comment = '".$this->db->escape($commentForproduct)."', date_added = NOW()");
+						$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '" . (int)$order_id . "',product_id = '" . (int)$product_id . "',customer_id='" . (int)$this->customer->getId() . "',order_status_id = '" . (int)$productOrderStatus['order_status_id'] . "',comment = '" . $this->db->escape($commentForproduct) . "', date_added = NOW()");
 					}
-			    }
+				}
 			}
 		}
 
 
-		if($comment){
-			$sql = $this->db->query("SELECT o.order_status_id FROM `" . DB_PREFIX ."order` o WHERE o.order_id = '".(int)$order_id."'")->row;
+		if ($comment) {
+			$sql = $this->db->query("SELECT o.order_status_id FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'")->row;
 
-			if($sql)
-				$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . $sql['order_status_id'] . "', notify = '" .  1 . "', comment = '".$this->db->escape($comment)."', date_added = NOW()");
+			if ($sql)
+				$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . $sql['order_status_id'] . "', notify = '" .  1 . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
 
-			$sql = $this->db->query("SELECT c2p.product_id FROM " . DB_PREFIX ."order_product o LEFT JOIN " . DB_PREFIX ."customerpartner_to_product c2p ON (o.product_id = c2p.product_id) LEFT JOIN " . DB_PREFIX ."customerpartner_sold_tracking cst ON (c2p.product_id = cst.product_id) where o.order_id='".(int)$order_id."' AND c2p.product_id NOT IN (SELECT product_id FROM " . DB_PREFIX . "customerpartner_sold_tracking cst WHERE cst.order_id = '".(int)$order_id."')")->rows;
+			$sql = $this->db->query("SELECT c2p.product_id FROM " . DB_PREFIX . "order_product o LEFT JOIN " . DB_PREFIX . "customerpartner_to_product c2p ON (o.product_id = c2p.product_id) LEFT JOIN " . DB_PREFIX . "customerpartner_sold_tracking cst ON (c2p.product_id = cst.product_id) where o.order_id='" . (int)$order_id . "' AND c2p.product_id NOT IN (SELECT product_id FROM " . DB_PREFIX . "customerpartner_sold_tracking cst WHERE cst.order_id = '" . (int)$order_id . "')")->rows;
 		}
 
 		return $count;
@@ -2129,7 +2173,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [addDownload to add download option]
 	 * @param [array] $data [detail about the download]
 	 */
-	public function addDownload($data) {
+	public function addDownload($data)
+	{
 
 		$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', date_added = NOW()");
 
@@ -2150,7 +2195,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $download_id [id of particular download]
 	 * @param  [array] $data        [detail about the download]
 	 */
-	public function editDownload($download_id, $data) {
+	public function editDownload($download_id, $data)
+	{
 
 		$download_info = $this->getDownload($download_id);
 
@@ -2173,14 +2219,15 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [deleteDownload to delete added download]
 	 * @param  [integer] $download_id [id of particular download]
 	 */
-	public function deleteDownload($download_id) {
+	public function deleteDownload($download_id)
+	{
 
 		$download_info = $this->getDownload($download_id);
 
-		if($download_info){
+		if ($download_info) {
 
-			if(file_exists(DIR_DOWNLOAD.$download_info['filename']))
-				unlink(DIR_DOWNLOAD.$download_info['filename']);
+			if (file_exists(DIR_DOWNLOAD . $download_info['filename']))
+				unlink(DIR_DOWNLOAD . $download_info['filename']);
 
 			$this->db->query("DELETE FROM " . DB_PREFIX . "download WHERE download_id = '" . (int)$download_id . "'");
 			$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
@@ -2193,8 +2240,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $download_id [id of particular download]
 	 * @return [array]              [detail about download]
 	 */
-	public function getDownload($download_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE d.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '".(int)$this->customer->getId()."'");
+	public function getDownload($download_id)
+	{
+		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE d.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '" . (int)$this->customer->getId() . "'");
 
 		return $query->row;
 	}
@@ -2204,7 +2252,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $download_id [id of download]
 	 * @return [array]              [detail about download]
 	 */
-	public function getDownloadProduct($download_id) {
+	public function getDownloadProduct($download_id)
+	{
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "download d LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE d.download_id = '" . (int)$download_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
@@ -2215,7 +2264,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $download_id [id of particular download]
 	 * @return [array]              [description detail of download]
 	 */
-	public function getDownloadDescriptions($download_id) {
+	public function getDownloadDescriptions($download_id)
+	{
 		$download_description_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
@@ -2231,8 +2281,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * [getTotalDownloads to get total number of downloads]
 	 * @return [integer] [total number of downloads]
 	 */
-	public function getTotalDownloads() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '".(int)$this->customer->getId()."'");
+	public function getTotalDownloads()
+	{
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '" . (int)$this->customer->getId() . "'");
 
 		return count($query->rows);
 	}
@@ -2242,7 +2293,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $download_id [id of particular download]
 	 * @return [integer]              [number of download]
 	 */
-	public function getTotalProductsByDownloadId($download_id) {
+	public function getTotalProductsByDownloadId($download_id)
+	{
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product_to_download WHERE download_id = '" . (int)$download_id . "'");
 
 		return $query->row['total'];
@@ -2253,7 +2305,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [details about manufacturer]
 	 */
-	public function getManufacturers($data = array()) {
+	public function getManufacturers($data = array())
+	{
 		$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer";
 
 		if (!empty($data['filter_name'])) {
@@ -2299,8 +2352,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $manufacturer_id [id of manufacturer]
 	 * @return [array]                  [details of manufacturer]
 	 */
-	public function getManufacturer($manufacturer_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "' AND language_id = '".(int)$this->config->get('config_language_id')."') AS keyword FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+	public function getManufacturer($manufacturer_id)
+	{
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "') AS keyword FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 		return $query->row;
 	}
@@ -2310,28 +2364,29 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array] $data [filter keywords]
 	 * @return [array]       [details of categories]
 	 */
-	public function getCategories($data) {
+	public function getCategories($data)
+	{
 
 		$marketplace_allowed_categories = '';
 
-		$seller_category = $this->db->query("SELECT category_id FROM ".DB_PREFIX."customerpartner_to_category WHERE seller_id = ".(int)$this->customer->getId())->row;
+		$seller_category = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "customerpartner_to_category WHERE seller_id = " . (int)$this->customer->getId())->row;
 
 		if (isset($seller_category['category_id'])) {
 			$marketplace_allowed_categories = $seller_category['category_id'];
 		} elseif (!$this->config->get('marketplace_allowed_seller_category_type') && $this->config->get('marketplace_allowed_categories')) {
 			foreach ($this->config->get('marketplace_allowed_categories') as $key => $categories) {
-				$marketplace_allowed_categories .= ','. $key;
+				$marketplace_allowed_categories .= ',' . $key;
 			}
 			if ($marketplace_allowed_categories) {
 				$marketplace_allowed_categories = ltrim($marketplace_allowed_categories, ',');
 			}
 		}
 
-        $sql = "SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category c ON (cp.path_id = c.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql = "SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category c ON (cp.path_id = c.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
-        if ($marketplace_allowed_categories) {
-        	$sql .= " AND cp.category_id IN (".$marketplace_allowed_categories.")";
-        }
+		if ($marketplace_allowed_categories) {
+			$sql .= " AND cp.category_id IN (" . $marketplace_allowed_categories . ")";
+		}
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -2354,7 +2409,7 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		if (!$this->config->get('marketplace_allowed_seller_category_type') && $marketplace_allowed_categories = '') {
 
 			return array();
-		}else{
+		} else {
 			$query = $this->db->query($sql);
 			return $query->rows;
 		}
@@ -2365,8 +2420,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $category_id [category id of particular category]
 	 * @return [array]              [category details]
 	 */
-	public function getCategory($category_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR ' &gt; ') FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) WHERE cp.category_id = c.category_id AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cp.category_id) AS path, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'category_id=" . (int)$category_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND store_id='".$this->config->get('config_store_id')."') AS keyword FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (c.category_id = cd2.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+	public function getCategory($category_id)
+	{
+		$query = $this->db->query("SELECT DISTINCT *, (SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR ' &gt; ') FROM " . DB_PREFIX . "category_path cp LEFT JOIN " . DB_PREFIX . "category_description cd1 ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) WHERE cp.category_id = c.category_id AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY cp.category_id) AS path, (SELECT keyword FROM " . DB_PREFIX . "seo_url WHERE query = 'category_id=" . (int)$category_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND store_id='" . $this->config->get('config_store_id') . "') AS keyword FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd2 ON (c.category_id = cd2.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
 	}
@@ -2376,7 +2432,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array] $data [filter keywords]
 	 * @return [array]       [detail about filters]
 	 */
-	public function getFilters($data) {
+	public function getFilters($data)
+	{
 		$sql = "SELECT *, (SELECT name FROM " . DB_PREFIX . "filter_group_description fgd WHERE f.filter_group_id = fgd.filter_group_id AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `group` FROM " . DB_PREFIX . "filter f LEFT JOIN " . DB_PREFIX . "filter_description fd ON (f.filter_id = fd.filter_id) WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
@@ -2407,7 +2464,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $filter_id [id of particular filter]
 	 * @return [array]            [detail of particular filter]
 	 */
-	public function getFilter($filter_id) {
+	public function getFilter($filter_id)
+	{
 		$query = $this->db->query("SELECT *, (SELECT name FROM " . DB_PREFIX . "filter_group_description fgd WHERE f.filter_group_id = fgd.filter_group_id AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `group` FROM " . DB_PREFIX . "filter f LEFT JOIN " . DB_PREFIX . "filter_description fd ON (f.filter_id = fd.filter_id) WHERE f.filter_id = '" . (int)$filter_id . "' AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
@@ -2418,8 +2476,9 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [details of downloads]
 	 */
-	public function getDownloads($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '".(int)$this->customer->getId()."'";
+	public function getDownloads($data = array())
+	{
+		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_download cd LEFT JOIN " . DB_PREFIX . "download d ON (cd.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd.seller_id = '" . (int)$this->customer->getId() . "'";
 
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND dd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -2464,7 +2523,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keyowrds]
 	 * @return [array]       [details of attributes]
 	 */
-	public function getAttributes($data = array()) {
+	public function getAttributes($data = array())
+	{
 		$sql = "SELECT *, (SELECT agd.name FROM " . DB_PREFIX . "attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM " . DB_PREFIX . "attribute a LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		if (!empty($data['filter_name'])) {
@@ -2515,7 +2575,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $attribute_id [id of an attribute]
 	 * @return [array]               [details of attribute]
 	 */
-	public function getAttribute($attribute_id) {
+	public function getAttribute($attribute_id)
+	{
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "attribute a LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE a.attribute_id = '" . (int)$attribute_id . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
@@ -2526,7 +2587,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [details of options]
 	 */
-	public function getOptions($data = array()) {
+	public function getOptions($data = array())
+	{
 		$sql = "SELECT * FROM `" . DB_PREFIX . "option` o LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE od.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 		if ($this->config->get('module_wk_seller_group_status')) {
 			if ($this->config->get('module_wk_seller_group_option_id')) {
@@ -2578,7 +2640,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $option_id [id of an option]
 	 * @return [array]            [detail of particular option]
 	 */
-	public function getOption($option_id) {
+	public function getOption($option_id)
+	{
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "option` o LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE o.option_id = '" . (int)$option_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
@@ -2589,7 +2652,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $option_value_id [id of option's value]
 	 * @return [array]                  [detail about the option value]
 	 */
-	public function getOptionValue($option_value_id) {
+	public function getOptionValue($option_value_id)
+	{
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_value ov LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE ov.option_value_id = '" . (int)$option_value_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		return $query->row;
@@ -2600,7 +2664,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [integer] $option_id [id of an option]
 	 * @return [array]            [detail of option values]
 	 */
-	public function getOptionValues($option_id) {
+	public function getOptionValues($option_id)
+	{
 		$option_value_data = array();
 
 		$option_value_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "option_value ov LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE ov.option_id = '" . (int)$option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order ASC");
@@ -2622,7 +2687,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [array]  $data [filter keywords]
 	 * @return [array]       [detail of customer groups]
 	 */
-	public function getCustomerGroups($data = array()) {
+	public function getCustomerGroups($data = array())
+	{
 		$sql = "SELECT * FROM " . DB_PREFIX . "customer_group cg LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (cg.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 		$sort_data = array(
@@ -2659,116 +2725,118 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		return $query->rows;
 	}
 
-    /**
-     * [getProductSellerDetails Uses to check whether this product is a seller product or admin product and if seller product then return seller details]
-     * @param  [type] $productId [product Id]
-     * @return [type]            [array]
-     */
-	public function getProductSellerDetails($productId){
+	/**
+	 * [getProductSellerDetails Uses to check whether this product is a seller product or admin product and if seller product then return seller details]
+	 * @param  [type] $productId [product Id]
+	 * @return [type]            [array]
+	 */
+	public function getProductSellerDetails($productId)
+	{
 
-         $query = $this->db->query("SELECT * FROM ".DB_PREFIX."customerpartner_to_product c2p LEFT JOIN ".DB_PREFIX."customer oc ON (c2p.customer_id = oc.customer_id) WHERE c2p.product_id = '" . (int)$productId . "' AND c2p.customer_id > 0")->row;
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_product c2p LEFT JOIN " . DB_PREFIX . "customer oc ON (c2p.customer_id = oc.customer_id) WHERE c2p.product_id = '" . (int)$productId . "' AND c2p.customer_id > 0")->row;
 
-         return $query;
+		return $query;
 	}
 
-    /**
-     * [addsellerorderproductstatus uses to change the order product status when seller changes his the order product status ]
-     * @param  [type] $order_id      [order Id]
-     * @param  [type] $orderstatusid [order status id]
-     * @param  [type] $product_ids   [product Ids ]
-     * @return [type]                [false]
-     */
-	public function addsellerorderproductstatus($order_id,$orderstatusid,$product_ids){
+	/**
+	 * [addsellerorderproductstatus uses to change the order product status when seller changes his the order product status ]
+	 * @param  [type] $order_id      [order Id]
+	 * @param  [type] $orderstatusid [order status id]
+	 * @param  [type] $product_ids   [product Ids ]
+	 * @return [type]                [false]
+	 */
+	public function addsellerorderproductstatus($order_id, $orderstatusid, $product_ids)
+	{
 
-       foreach ($product_ids as $value) {
-       	 $this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_order SET order_product_status = '".$orderstatusid."' WHERE order_id = '".(int)$order_id."' AND product_id = '".(int)$value."'");
-       }
+		foreach ($product_ids as $value) {
+			$this->db->query("UPDATE " . DB_PREFIX . "customerpartner_to_order SET order_product_status = '" . $orderstatusid . "' WHERE order_id = '" . (int)$order_id . "' AND product_id = '" . (int)$value . "'");
+		}
 
-       return false;
-
+		return false;
 	}
 
-	private function getWholeOrderStatusId($data = array()){
+	private function getWholeOrderStatusId($data = array())
+	{
 
-        $allOrderStatus = array();
+		$allOrderStatus = array();
 		foreach ($data as $key => $value) {
 
-          	 array_push($allOrderStatus,$value['order_product_status']);
-          }
+			array_push($allOrderStatus, $value['order_product_status']);
+		}
 
-        $isSameSatus = array_unique($allOrderStatus);
+		$isSameSatus = array_unique($allOrderStatus);
 
-        if (count($isSameSatus) == 1) {
+		if (count($isSameSatus) == 1) {
 
-      	    return $isSameSatus[0];
-        }else{
-        	return false;
-        }
-
+			return $isSameSatus[0];
+		} else {
+			return false;
+		}
 	}
 
-   /**
+	/**
 	 * [getWholeOrderStatus get order status in which that
 	 *
 	 * 1) if all the order product status of that order is same status then whole order status of that order will be that status
 	 * 2) if some order prodcut status are canceled and rest product status are same then whole order status is same as rest product status
 	 * 3)if some order prodcut status are canceled and rest product status are not same then whole order status will be the previous status
-     * @param  [type] $order_id                  [INT]
-     * @param  [type] $admin_cancel_order_status [INT]
-     * @return [type]                            [INT]
-     */
-	public function getWholeOrderStatus($order_id,$admin_cancel_order_status){
+	 * @param  [type] $order_id                  [INT]
+	 * @param  [type] $admin_cancel_order_status [INT]
+	 * @return [type]                            [INT]
+	 */
+	public function getWholeOrderStatus($order_id, $admin_cancel_order_status)
+	{
 
-          $allOrderStatus = array();
+		$allOrderStatus = array();
 
-          $getAllStatus =  $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".(int)$order_id."'")->rows;
+		$getAllStatus =  $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '" . (int)$order_id . "'")->rows;
 
-          foreach ($getAllStatus as $key => $value) {
+		foreach ($getAllStatus as $key => $value) {
 
-          	 array_push($allOrderStatus,$value['order_product_status']);
-          }
+			array_push($allOrderStatus, $value['order_product_status']);
+		}
 
-          $isSameSatus = array_unique($allOrderStatus);
+		$isSameSatus = array_unique($allOrderStatus);
 
-          if (count($isSameSatus) == 1) {
+		if (count($isSameSatus) == 1) {
 
-          	  return $isSameSatus[0];
+			return $isSameSatus[0];
+		} else {
 
-          }else{
+			$check_cancel = $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '" . (int)$order_id . "' AND order_product_status != '" . $admin_cancel_order_status . "'")->rows;
 
-             $check_cancel = $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".(int)$order_id."' AND order_product_status != '".$admin_cancel_order_status."'")->rows;
+			$id = $this->getWholeOrderStatusId($check_cancel);
 
-             $id = $this->getWholeOrderStatusId($check_cancel);
-
-             return $id;
-
-
-             // $check_cancel = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."' AND order_product_status = '".$admin_cancel_order_status."'")->num_rows;
-
-             // $check_total_order = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."'")->num_rows;
+			return $id;
 
 
-             // if ($check_total_order - $check_cancel == 1) {
+			// $check_cancel = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."' AND order_product_status = '".$admin_cancel_order_status."'")->num_rows;
 
-             // 	 $getOtherStatus = $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."' AND order_product_status != '".$admin_cancel_order_status."'")->row;
-
-             // 	 return $getOtherStatus['order_product_status'];
-
-             // }else{
-
-             // 	 return $this->config->get('config_order_status_id');
-             // }
+			// $check_total_order = $this->db->query("SELECT * FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."'")->num_rows;
 
 
-          }
+			// if ($check_total_order - $check_cancel == 1) {
+
+			// 	 $getOtherStatus = $this->db->query("SELECT order_product_status FROM " . DB_PREFIX . "customerpartner_to_order WHERE order_id = '".$order_id."' AND order_product_status != '".$admin_cancel_order_status."'")->row;
+
+			// 	 return $getOtherStatus['order_product_status'];
+
+			// }else{
+
+			// 	 return $this->config->get('config_order_status_id');
+			// }
+
+
+		}
 	}
 
-    /**
-     * [changeWholeOrderStatus uses to update the whole order status]
-     * @param [type] $order_id        [order Id]
-     * @param [type] $order_status_id [order status Id]
-     */
-	public function changeWholeOrderStatus($order_id,$order_status_id){
+	/**
+	 * [changeWholeOrderStatus uses to update the whole order status]
+	 * @param [type] $order_id        [order Id]
+	 * @param [type] $order_status_id [order status Id]
+	 */
+	public function changeWholeOrderStatus($order_id, $order_status_id)
+	{
 		$this->load->model('checkout/order');
 		$order_info = $this->model_checkout_order->getOrder($order_id);
 		if ($order_info && !in_array($order_info['order_status_id'], array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status'))) && in_array($order_status_id, array_merge($this->config->get('config_processing_status'), $this->config->get('config_complete_status')))) {
@@ -2786,53 +2854,50 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			}
 		}
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
-
 	}
 
-    /**
-     * [addSellerOrderStatus uses to update seller order product status]
-     * @param [type] $order_id      [order Id]
-     * @param [type] $orderstatusid [order status Id]
-     * @param string $comment       [comment]
-     */
-	public function addSellerOrderStatus($order_id,$orderstatusid,$post,$products = array(),$seller_change_order_status_name = ''){
+	/**
+	 * [addSellerOrderStatus uses to update seller order product status]
+	 * @param [type] $order_id      [order Id]
+	 * @param [type] $orderstatusid [order status Id]
+	 * @param string $comment       [comment]
+	 */
+	public function addSellerOrderStatus($order_id, $orderstatusid, $post, $products = array(), $seller_change_order_status_name = '')
+	{
 
-        if ($products) {
+		if ($products) {
 
 			foreach ($products as $value) {
-	       	  $product_details = $this->getProduct($value);
+				$product_details = $this->getProduct($value);
 
-			  if ($post['comment']) {
+				if ($post['comment']) {
 
-			  	  $comment = $product_details['name'].' '.' status has been changed to'.' '.$seller_change_order_status_name. "\n\n";
-			  	  $comment .= strip_tags(html_entity_decode($post['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
-			  }else{
-			  	  $comment = $product_details['name'].' '.' status has been changed to'.' '.$seller_change_order_status_name;
-			  }
+					$comment = $product_details['name'] . ' ' . ' status has been changed to' . ' ' . $seller_change_order_status_name . "\n\n";
+					$comment .= strip_tags(html_entity_decode($post['comment'], ENT_QUOTES, 'UTF-8')) . "\n\n";
+				} else {
+					$comment = $product_details['name'] . ' ' . ' status has been changed to' . ' ' . $seller_change_order_status_name;
+				}
 
-	       	  $this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '".(int)$order_id."',order_status_id = '".(int)$orderstatusid."',comment = '".$this->db->escape($comment)."',product_id = '".(int)$product_details['product_id']."',customer_id = '".(int)$this->customer->getId()."',date_added = NOW()");
-
-
-	        }
-
-	    }else{
-	    	$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '".(int)$order_id."',comment = '".$post['comment']."',customer_id = '".(int)$this->customer->getId()."',date_added = NOW()");
-	    }
-        return false;
-
+				$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '" . (int)$order_id . "',order_status_id = '" . (int)$orderstatusid . "',comment = '" . $this->db->escape($comment) . "',product_id = '" . (int)$product_details['product_id'] . "',customer_id = '" . (int)$this->customer->getId() . "',date_added = NOW()");
+			}
+		} else {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "customerpartner_to_order_status SET order_id = '" . (int)$order_id . "',comment = '" . $post['comment'] . "',customer_id = '" . (int)$this->customer->getId() . "',date_added = NOW()");
+		}
+		return false;
 	}
 
 
-    /**
-     * [getOrderDetails uses to fetch the order details of an order]
-     * @param  array  $data       [filter variable]
-     * @param  [type] $order_id   [order Id]
-     * @param  [type] $product_id [product Id]
-     * @return [type]             [array]
-     */
-	public function getOrderDetails($data = array(),$order_id,$product_id){
+	/**
+	 * [getOrderDetails uses to fetch the order details of an order]
+	 * @param  array  $data       [filter variable]
+	 * @param  [type] $order_id   [order Id]
+	 * @param  [type] $product_id [product Id]
+	 * @return [type]             [array]
+	 */
+	public function getOrderDetails($data = array(), $order_id, $product_id)
+	{
 
-		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_to_order_status WHERE order_id = '".(int)$order_id."' AND product_id = '".(int)$product_id."'";
+		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_to_order_status WHERE order_id = '" . (int)$order_id . "' AND product_id = '" . (int)$product_id . "'";
 
 		$sort_data = array(
 			'date_added',
@@ -2867,16 +2932,17 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		return $query->rows;
 	}
 
-    /**
-     * [getOrderDetailsTotal uses to count the total order changed status]
-     * @param  array  $data       [filter variable]
-     * @param  [type] $order_id   [Order Id]
-     * @param  [type] $product_id [Product Id]
-     * @return [type]             [array]
-     */
-	public function getOrderDetailsTotal($data = array(),$order_id,$product_id){
+	/**
+	 * [getOrderDetailsTotal uses to count the total order changed status]
+	 * @param  array  $data       [filter variable]
+	 * @param  [type] $order_id   [Order Id]
+	 * @param  [type] $product_id [Product Id]
+	 * @return [type]             [array]
+	 */
+	public function getOrderDetailsTotal($data = array(), $order_id, $product_id)
+	{
 
-		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_to_order_status WHERE order_id = '".(int)$order_id."' AND product_id = '".(int)$product_id."'";
+		$sql = "SELECT * FROM " . DB_PREFIX . "customerpartner_to_order_status WHERE order_id = '" . (int)$order_id . "' AND product_id = '" . (int)$product_id . "'";
 
 		$sort_data = array(
 			'date_added',
@@ -2911,25 +2977,26 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		return count($query->rows);
 	}
 
-    /**
-     * [getOrderStatusId uses to get order status id of an order]
-     * @param  [type] $order_id [order Id]
-     * @return [type]           [array]
-     */
-	public function getOrderStatusId($order_id){
+	/**
+	 * [getOrderStatusId uses to get order status id of an order]
+	 * @param  [type] $order_id [order Id]
+	 * @return [type]           [array]
+	 */
+	public function getOrderStatusId($order_id)
+	{
 
-        $query = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id = '".(int)$order_id."'")->row;
+		$query = $this->db->query("SELECT order_status_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "'")->row;
 
-        return $query;
-
+		return $query;
 	}
 
-    /**
-     * [getProductStores uses to get store of the product]
-     * @param  [type] $product_id [Product Id]
-     * @return [type]             [array]
-     */
-	public function getProductStores($product_id) {
+	/**
+	 * [getProductStores uses to get store of the product]
+	 * @param  [type] $product_id [Product Id]
+	 * @return [type]             [array]
+	 */
+	public function getProductStores($product_id)
+	{
 		$product_store_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
@@ -2941,12 +3008,13 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		return $product_store_data;
 	}
 
-    /**
-     * [getUrlAlias uses to get seo url through keyword]
-     * @param  [type] $keyword [keyword]
-     * @return [type]          [array]
-     */
-	public function getUrlAlias($keyword,$language_id) {
+	/**
+	 * [getUrlAlias uses to get seo url through keyword]
+	 * @param  [type] $keyword [keyword]
+	 * @return [type]          [array]
+	 */
+	public function getUrlAlias($keyword, $language_id)
+	{
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($keyword) . "' AND language_id = " . (int)$language_id . " AND store_id = '" . $this->config->get('config_store_id') . "'");
 
 		return $query->row;
@@ -2956,7 +3024,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [type] $product_id [description]
 	 * @return [type]             [description]
 	 */
-	public function copyProduct($product_id) {
+	public function copyProduct($product_id)
+	{
 		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
 		if ($query->num_rows) {
@@ -2987,11 +3056,11 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 			}
 
 			return $data;
-
 		}
 	}
 
-	public function getProductImages($product_id) {
+	public function getProductImages($product_id)
+	{
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
 
 		return $query->rows;
@@ -3001,7 +3070,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [type] $product_id [description]
 	 * @return [type]             [description]
 	 */
-	public function getProductRewards($product_id) {
+	public function getProductRewards($product_id)
+	{
 		$product_reward_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$product_id . "'");
@@ -3017,7 +3087,8 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [type] $product_id [description]
 	 * @return [type]             [description]
 	 */
-	public function getProductLayouts($product_id) {
+	public function getProductLayouts($product_id)
+	{
 		$product_layout_data = array();
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_layout WHERE product_id = '" . (int)$product_id . "'");
@@ -3033,21 +3104,24 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 	 * @param  [type] $product_id [description]
 	 * @return [type]             [description]
 	 */
-	public function getRecurrings($product_id) {
+	public function getRecurrings($product_id)
+	{
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_recurring` WHERE product_id = '" . (int)$product_id . "'");
 
 		return $query->rows;
 	}
 
-	public function getMinDays($seller_id = 0 , $postcode = 0 , $weight = 0){
-		$sql = "SELECT max_days FROM ".DB_PREFIX."customerpartner_shipping WHERE seller_id = " . (int)$seller_id . " AND zip_from <= " . (int)$postcode . " AND zip_to >= ". (int)$postcode . " AND weight_from <= " . (float)$weight . " AND weight_to >= " . (float)$weight . "";
+	public function getMinDays($seller_id = 0, $postcode = 0, $weight = 0)
+	{
+		$sql = "SELECT max_days FROM " . DB_PREFIX . "customerpartner_shipping WHERE seller_id = " . (int)$seller_id . " AND zip_from <= " . (int)$postcode . " AND zip_to >= " . (int)$postcode . " AND weight_from <= " . (float)$weight . " AND weight_to >= " . (float)$weight . "";
 
 		$query = $this->db->query($sql)->row;
 
 		return $query;
 	}
 
-	public function getProductRestriction()	{
+	public function getProductRestriction()
+	{
 		if ($this->cart->hasProducts()) {
 			foreach ($this->cart->getProducts() as $key => $product) {
 
@@ -3068,62 +3142,64 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 				}
 
 				//if (isset($start_date) && $start_date > '0000-00-00') {
-					//$order_product_quantity = $this->db->query("SELECT op.quantity FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `".DB_PREFIX."order` o ON (op.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND o.date_added >= '".$start_date."' AND op.product_id = ".(int)$product['product_id'])->rows;
+				//$order_product_quantity = $this->db->query("SELECT op.quantity FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `".DB_PREFIX."order` o ON (op.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND o.date_added >= '".$start_date."' AND op.product_id = ".(int)$product['product_id'])->rows;
 
-					$order_product_quantity = $this->db->query("SELECT op.quantity FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `".DB_PREFIX."order` o ON (op.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND op.product_id = ".(int)$product['product_id'])->rows;
+				$order_product_quantity = $this->db->query("SELECT op.quantity FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND o.store_id = '" . (int)$this->config->get('config_store_id') . "' AND op.product_id = " . (int)$product['product_id'])->rows;
 
-					$quantity = $product['quantity'];
+				$quantity = $product['quantity'];
 
-					if ($order_product_quantity) {
-						foreach ($order_product_quantity as $key => $value) {
-							$quantity += $value['quantity'];
-						}
+				if ($order_product_quantity) {
+					foreach ($order_product_quantity as $key => $value) {
+						$quantity += $value['quantity'];
 					}
+				}
 
-					if ((int)$this->config->get('marketplace_product_quantity_restriction') && $quantity > (int)$this->config->get('marketplace_product_quantity_restriction')) {
-						return $product;
-					}
+				if ((int)$this->config->get('marketplace_product_quantity_restriction') && $quantity > (int)$this->config->get('marketplace_product_quantity_restriction')) {
+					return $product;
+				}
 				//}
 			}
 		}
 		return false;
 	}
 
-	public function getCategoryAttribute($category_id = 0) {
+	public function getCategoryAttribute($category_id = 0)
+	{
 		if ($category_id) {
-			$category_attributes = $this->db->query("SELECT attribute_id FROM ".DB_PREFIX."wk_category_attribute_mapping WHERE category_id =".(int)$category_id)->row;
+			$category_attributes = $this->db->query("SELECT attribute_id FROM " . DB_PREFIX . "wk_category_attribute_mapping WHERE category_id =" . (int)$category_id)->row;
 
-			if (isset($category_attributes['attribute_id']) && $category_attributes['attribute_id'] ) {
-					$sql = "SELECT *, (SELECT agd.name FROM " . DB_PREFIX . "attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM " . DB_PREFIX . "attribute a LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND a.attribute_id IN (".$category_attributes['attribute_id'].")";
+			if (isset($category_attributes['attribute_id']) && $category_attributes['attribute_id']) {
+				$sql = "SELECT *, (SELECT agd.name FROM " . DB_PREFIX . "attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM " . DB_PREFIX . "attribute a LEFT JOIN " . DB_PREFIX . "attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND a.attribute_id IN (" . $category_attributes['attribute_id'] . ")";
 
-					$query = $this->db->query($sql);
+				$query = $this->db->query($sql);
 
-					return $query->rows;
+				return $query->rows;
 			}
 		}
 	}
 
-	public function getParentCatrgories(){
+	public function getParentCatrgories()
+	{
 
 		$marketplace_allowed_categories = '';
 
-		$seller_category = $this->db->query("SELECT category_id FROM ".DB_PREFIX."customerpartner_to_category WHERE seller_id = ".(int)$this->customer->getId())->row;
+		$seller_category = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "customerpartner_to_category WHERE seller_id = " . (int)$this->customer->getId())->row;
 
 		if (isset($seller_category['category_id'])) {
 			$marketplace_allowed_categories = $seller_category['category_id'];
 		} elseif (!$this->config->get('marketplace_allowed_seller_category_type') && $this->config->get('marketplace_allowed_categories')) {
 			foreach ($this->config->get('marketplace_allowed_categories') as $key => $categories) {
-				$marketplace_allowed_categories .= ','. $key;
+				$marketplace_allowed_categories .= ',' . $key;
 			}
 			if ($marketplace_allowed_categories) {
 				$marketplace_allowed_categories = ltrim($marketplace_allowed_categories, ',');
 			}
 		}
 
-		$sql = "SELECT c.category_id, cd.name FROM ". DB_PREFIX ."category c LEFT JOIN ". DB_PREFIX ."category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.parent_id = '0'";
+		$sql = "SELECT c.category_id, cd.name FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.parent_id = '0'";
 
 		if ($marketplace_allowed_categories) {
-			$sql .= " AND c.category_id IN (".$marketplace_allowed_categories.")";
+			$sql .= " AND c.category_id IN (" . $marketplace_allowed_categories . ")";
 		}
 
 		$query = $this->db->query($sql)->rows;
@@ -3131,65 +3207,71 @@ $this->db->query("DELETE FROM " . DB_PREFIX . "mp_customer_activity WHERE id = '
 		return $query;
 	}
 
-	public function getCatrgories($category_id){
+	public function getCatrgories($category_id)
+	{
 
 		$marketplace_allowed_categories = '';
 
-		$seller_category = $this->db->query("SELECT category_id FROM ".DB_PREFIX."customerpartner_to_category WHERE seller_id = ".(int)$this->customer->getId())->row;
+		$seller_category = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "customerpartner_to_category WHERE seller_id = " . (int)$this->customer->getId())->row;
 
 		if (isset($seller_category['category_id'])) {
 			$marketplace_allowed_categories = $seller_category['category_id'];
 		} elseif (!$this->config->get('marketplace_allowed_seller_category_type') && $this->config->get('marketplace_allowed_categories')) {
 			foreach ($this->config->get('marketplace_allowed_categories') as $key => $categories) {
-				$marketplace_allowed_categories .= ','. $key;
+				$marketplace_allowed_categories .= ',' . $key;
 			}
 			if ($marketplace_allowed_categories) {
 				$marketplace_allowed_categories = ltrim($marketplace_allowed_categories, ',');
 			}
 		}
 
-		$sql = "SELECT c.category_id, cd.name FROM ". DB_PREFIX ."category c LEFT JOIN ". DB_PREFIX ."category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.parent_id = '" . (int)$this->db->escape($category_id) . "'";
+		$sql = "SELECT c.category_id, cd.name FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c.parent_id = '" . (int)$this->db->escape($category_id) . "'";
 
 		if ($marketplace_allowed_categories) {
-			$sql .= " AND c.category_id IN (".$marketplace_allowed_categories.")";
+			$sql .= " AND c.category_id IN (" . $marketplace_allowed_categories . ")";
 		}
 
-        $query = $this->db->query($sql)->rows;
+		$query = $this->db->query($sql)->rows;
 
 		return $query;
 	}
 
-	public function  getCustomFieldOptionId($pro_id,$id){
-			$result = $this->db->query("SELECT option_id FROM ".DB_PREFIX."wk_custom_field_product_options WHERE fieldId = '".(int)$id."' AND product_id = '".(int)$pro_id."' ")->rows;
-			return $result;
+	public function  getCustomFieldOptionId($pro_id, $id)
+	{
+		$result = $this->db->query("SELECT option_id FROM " . DB_PREFIX . "wk_custom_field_product_options WHERE fieldId = '" . (int)$id . "' AND product_id = '" . (int)$pro_id . "' ")->rows;
+		return $result;
 	}
 
-	public function getProductCustomFields($id){
-			$result = $this->db->query("SELECT fieldId FROM ".DB_PREFIX."wk_custom_field_product WHERE productId = '".(int)$id."' ")->rows;
-			return $result;
+	public function getProductCustomFields($id)
+	{
+		$result = $this->db->query("SELECT fieldId FROM " . DB_PREFIX . "wk_custom_field_product WHERE productId = '" . (int)$id . "' ")->rows;
+		return $result;
 	}
 
-	public function getCustomFieldName($id){
-		$result = $this->db->query("SELECT fieldName FROM ".DB_PREFIX."wk_custom_field_description WHERE fieldId = '".(int)$id."' AND language_id = '".(int)$this->config->get('config_language_id')."' ")->row;
+	public function getCustomFieldName($id)
+	{
+		$result = $this->db->query("SELECT fieldName FROM " . DB_PREFIX . "wk_custom_field_description WHERE fieldId = '" . (int)$id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' ")->row;
 		if (isset($result['fieldName'])) {
 			return $result['fieldName'];
 		}
 	}
 
-	public function getCustomFieldOption($id){
-		$result = $this->db->query("SELECT optionValue FROM ".DB_PREFIX."wk_custom_field_option_description WHERE optionId = '".(int)$id."' AND language_id = '".(int)$this->config->get('config_language_id')."' ")->row;
+	public function getCustomFieldOption($id)
+	{
+		$result = $this->db->query("SELECT optionValue FROM " . DB_PREFIX . "wk_custom_field_option_description WHERE optionId = '" . (int)$id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' ")->row;
 		if (isset($result['optionValue'])) {
 			return $result['optionValue'];
 		}
 	}
 
-	public function getSellerAddress() {
-		$result = $this->db->query("SELECT c.firstname , c.lastname, a.address_1, a.city, z.name as state, cn.name as country, c2c.companyname FROM " . DB_PREFIX . "customer c LEFT JOIN " . DB_PREFIX . "customerpartner_to_customer c2c ON(c2c.customer_id = c.customer_id) LEFT JOIN ". DB_PREFIX . "address a ON(a.customer_id = c.customer_id) LEFT JOIN " .DB_PREFIX . "zone z ON(a.zone_id = z.zone_id) LEFT JOIN " . DB_PREFIX . "country cn ON(a.country_id = cn.country_id) WHERE c.customer_id = '" . (int)$this->customer->getId() . "'")->row;
+	public function getSellerAddress()
+	{
+		$result = $this->db->query("SELECT c.firstname , c.lastname, a.address_1, a.city, z.name as state, cn.name as country, c2c.companyname FROM " . DB_PREFIX . "customer c LEFT JOIN " . DB_PREFIX . "customerpartner_to_customer c2c ON(c2c.customer_id = c.customer_id) LEFT JOIN " . DB_PREFIX . "address a ON(a.customer_id = c.customer_id) LEFT JOIN " . DB_PREFIX . "zone z ON(a.zone_id = z.zone_id) LEFT JOIN " . DB_PREFIX . "country cn ON(a.country_id = cn.country_id) WHERE c.customer_id = '" . (int)$this->customer->getId() . "'")->row;
 		return $result;
 	}
 
-	public function getSellerLogo() {
+	public function getSellerLogo()
+	{
 		return $this->db->query("SELECT companylogo FROM " . DB_PREFIX . "customerpartner_to_customer WHERE customer_id = '" . (int)$this->customer->getId() . "'")->row['companylogo'];
 	}
 }
-?>

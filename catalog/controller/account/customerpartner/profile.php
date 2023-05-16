@@ -237,6 +237,12 @@ class ControllerAccountCustomerpartnerProfile extends Controller {
 		} else {
 			$data['companyname_error'] = '';
 		}
+		
+		if (isset($this->error['companytype_error'])) {
+			$data['companytype_error'] = $this->error['companytype_error'];
+		} else {
+			$data['companytype_error'] = '';
+		}
 
 		if (isset($this->error['paypal_error'])) {
 			$data['paypal_error'] = $this->error['paypal_error'];
@@ -427,6 +433,13 @@ class ControllerAccountCustomerpartnerProfile extends Controller {
 		if(strlen(trim($this->request->post['screenName'])) < 1) {
 			$this->request->post['screenName'] = '';
 			$this->error['screenname_error'] = $this->language->get('error_seo_keyword');
+			$this->error['warning'] = $this->language->get('error_check_form');
+			$error = true;
+		}
+
+		if(strlen(trim($this->request->post['companyType'])) < 1) {
+			$this->request->post['companyType'] = '';
+			$this->error['companytype_error'] = $this->language->get('error_company_type');
 			$this->error['warning'] = $this->language->get('error_check_form');
 			$error = true;
 		}

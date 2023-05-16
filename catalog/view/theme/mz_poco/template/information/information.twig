@@ -23,12 +23,25 @@
       
       <div class="about banner d-flex align-items-center justify-content-center flex-column">
         <div class="banner-text">
-          <h3 class="page-title">{{ heading_title }}</h3>
+          <h2 class="page-title">{{ heading_title }}</h2>
+          <div class="feature_divider"></div>
         </div>
       </div>
+        <style>
+          .about-content img{
+            width:100% !important;
+          }
+          .small-down—one-whole h3{
+            margin-bottom:30px;
+          }
+          .small-down—one-whole + .small-down—one-whole{
+            margin-block:30px;
+          }
+        </style>
 
-      {{ description }}
-    
+      <div class="three-fourths columns medium-down--one-whole offset-by-two is-hidden-offset-mobile-only page">
+       {{ description }}
+      </div>
       {{ content_bottom }}
     </div>
       {{ column_right }}

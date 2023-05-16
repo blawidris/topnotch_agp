@@ -1,63 +1,178 @@
 {{ header }}
 
 <div id="account-login" class="container content pb-5">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      {% for breadcrumb in breadcrumbs|slice(0,-1) %}
-        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-      {% endfor %}
-      <li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs|last.text }}</li>
-    </ol>
-  </nav>
-  {% if success %}
-  <div class="alert alert-success alert-dismissible"><i class="fas fa-check-circle"></i> {{ success }}</div>
-  {% endif %}
-  {% if error_warning %}
-  <div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}</div>
-  {% endif %}
-  <div class="row">{{ column_left }}
-    {% if column_left and column_right %}
-    {% set class = 'col-md-6' %}
-    {% elseif column_left or column_right %}
-    {% set class = 'col-md-9' %}
-    {% else %}
-    {% set class = 'col-md-12' %}
-    {% endif %}
-    <div id="content" class="{{ class }}">{{ content_top }}
-      <div class="row">
-        <div class="col-lg-6 order-sm-2">
-          <div class="card mb-4">
-            <div class="card-body p-4">
-              <h2>{{ text_new_customer }}</h2>
-              <p><strong>{{ text_register }}</strong></p>
-              <p>{{ text_register_account }}</p>
-              <a href="{{ register }}" class="btn btn-primary mt-2">{{ button_continue }}</a></div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="card mb-4">
-            <div class="card-body p-4">
-              <h2>{{ text_returning_customer }}</h2>
-              <p><strong>{{ text_i_am_returning_customer }}</strong></p>
-              <form action="{{ action }}" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                  <label for="input-email">{{ entry_email }}</label>
-                  <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
-                </div>
-                <div class="form-group">
-                  <label for="input-password">{{ entry_password }}</label>
-                  <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
-                  <a href="{{ forgotten }}" class="mt-2">{{ text_forgotten }}</a></div>
-                <input type="submit" value="{{ button_login }}" class="btn btn-primary" />
-                {% if redirect %}
-                <input type="hidden" name="redirect" value="{{ redirect }}" />
-                {% endif %}
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      {{ content_bottom }}</div>
-    {{ column_right }}</div>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			{% for breadcrumb in breadcrumbs|slice(0,-1) %}
+				<li class="breadcrumb-item">
+					<a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+				</li>
+			{% endfor %}
+			<li class="breadcrumb-item active" aria-current="page">{{ breadcrumbs|last.text }}</li>
+		</ol>
+	</nav>
+	{% if success %}
+		<div class="alert alert-success alert-dismissible">
+			<i class="fas fa-check-circle"></i>
+			{{ success }}</div>
+	{% endif %}
+	{% if error_warning %}
+		<div class="alert alert-danger alert-dismissible">
+			<i class="fas fa-exclamation-circle"></i>
+			{{ error_warning }}</div>
+	{% endif %}
+	<div class="row">{{ column_left }}
+		{% if column_left and column_right %}
+			{% set class = 'col-md-6' %}
+			{# {% elseif column_left or column_right %}
+																		{% set class = 'col-md-9' %} #}
+		{% else %}
+			{% set class = 'col-md-12' %}
+		{% endif %}
+		<div id="content" class="{{ class }}">{{ content_top }}
+			<div class="row justify-content-center">
+				<style>
+					.card {
+						margin-bottom: 30px;
+						border: none;
+						border-radius: 5px;
+						box-shadow: 0 0 30px rgba(1, 41, 112, 0.1);
+					}
+					.card-body {
+						padding: 0 20px 20px;
+					}
+					small,
+					small {
+						font-size: 0.875em;
+					}
+					p {
+						margin-top: 0;
+						margin-bottom: 16px;
+					}
+					.g-3,
+					.gy-3 {
+						column-gap: 16px;
+					}
+
+					.g-3,
+					.gx-3 {
+						row-gap: 16px;
+					}
+
+					.form-label {
+						margin-bottom: 0.5rem;
+					}
+
+					.nav-link,
+					.form-label {
+						font-weight: 500;
+					}
+				</style>
+				<div class="col-lg-4 col-md-5">
+					<div class="card mb-3">
+						<div class="card-body">
+							<div class="pt-4 pb-2">
+								<h5 class="card-title text-center pb-0 fs-4">
+									{{ text_returning_customer }}
+								</h5>
+								<p class="text-center small">{{ text_i_am_returning_customer }}</p>
+							</div>
+
+							<form class="row g-3 needs-validation" novalidate="" action="{{ action }}" method="post">
+								<div class="col-12">
+									<label for="input-email" class="form-label">{{ entry_email }}</label>
+									<div class="input-group has-validation">
+										<input type="text" name="email" class="form-control" id="input-email" value="{{ email }}"/>
+										<div class="invalid-feedback">Please enter your email.</div>
+									</div>
+								</div>
+
+								<div class="col-12">
+									<label for="input-password" class="form-label">{{ entry_password }}</label>
+									<input type="password" name="password" class="form-control" id="input-password" placeholder="{{ entry_password }}" value="{{ password }}"/>
+									<div class="invalid-feedback">Please enter your password!</div>
+								</div>
+
+								<div class="col-12">
+									<div class="d-flex align-items-center justify-content-between">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe"/>
+											<label class="form-check-label" for="rememberMe">Remember me</label>
+										</div>
+										<a href="{{ forgotten }}" class="nav-link">{{ text_forgotten }}</a>
+									</div>
+								</div>
+								<div class="col-12">
+									<button class="btn btn-primary w-100" type="submit">Login</button>
+									{% if redirect %}
+										<input type="hidden" name="redirect" value="{{ redirect }}"/>
+									{% endif %}
+								</div>
+								<div class="col-12 text-center">
+									<p class="small mb-0">
+										Don't have account?
+										<a href="{{ register }}">Create an account</a>
+									</p>
+								</div>
+							</form>
+						</div>
+					</div>
+
+				</div>
+
+				{# <div class="col-lg-6 order-sm-2">
+																								          <div class="card mb-4">
+																								            <div class="card-body p-4">
+																								              <h2>{{ text_new_customer }}</h2>
+																								              <p><strong>{{ text_register }}</strong></p>
+																								              <p>{{ text_register_account }}</p>
+																								              <a href="{{ register }}" class="btn btn-primary mt-2">{{ button_continue }}</a></div>
+																								            </div>
+																								        </div>
+																								        <div class="col-lg-6">
+																								          <div class="card mb-4">
+																								            <div class="card-body p-4">
+																								              <h2>{{ text_returning_customer }}</h2>
+																								              <p><strong>{{ text_i_am_returning_customer }}</strong></p>
+																								              <form action="{{ action }}" method="post" enctype="multipart/form-data">
+																								                <div class="form-group">
+																								                  <label for="input-email">{{ entry_email }}</label>
+																								                  <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+																								                </div>
+																								                <div class="form-group">
+																								                  <label for="input-password">{{ entry_password }}</label>
+																								                  <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+																								                  <a href="{{ forgotten }}" class="mt-2">{{ text_forgotten }}</a></div>
+																								                <input type="submit" value="{{ button_login }}" class="btn btn-primary" />
+																								                {% if redirect %}
+																								                <input type="hidden" name="redirect" value="{{ redirect }}" />
+																								                {% endif %}
+																								              </form>
+																								            </div>
+																								          </div>
+																								        </div> #}
+			</div>
+			{{ content_bottom }}</div>
+		{# {{ column_right }} #}
+
+	</div>
 </div>
 {{ footer }}
+
+<script>
+	/**
+   * Initiate Bootstrap validation check
+   */
+var needsValidation = document.querySelectorAll(".needs-validation");
+
+Array.prototype.slice.call(needsValidation).forEach(function (form) {
+form.addEventListener("submit", function (event) {
+if (! form.checkValidity()) {
+event.preventDefault();
+event.stopPropagation();
+}
+
+form.classList.add("was-validated");
+}, false);
+});
+</script>

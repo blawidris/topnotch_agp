@@ -102,11 +102,10 @@
 
 								{% if (partner['companyname'] is defined or allowed['otherpayment'] is defined or allowed['taxinfo'] is defined) %}
 
-								<li>
-									<a href="#tab-shop" data-toggle="tab">{{ tab_shop }}</a>
-								</li>
+									<li>
+										<a href="#tab-shop" data-toggle="tab">{{ tab_shop }}</a>
+									</li>
 								{% endif %}
-
 
 
 								{% if marketplace_google_analytic_seller_status is defined and marketplace_google_analytic_seller_status %}
@@ -256,6 +255,30 @@
 										</div>
 									</div>
 
+									<div class="form-group required">
+										<label class="col-md-3 control-label" for="input-shoppartner">{{ text_company_type}}
+										</label>
+
+										<div class="col-md-9 input-group">
+											<select class="form-control" name="companyType" id="input-account-type">
+												<option value="">Select type</option>
+												<option value="farmer" {% if partner['company_type'] == 'farmer' %} selected {% endif %}>Farmer</option>
+												<option value="trading company" {% if partner['company_type'] == 'trading company' %} selected {% endif %}>Trading Company</option>
+												<option value="manufacturer" {% if partner['company_type'] == 'manufacturer' %} selected {% endif %}>Manufacturer</option>
+												<option value="association" {% if partner['company_type'] == 'association' %} selected {% endif %}>Association</option>
+												<option value="agent" {% if partner['company_type'] == 'agent' %} selected {% endif %}>Agent</option>
+												<option value="Government ministry/Bureau/Commission" {% if partner['company_type'] == 'government ministry/bureau/commission' %} selected {% endif %}>Government ministry/Bureau/Commission</option>
+												<option value="distributor/wholesaler" {% if partner['company_type'] == 'distributor/wholesaler' %} selected {% endif %}>Distributor/Wholesaler</option>
+												<option value="Business Service (Transportation, finance)" {% if partner['company_type'] == 'business service (transportation, finance)' %} selected {% endif %}>Business Service (Transportation, finance)</option>
+
+											</select>
+											{% if (companytype_error is defined and companytype_error) %}
+												<div class="text-danger">
+													{{ companytype_error }}
+												</div>
+											{% endif %}
+										</div>
+									</div>
 									<div class="form-group required">
 										<label class="col-sm-12 control-label" for="input-screenname">
 											<span data-toggle="tooltip" title="{{ text_sef_url }}">{{ text_screen_name }}</span>
@@ -556,6 +579,8 @@ var flag = false;
 if (! files.length || !window.FileReader) 
 return;
 
+
+
 // no file selected, or no FileReader support
 var typefie = 'application/pdf';
 filethis.parent().removeClass('has-success');
@@ -577,12 +602,12 @@ var massg = files[0].name;
 massg += "<br>Valid File Uploaded. Please submit the form to save the data";
 $(this).after('<div class="text-success achiv">' + massg + '</div>');
 } else {
-$(this).after('<div class="text-danger achiv">   {{ "Error invalid file type .Only pdf file are allowed" }}</div>');
+$(this).after('<div class="text-danger achiv">     {{ "Error invalid file type .Only pdf file are allowed" }}</div>');
 $(this).parent().addClass('has-error');
 filethis.replaceWith(filethis.val('').clone(true))
 }
 } else {
-$(this).after('<div class="text-danger achiv">   {{ "Error invalid file type .Do not use files having multiple extension" }}</div>');
+$(this).after('<div class="text-danger achiv">     {{ "Error invalid file type .Do not use files having multiple extension" }}</div>');
 $(this).parent().addClass('has-error');
 filethis.replaceWith(filethis.val('').clone(true))
 }

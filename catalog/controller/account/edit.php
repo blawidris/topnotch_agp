@@ -1,8 +1,10 @@
 <?php
-class ControllerAccountEdit extends Controller {
+class ControllerAccountEdit extends Controller
+{
 	private $error = array();
 
-	public function index() {
+	public function index()
+	{
 		if (!$this->customer->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('account/edit', '', true);
 
@@ -94,6 +96,15 @@ class ControllerAccountEdit extends Controller {
 		} else {
 			$data['firstname'] = '';
 		}
+		if (isset($this->request->post['account_type'])) {
+			$data['account_type'] = $this->request->post['account_type'];
+		} elseif (!empty($customer_info)) {
+			$data['account_type'] = $customer_info['account_type'];
+		} else {
+			$data['account_type'] = '';
+		}
+
+		$data['account_type'] = $customer_info['account_type'];
 
 		if (isset($this->request->post['lastname'])) {
 			$data['lastname'] = $this->request->post['lastname'];
@@ -102,7 +113,7 @@ class ControllerAccountEdit extends Controller {
 		} else {
 			$data['lastname'] = '';
 		}
-
+		
 		if (isset($this->request->post['email'])) {
 			$data['email'] = $this->request->post['email'];
 		} elseif (!empty($customer_info)) {
@@ -137,14 +148,14 @@ class ControllerAccountEdit extends Controller {
 
 		foreach ($custom_fields as $custom_field) {
 			if ($custom_field['location'] == 'account') {
-				if($custom_field['type'] == 'file' && isset($data['account_custom_field'][$custom_field['custom_field_id']])) {
+				if ($custom_field['type'] == 'file' && isset($data['account_custom_field'][$custom_field['custom_field_id']])) {
 					$code = $data['account_custom_field'][$custom_field['custom_field_id']];
 
 					$data['account_custom_field'][$custom_field['custom_field_id']] = array();
 
 					$upload_result = $this->model_tool_upload->getUploadByCode($code);
-					
-					if($upload_result) {
+
+					if ($upload_result) {
 						$data['account_custom_field'][$custom_field['custom_field_id']]['name'] = $upload_result['name'];
 						$data['account_custom_field'][$custom_field['custom_field_id']]['code'] = $upload_result['code'];
 					} else {
@@ -167,10 +178,17 @@ class ControllerAccountEdit extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
+		// return ($data);
+
 		$this->response->setOutput($this->load->view('account/edit', $data));
 	}
 
-	protected function validate() {
+	protected function validate()
+	{
+		if (trim($this->request->post['account_type']) == '') {
+			$this->error['account_type'] = $this->language->get('error_account_type');
+		}
+		
 		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
@@ -178,7 +196,7 @@ class ControllerAccountEdit extends Controller {
 		if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
-
+	
 		if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
 			$this->error['email'] = $this->language->get('error_email');
 		}

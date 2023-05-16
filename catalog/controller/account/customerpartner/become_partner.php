@@ -1,10 +1,12 @@
 <?php
-class ControllerAccountCustomerpartnerBecomePartner extends Controller {
+class ControllerAccountCustomerpartnerBecomePartner extends Controller
+{
 
 	private $error = array();
 	private $data = array();
 
-	public function index() {
+	public function index()
+	{
 
 		if (!$this->customer->isLogged()) {
 			$this->session->data['redirect'] = $this->url->link('account/customerpartner/become_partner', '', true);
@@ -23,31 +25,42 @@ class ControllerAccountCustomerpartnerBecomePartner extends Controller {
 
 			$country_id = $this->model_account_customerpartner->CustomerCountry_Id($this->customer->getId());
 
-			if (empty($country_id)) {
-				$this->model_account_customerpartner->becomePartner($this->request->post['shoppartner'],$customer_country_id='',$this->customer->getId(),$this->request->post['description']);
-			}else{
-				$this->model_account_customerpartner->becomePartner($this->request->post['shoppartner'],$country_id['country_id'],$this->customer->getId(),$this->request->post['description']);
-			}
-      $this->session->data['success'] = $this->language->get('text_success');
+			$shop = array(
+				'country_id' => $country_id ? $country_id['country_id'] : '',
+				'business_name' => $this->request->post['shoppartner'], 
+				'business_type' => utf8_strtolower($this->request->post['business_type']),
+				'customer_id' => $this->customer->getId(),
+				'message' => $this->request->post['description']
+
+			);
+
+			$this->model_account_customerpartner->becomePartner($shop);
+
+			// if (empty($country_id)) {
+			// 	$this->model_account_customerpartner->becomePartner($this->request->post['shoppartner'], $customer_country_id = '', $this->customer->getId(), $this->request->post['description']);
+			// } else {
+				// $this->model_account_customerpartner->becomePartner($this->request->post['shoppartner'], $country_id['country_id'], $this->customer->getId(), $this->request->post['description']);
+			// }
+			$this->session->data['success'] = $this->language->get('text_success');
 			$this->response->redirect($this->url->link('account/account', '', true));
 		}
 
-  	$this->data['breadcrumbs'] = array();
-
-  	$this->data['breadcrumbs'][] = array(
-    	 'text'      => $this->language->get('text_home'),
-	     'href'      => $this->url->link('common/home', '', true),
-  	);
+		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
-    	'text'      => $this->language->get('text_account'),
-	     'href'      => $this->url->link('account/account', '', true),
-  	);
+			'text'      => $this->language->get('text_home'),
+			'href'      => $this->url->link('common/home', '', true),
+		);
 
-  	$this->data['breadcrumbs'][] = array(
-    	'text'      => $this->language->get('heading_title_become_partner'),
-	    'href'      => $this->url->link('account/customerpartner/become_partner', '', true),
-  	);
+		$this->data['breadcrumbs'][] = array(
+			'text'      => $this->language->get('text_account'),
+			'href'      => $this->url->link('account/account', '', true),
+		);
+
+		$this->data['breadcrumbs'][] = array(
+			'text'      => $this->language->get('heading_title_become_partner'),
+			'href'      => $this->url->link('account/customerpartner/become_partner', '', true),
+		);
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -66,40 +79,51 @@ class ControllerAccountCustomerpartnerBecomePartner extends Controller {
 
 		$hasApplied = $this->model_account_customerpartner->IsApplyForSellership();
 
-		if($hasApplied){
+		if ($hasApplied) {
 
-			if($this->model_account_customerpartner->chkIsPartner())
+			if ($this->model_account_customerpartner->chkIsPartner())
 				$this->response->redirect($this->url->link('account/customerpartner/dashboard', '', true));
-			else{
+			else {
 				$this->data['in_process'] = true;
 				$this->data['text_delay'] = $this->language->get('text_delay');
 			}
+		} else {
 
-		}else{
-
-			if(isset($this->error['error_shoppartner'])) {
-		        $this->data['error_shoppartner'] = $this->error['error_shoppartner'];
-		    }else{
+			if (isset($this->error['error_shoppartner'])) {
+				$this->data['error_shoppartner'] = $this->error['error_shoppartner'];
+			} else {
 				$this->data['error_shoppartner'] = '';
-		    }
+			}
 
-		    if(isset($this->error['error_description'])) {
-		        $this->data['error_description'] = $this->error['error_description'];
-		    }else{
+			if (isset($this->error['error_business_type'])) {
+				$this->data['error_business_type'] = $this->error['error_business_type'];
+			} else {
+				$this->data['error_business_type'] = '';
+			}
+
+			if (isset($this->error['error_description'])) {
+				$this->data['error_description'] = $this->error['error_description'];
+			} else {
 				$this->data['error_description'] = '';
-		    }
+			}
 
-		    if(isset($this->request->post['shoppartner'])) {
-		        $this->data['shoppartner'] = $this->request->post['shoppartner'];
-		    }else{
+			if (isset($this->request->post['shoppartner'])) {
+				$this->data['shoppartner'] = $this->request->post['shoppartner'];
+			} else {
 				$this->data['shoppartner'] = '';
-		    }
+			}
 
-			if(isset($this->request->post['description'])) {
-		        $this->data['description'] = $this->request->post['description'];
-		    }else{
+			if (isset($this->request->post['business_type'])) {
+				$this->data['business_type'] = $this->request->post['business_type'];
+			} else {
+				$this->data['business_type'] = '';
+			}
+
+			if (isset($this->request->post['description'])) {
+				$this->data['description'] = $this->request->post['description'];
+			} else {
 				$this->data['description'] = '';
-		    }
+			}
 		}
 
 		$this->data['button_continue'] = $this->language->get('button_continue');
@@ -122,41 +146,42 @@ class ControllerAccountCustomerpartnerBecomePartner extends Controller {
 		$this->data['separate_column_left'] = '';
 
 		if ($this->config->get('marketplace_separate_view') && isset($this->session->data['marketplace_separate_view']) && $this->session->data['marketplace_separate_view'] == 'separate') {
-		  $this->data['separate_view'] = true;
-		  $this->data['column_left'] = '';
-		  $this->data['column_right'] = '';
-		  $this->data['content_top'] = '';
-		  $this->data['content_bottom'] = '';
-		  $this->data['separate_column_left'] = $this->load->controller('account/customerpartner/column_left');
-		  $this->data['footer'] = $this->load->controller('account/customerpartner/footer');
-		  $this->data['header'] = $this->load->controller('account/customerpartner/header');
+			$this->data['separate_view'] = true;
+			$this->data['column_left'] = '';
+			$this->data['column_right'] = '';
+			$this->data['content_top'] = '';
+			$this->data['content_bottom'] = '';
+			$this->data['separate_column_left'] = $this->load->controller('account/customerpartner/column_left');
+			$this->data['footer'] = $this->load->controller('account/customerpartner/footer');
+			$this->data['header'] = $this->load->controller('account/customerpartner/header');
 		}
 
-		$this->response->setOutput($this->load->view('account/customerpartner/become_partner' , $this->data));
-
+		$this->response->setOutput($this->load->view('account/customerpartner/become_partner', $this->data));
 	}
 
-	private function validateForm() {
-    $this->request->post['shoppartner'] = isset($this->request->post['shoppartner']) ? trim($this->request->post['shoppartner']): '';
-		$this->request->post['description'] = isset($this->request->post['description']) ? trim($this->request->post['description']): '';
-		if(utf8_strlen($this->request->post['shoppartner'])<=3){
-            $this->error['error_shoppartner'] = $this->language->get('error_validshop');
-        }elseif(utf8_strlen($this->request->post['description'])<=3){
-            $this->error['error_description'] = $this->language->get('error_message');
-        }else{
-            $this->load->model('customerpartner/master');
-            if($this->model_customerpartner_master->getShopData($this->request->post['shoppartner'])){
-                $this->error['error_shoppartner'] = $this->language->get('error_message');
-            }
-        }
+	private function validateForm()
+	{
+		$this->request->post['shoppartner'] = isset($this->request->post['shoppartner']) ? trim($this->request->post['shoppartner']) : '';
+		$this->request->post['description'] = isset($this->request->post['description']) ? trim($this->request->post['description']) : '';
+		$this->request->post['business_type'] = isset($this->request->post['business_type']) ? trim($this->request->post['business_type']) : '';
+
+		if (utf8_strlen($this->request->post['shoppartner']) <= 3) {
+			$this->error['error_shoppartner'] = $this->language->get('error_validshop');
+		} elseif (empty($this->request->post['business_type'])) {
+			$this->error['error_business_type'] = $this->language->get('error_business_type');
+		} elseif (utf8_strlen($this->request->post['description']) <= 3) {
+			$this->error['error_description'] = $this->language->get('error_message');
+		} else {
+			$this->load->model('customerpartner/master');
+			if ($this->model_customerpartner_master->getShopData($this->request->post['shoppartner'])) {
+				$this->error['error_shoppartner'] = $this->language->get('error_message');
+			}
+		}
 
 		if (!$this->error) {
-	  		return true;
+			return true;
 		} else {
-	  		return false;
+			return false;
 		}
-  	}
-
-
+	}
 }
-?>
