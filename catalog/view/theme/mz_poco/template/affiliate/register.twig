@@ -1,4 +1,5 @@
 {{ header }}
+
 <div id="affiliate-register" class="container content">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -26,7 +27,7 @@
       <form action="{{ action }}" method="post" enctype="multipart/form-data">
         <fieldset id="account">
           {# <legend>{{ text_your_details }}</legend> #}
-          
+
           <div class="form-group required" style="display: {% if customer_groups|length > 1 %} block {% else %} none {% endif %};">
             <label class="col-sm-2 col-form-label">{{ entry_customer_group }}</label>
             <div class="col-sm-10">{% for customer_group in customer_groups %}
