@@ -50,6 +50,7 @@ $_['column_total']                   = 'Total';
 // Entry
 $_['entry_email_address']            = 'E-Mail Address';
 $_['entry_email']                    = 'E-Mail';
+$_['entry_account_type']                    = 'I am a ';
 $_['entry_password']                 = 'Password';
 $_['entry_confirm']                  = 'Password Confirm';
 $_['entry_firstname']                = 'First Name';
@@ -70,6 +71,7 @@ $_['entry_shipping']                 = 'My delivery and billing addresses are th
 // Error
 $_['error_warning']                  = 'There was a problem while trying to process your order! If the problem persists please try selecting a different payment method or you can contact the store owner by <a href="%s">clicking here</a>.';
 $_['error_login']                    = 'Warning: No match for E-Mail Address and/or Password.';
+$_['error_account_type']             = 'Account type cannot be empty';
 $_['error_attempts']                 = 'Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.';
 $_['error_approved']                 = 'Warning: Your account requires approval before you can login.';
 $_['error_exists']                   = 'Warning: E-Mail Address is already registered!';

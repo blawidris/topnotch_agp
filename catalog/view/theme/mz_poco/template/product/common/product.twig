@@ -62,9 +62,9 @@
 
       {% if (not mz_config('html_product_cart_in_caption') and cart_status) or (not mz_config('html_product_wishlist_in_caption') and wishlist_status) or (not mz_config('html_product_quick_view_in_caption') and quick_view_status) or (not mz_config('html_product_compare_in_caption') and compare_status) %}
       <div class="product-action">
-        {# {% if not mz_config('html_product_cart_in_caption') and cart_status %}
-        {% verbatim %}<button class="btn btn-cart cart-{{ product.product_id }}" title="{{ button_cart }}" onclick="cart.add('{{ product.product_id }}');"><i class="fas fa-shopping-cart"></i> <span>{{ button_cart }}</span></button>{% endverbatim %}
-        {% endif %} #}
+        {# {% if not mz_config('html_product_cart_in_caption') and cart_status %}#}
+        {#{% verbatim %}<button class="btn btn-cart cart-{{ product.product_id }} " title="{{ button_cart }}" onclick="cart.add('{{ product.product_id }}');"><i class="fas fa-shopping-cart"></i> <span>{{ button_cart }}</span></button>{% endverbatim %}#}
+        {#{% endif %} #}
         {% if not mz_config('html_product_wishlist_in_caption') and wishlist_status %}
         {% verbatim %}<button class="btn btn-wishlist wishlist-{{ product.product_id }} {{ product.mz_wishlist?'wished' }}" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}', this);" data-wishlist="{{ product.mz_wishlist }}" ><i class="fas fa-heart"></i> <span>{{ button_wishlist }}</span></button>{% endverbatim %}
         {% endif %}

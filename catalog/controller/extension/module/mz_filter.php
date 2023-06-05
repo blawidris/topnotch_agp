@@ -84,6 +84,11 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
 
         $data['filters']  =  array();
 
+        // Category
+        // if ($this->info['filter']['category']['status']) {
+        //     $data['filters'][] = $this->getCategoryFilter();
+        // }
+
         // Price
         if ($this->info['filter']['price']['status']) {
             $data['filters'][] = $this->getPriceFilter();
@@ -237,6 +242,19 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
             return $this->load->view('extension/module/mz_filter', $data);
         }
     }
+
+    /**
+     * Category Filter
+     * @return Array
+     */
+
+     private function getCategoryFilter(){
+        if(!empty($this->request->get['mz_fc'])){
+            $selected= explode('.', $this->request->get['mz_fc']);
+        }else{
+            $selected = array();
+        }
+     }
 
     /**
      * Price filter
@@ -1081,7 +1099,7 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
         }
         if (($this->info && empty($this->request->get['manufacturer_id']) && $this->info['filter']['manufacturer']['status']) || isset($this->request->get['_f_manufacturer']) || isset($filter_param['filter_manufacturer_id'])) {
             $additional_field[] = 'p.manufacturer_id';
-        } 
+        }
 
         if (($this->info && $this->info['filter']['rating']['status']) || isset($this->request->get['_f_rating']) || isset($filter_param['filter_min_rating'])) {
             $additional_field[] = 'rating';
@@ -1605,8 +1623,8 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
 
         if ($this->sub_category) {
             $filter_data['filter_sub_category'] = $this->sub_category;
-        } 
-    
+        }
+
 
         if (isset($this->request->get['search'])) {
             $filter_data['filter_name'] = $this->request->get['search'];
@@ -1626,8 +1644,8 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
 
         if (isset($this->request->get['manufacturer_id'])) {
             $filter_data['filter_manufacturer_id'] = (int)$this->request->get['manufacturer_id'];
-        } 
-        
+        }
+
         if (isset($this->request->get['category_id'])) {
             $filter_data['filter_category_id'] = (int)$this->request->get['category_id'];
         }
@@ -1660,8 +1678,8 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
         // Filter Manufacturer
         if (!empty($this->request->get['mz_fm'])) {
             $filter_data['filter_manufacturer_id'] = explode('.', $this->request->get['mz_fm']);
-        } 
-        
+        }
+
 
         // Filter sub category
         if (!empty($this->request->get['mz_fsc'])) {
@@ -1748,7 +1766,7 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
         if (!empty($this->request->get['mz_fsc'])) {
             $url .= '&mz_fsc=' . $this->request->get['mz_fsc'];
         }
-        
+
         // Filter search
         if (!empty($this->request->get['mz_fq'])) {
             $url .= '&mz_fq=' . urlencode(html_entity_decode($this->request->get['mz_fq'], ENT_QUOTES, 'UTF-8'));
@@ -1800,8 +1818,8 @@ class ControllerExtensionModuleMzFilter extends maza\layout\Module
         // Manufacturer
         if ($this->info['filter']['manufacturer']['title'] && !empty($this->info['filter']['manufacturer']['title'][$this->config->get('config_language_id')])) {
             $this->language->set('text_manufacturer', $this->info['filter']['manufacturer']['title'][$this->config->get('config_language_id')]);
-        } 
-    
+        }
+
         // Search
         if ($this->info['filter']['search']['title'] && !empty($this->info['filter']['search']['title'][$this->config->get('config_language_id')])) {
             $this->language->set('text_search', $this->info['filter']['search']['title'][$this->config->get('config_language_id')]);

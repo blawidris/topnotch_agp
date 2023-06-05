@@ -36,6 +36,8 @@ class ControllerExtensionModuleMzProductListing extends maza\layout\Module {
             return $this->mz_load->view($this->template($setting, $data), $data, 'extension/module/mz_product_listing');
         }
 	}
+
+    
     
     private function template(array $setting, array $data = array()): string {
         $carousel_nav_icon_svg = maza\getOfLanguage($setting['carousel_nav_icon_svg']);

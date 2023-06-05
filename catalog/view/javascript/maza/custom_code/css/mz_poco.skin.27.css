@@ -148,3 +148,10 @@ font-size: 1.166666666666667vw;
 footer .nav-link.icon, footer .widget-html p{
     color:#999;
 }
+
+@media (max-width:576px){
+   .content-image .image-additional .thumbnail, .content-image .image-additional img{
+        height:auto !important;
+    } 
+}
+

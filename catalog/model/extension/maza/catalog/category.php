@@ -1,5 +1,6 @@
 <?php
 class ModelExtensionMazaCatalogCategory extends Model{
+	
     public function getCategoryPath(int $category_id): array {
 		$query = $this->db->query("SELECT category_id, path_id, level FROM " . DB_PREFIX . "category_path WHERE category_id = '" . (int)$category_id . "' ORDER BY `level` ASC");
 

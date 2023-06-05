@@ -170,7 +170,7 @@
 										{% endif %}
 
 									</select>
-									{% if error_account_type %}
+									{% if !error_account_type %}
 										<div class="text-danger">{{ error_account_type }}</div>
 									{% endif %}
 								</div>

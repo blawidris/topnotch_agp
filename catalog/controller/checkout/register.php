@@ -1,5 +1,6 @@
 <?php
 class ControllerCheckoutRegister extends Controller {
+
 	public function index() {
 		$this->load->language('checkout/checkout');
 		
@@ -117,6 +118,10 @@ class ControllerCheckoutRegister extends Controller {
 
 			if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
 				$json['error']['lastname'] = $this->language->get('error_lastname');
+			}
+			
+			if (empty($this->request->post['account_type'])) {
+				$json['error']['account_type'] = $this->language->get('error_account_type');
 			}
 
 			if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {

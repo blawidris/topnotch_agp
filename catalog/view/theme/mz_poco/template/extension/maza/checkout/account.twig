@@ -104,6 +104,25 @@ $(document).on('keydown', '#checkout-login input[name=\'login_email\'], #checkou
       <div class="form-group row required">
         <label class="col-sm-3 col-form-label" for="input-payment-telephone">{{ entry_telephone }}</label> <div class="col-sm-9"><input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-payment-telephone" class="form-control"/></div>
       </div>
+      	<div class="form-group row required">
+          <label class="col-sm-3 form-label" for="input-account-type">{{ entry_account_type }}</label>
+          <div class="col-sm-9">
+            <select class="form-control" name="account_type" id="input-account-type">
+              <option value="">{{ text_select }}</option>
+              {% if account_type == 'Seller' %}
+                <option value="Seller"  selected="selected">Seller</option>
+              {% else %}
+                <option value="Seller">Seller</option>
+              {% endif %}
+
+              {% if account_type == 'Buyer' %}
+                <option value="Buyer"  selected="selected">Buyer</option>
+              {% else %}
+                <option value="Buyer">Buyer</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
       {% if mz_oc_flag == 2 %}
       <div class="form-group row">
         <label class="col-sm-3 col-form-label" for="input-payment-fax">{{ entry_fax }}</label> <div class="col-sm-9"><input type="text" name="fax" value="{{ fax }}" placeholder="{{ entry_fax }}" id="input-payment-fax" class="form-control" /></div>

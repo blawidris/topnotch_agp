@@ -1,18 +1,18 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'https://topnotchagp.com/admin/');
-define('HTTP_CATALOG', 'https://topnotchagp.com/');
+define('HTTP_SERVER', 'http://localhost/topnotch_agp/admin/');
+define('HTTP_CATALOG', 'http://localhost/topnotch_agp/');
 
 // HTTPS
-define('HTTPS_SERVER', 'https://topnotchagp.com/admin/');
-define('HTTPS_CATALOG', 'https://topnotchagp.com/');
+define('HTTPS_SERVER', 'http://localhost/topnotch_agp/admin/');
+define('HTTPS_CATALOG', 'http://localhost/topnotch_agp/');
 
 // DIR
-define('DIR_APPLICATION', '/home3/topnott6/public_html/admin/');
-define('DIR_SYSTEM', '/home3/topnott6/public_html/system/');
-define('DIR_IMAGE', '/home3/topnott6/public_html/image/');
-define('DIR_STORAGE', '/home3/topnott6/storage/');
-define('DIR_CATALOG', '/home3/topnott6/public_html/catalog/');
+define('DIR_APPLICATION', 'C:/xampp/htdocs/topnotch_agp/admin/');
+define('DIR_SYSTEM', 'C:/xampp/htdocs/topnotch_agp/system/');
+define('DIR_IMAGE', 'C:/xampp/htdocs/topnotch_agp/image/');
+define('DIR_STORAGE','C:/xampp/storage/');
+define('DIR_CATALOG', 'C:/xampp/htdocs/topnotch_agp/catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -26,9 +26,9 @@ define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
 // DB
 define('DB_DRIVER', 'mysqli');
 define('DB_HOSTNAME', 'localhost');
-define('DB_USERNAME', 'topnott6_root');
-define('DB_PASSWORD', 'topnott6_root');
-define('DB_DATABASE', 'topnott6_topnotch');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'topnotch');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
 

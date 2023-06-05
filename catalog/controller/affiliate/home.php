@@ -21,7 +21,7 @@ class ControllerAffiliateHome extends Controller
             }
         }
 
-
+        
         $data['text_description'] = sprintf($this->language->get('text_description'), $this->config->get('config_name'), $this->config->get('config_name'), $this->config->get('config_affiliate_commission') . '%');
 
 

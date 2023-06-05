@@ -8,16 +8,17 @@ class ControllerExtensionMazaProducts extends Controller {
 		$this->load->model('tool/image');
 
 
+		// Get Filter request 
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'p.sort_order';
+			$sort = 'p.date_added';
 		}
 
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -34,6 +35,7 @@ class ControllerExtensionMazaProducts extends Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
+		// Set url
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -52,6 +54,8 @@ class ControllerExtensionMazaProducts extends Controller {
 			$url .= '&limit=' . $this->request->get['limit'];
 		}
 
+		// breadcrumbs
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -64,6 +68,7 @@ class ControllerExtensionMazaProducts extends Controller {
 			'href' => $this->url->link('extension/maza/products', $url)
 		);
 
+		// Page Title
 		$data['heading_title'] = $this->language->get('heading_title');
 
 		$data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
@@ -73,7 +78,7 @@ class ControllerExtensionMazaProducts extends Controller {
 		$data['products'] = array();
 
 		$filter_data = array(
-			'sort'                => $sort ?: 'pd.name',
+			'sort'                => $sort ?: 'pd.product_id',
 			'order'               => $order ?: 'DESC',
 			'start'               => ($page - 1) * $limit,
 			'limit'               => $limit
@@ -143,8 +148,8 @@ class ControllerExtensionMazaProducts extends Controller {
 
 		$data['sorts'][] = array(
 			'text'  => $this->language->get('text_default'),
-			'value' => 'p.sort_order-DESC',
-			'href'  => $this->url->link('extension/maza/products', 'sort=p.sort_order&order=DESC' . $url)
+			'value' => 'p.product_id-DESC',
+			'href'  => $this->url->link('extension/maza/products', 'sort=p.date_added&order=DESC' . $url)
 		);
 
 		$data['sorts'][] = array(
